@@ -1,0 +1,122 @@
+{
+  "schema_version": "1.0",
+  "plugin": {
+    "name": "claude-sdd",
+    "display_name": "claude-sdd",
+    "version": "0.1.0",
+    "description": "Spec-Driven Development lifecycle with Claude Code Agent Teams. Manages the full development lifecycle from requirements gathering through implementation, quality verification, and integration.",
+    "short_description": "SDD lifecycle management with Agent Teams",
+    "repository": "https://github.com/joypop-lguplus/claude-sdd",
+    "homepage": "https://github.com/joypop-lguplus/claude-sdd",
+    "license": "MIT",
+    "author": {
+      "name": "joypop",
+      "github": "joypop-lguplus"
+    },
+    "categories": [
+      "developer-tools",
+      "productivity",
+      "lifecycle-management",
+      "agent-teams"
+    ],
+    "tags": [
+      "sdd",
+      "spec-driven-development",
+      "agent-teams",
+      "lifecycle",
+      "requirements",
+      "specifications",
+      "quality-gate",
+      "confluence",
+      "jira",
+      "checklist"
+    ],
+    "min_claude_code_version": "1.0.33",
+    "platforms": ["darwin", "linux"],
+    "components": {
+      "skills": [
+        {
+          "name": "sdd",
+          "description": "SDD lifecycle orchestrator (auto-detect phase)"
+        },
+        {
+          "name": "sdd-init",
+          "description": "Initialize project for SDD"
+        },
+        {
+          "name": "sdd-intake",
+          "description": "Requirements gathering (Confluence, Jira, Figma, file, interview)"
+        },
+        {
+          "name": "sdd-spec",
+          "description": "Generate technical specifications and checklist"
+        },
+        {
+          "name": "sdd-plan",
+          "description": "Task decomposition and team assignment"
+        },
+        {
+          "name": "sdd-build",
+          "description": "Implementation with Agent Teams quality loop"
+        },
+        {
+          "name": "sdd-review",
+          "description": "Quality gate verification against spec checklist"
+        },
+        {
+          "name": "sdd-integrate",
+          "description": "Integration, PR creation, and documentation"
+        },
+        {
+          "name": "sdd-status",
+          "description": "Status dashboard with progress tracking"
+        }
+      ],
+      "agents": [
+        {
+          "name": "sdd-requirements-analyst",
+          "description": "Extracts and structures requirements from Confluence/Jira/Figma"
+        },
+        {
+          "name": "sdd-spec-writer",
+          "description": "Generates technical specifications and compliance checklists"
+        },
+        {
+          "name": "sdd-implementer",
+          "description": "Implements work packages as Agent Teams member"
+        },
+        {
+          "name": "sdd-reviewer",
+          "description": "Verifies implementation against spec checklist"
+        }
+      ],
+      "mcp_servers": [],
+      "hooks": [
+        {
+          "event": "SessionStart",
+          "description": "Detects SDD project, shows phase and checklist progress"
+        }
+      ]
+    },
+    "optional_dependencies": {
+      "agent_teams": {
+        "env": "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1",
+        "purpose": "Parallel implementation with Agent Teams"
+      },
+      "gh_cli": {
+        "install": "https://cli.github.com/",
+        "purpose": "PR creation in /sdd-integrate"
+      },
+      "confluence_mcp": {
+        "purpose": "Read Confluence pages in /sdd-intake",
+        "note": "User must configure in their environment"
+      },
+      "jira_mcp": {
+        "purpose": "Read Jira epics/stories in /sdd-intake",
+        "note": "User must configure in their environment"
+      }
+    },
+    "screenshots": [],
+    "changelog_url": "https://github.com/joypop-lguplus/claude-sdd/blob/main/CHANGELOG.md"
+  }
+}

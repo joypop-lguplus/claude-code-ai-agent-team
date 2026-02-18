@@ -1,0 +1,28 @@
+{
+  "name": "claude-sdd",
+  "version": "0.1.0",
+  "description": "Spec-Driven Development lifecycle with Claude Code Agent Teams",
+  "type": "module",
+  "bin": {
+    "claude-sdd": "./bin/cli.mjs"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joypop-lguplus/claude-sdd.git"
+  },
+  "homepage": "https://github.com/joypop-lguplus/claude-sdd",
+  "author": "joypop",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "plugin",
+    "sdd",
+    "spec-driven-development",
+    "agent-teams",
+    "lifecycle"
+  ],
+  "dependencies": {}
+}

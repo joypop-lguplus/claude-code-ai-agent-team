@@ -1,0 +1,49 @@
+# Quality Gate Criteria
+
+> All criteria must pass before integration approval.
+
+## Gate 1: Spec Compliance
+
+- [ ] All checklist items in `06-spec-checklist.md` are marked `[x]`
+- [ ] Every `[x]` item has corresponding code that matches the spec
+- [ ] No spec items were skipped or partially implemented
+
+## Gate 2: Code Quality
+
+- [ ] No linting errors in modified files
+- [ ] No TypeScript/type errors (if applicable)
+- [ ] No unused imports or dead code introduced
+- [ ] Naming conventions follow project standards
+
+## Gate 3: Test Coverage
+
+- [ ] All public interfaces have unit tests
+- [ ] API endpoints have integration tests (if applicable)
+- [ ] All tests pass (`npm test` / project test command)
+- [ ] No test files contain `.skip` or `.only`
+
+## Gate 4: Documentation
+
+- [ ] API documentation is up to date
+- [ ] CHANGELOG entry added for this change
+- [ ] README updated if user-facing behavior changed
+
+## Gate 5: Integration
+
+- [ ] No merge conflicts with main branch
+- [ ] CI pipeline passes (if configured)
+- [ ] PR description includes spec traceability
+
+---
+
+## Result
+
+| Gate | Status | Notes |
+|------|--------|-------|
+| Spec Compliance | {{STATUS}} | {{NOTES}} |
+| Code Quality | {{STATUS}} | {{NOTES}} |
+| Test Coverage | {{STATUS}} | {{NOTES}} |
+| Documentation | {{STATUS}} | {{NOTES}} |
+| Integration | {{STATUS}} | {{NOTES}} |
+
+**Overall**: {{PASS/FAIL}}
