@@ -1,6 +1,6 @@
 {
   "name": "claude-sdd",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Spec-Driven Development lifecycle with Claude Code Agent Teams",
   "author": {
     "name": "joypop",
@@ -14,6 +14,9 @@
     "agent-teams",
     "lifecycle",
     "confluence",
-    "jira"
+    "jira",
+    "lint",
+    "code-analysis",
+    "ast-grep"
   ]
 }

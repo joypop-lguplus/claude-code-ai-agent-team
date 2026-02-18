@@ -1,0 +1,46 @@
+# Lint & Format Configuration for SDD Project
+# This section is added to sdd-config.yaml during /sdd-init
+# Auto-detected values can be overridden here
+
+lint:
+  # Auto-detected project language (typescript, python, go, rust, java, kotlin, cpp)
+  language: "{{LANGUAGE}}"
+
+  # Diagnostic tool command (for error/warning collection)
+  # Examples: "tsc --noEmit", "ruff check", "cargo check", "go vet ./..."
+  diagnostics: "{{DIAGNOSTICS_CMD}}"
+
+  # Formatter command (for code style enforcement)
+  # Examples: "prettier --write", "ruff format", "gofmt -w", "rustfmt"
+  formatter: "{{FORMATTER_CMD}}"
+
+  # Linter command (for code quality checks)
+  # Examples: "eslint", "ruff check", "cargo clippy", "golangci-lint run"
+  linter: "{{LINTER_CMD}}"
+
+  # ast-grep availability (true/false)
+  ast_grep: {{AST_GREP}}
+
+  # Paths to include in analysis (default: project root)
+  include:
+    - "src/"
+    - "lib/"
+
+  # Paths to exclude from analysis
+  exclude:
+    - "node_modules/"
+    - "dist/"
+    - "build/"
+    - ".git/"
+    - "__pycache__/"
+    - "target/"
+    - "vendor/"
+
+  # Quality gate thresholds
+  gates:
+    # Maximum allowed errors (0 = no errors allowed)
+    max_errors: 0
+    # Maximum allowed warnings (-1 = unlimited)
+    max_warnings: -1
+    # Require all files to be formatted (true/false)
+    require_formatted: false

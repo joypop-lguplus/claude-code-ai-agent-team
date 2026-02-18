@@ -30,6 +30,25 @@ For each checklist item in `06-spec-checklist.md`:
 - Verify tests exist for public interfaces.
 - Check that tests cover the spec requirements.
 
+### Step 4: Diagnostics Check
+
+Run the `sdd-code-analyzer` agent to perform automated analysis:
+
+1. **Run diagnostics**: Execute the project's native diagnostic tool
+   - Zero errors required for PASS
+   - Warnings are reported but don't block
+2. **Structural verification** (if ast-grep available): Use ast-grep patterns to verify spec items have matching code implementations
+3. **Format check**: Run formatter in check mode to detect style violations
+4. **Generate results**: Include in the review report under "Automated Checks"
+
+```
+Diagnostics Check:
+  Errors:   0 → PASS
+  Warnings: 3 → REPORTED (non-blocking)
+  Format:   2 files need formatting → WARN
+  Coverage: 28/28 spec items have code → PASS
+```
+
 ### Verification Result per Item
 
 | Status | Meaning |

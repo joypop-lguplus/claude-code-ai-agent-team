@@ -31,6 +31,24 @@ Use `sonnet` for this agent.
 5. **Stay in scope.** Only modify files related to your assigned work package.
 6. **Mark honestly.** Only mark `[x]` when the item is fully implemented and tested.
 
+## Pre-Completion: Lint & Format
+
+Before reporting completion, run code quality checks on your work:
+
+1. **Format code**: Run the project formatter on all modified files
+   - TypeScript/JS: `prettier --write` or `biome format --write`
+   - Python: `ruff format` or `black`
+   - Go: `gofmt -w`
+   - Rust: `rustfmt`
+2. **Run diagnostics**: Check for errors with the project's diagnostic tool
+   - TypeScript: `tsc --noEmit`
+   - Python: `ruff check`
+   - Go: `go vet ./...`
+   - Rust: `cargo check`
+3. **Fix all errors** before marking checklist items as `[x]`
+
+If `sdd-config.yaml` has a `lint` section, use those configured tools. If tools are not available, skip this step and note it in the completion report.
+
 ## Completion Report Format
 
 ```markdown

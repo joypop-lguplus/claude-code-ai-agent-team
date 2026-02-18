@@ -30,6 +30,26 @@ Classify each item:
 - **FAIL**: Missing code, spec mismatch, or missing tests
 - **PARTIAL**: Partially implemented
 
+### Step 2.5: Automated Diagnostics
+
+Run the `sdd-code-analyzer` agent to perform automated checks:
+
+1. **Run diagnostics**: Execute project-native diagnostic tool (tsc, ruff, cargo check, etc.)
+2. **Collect errors/warnings**: Parse output into structured error list
+3. **Map to checklist items**: Correlate diagnostic results with spec checklist item IDs where possible
+4. **Run format verification**: Check if modified files follow project formatting rules
+
+Include results in the review report under an "Automated Checks" section:
+
+```
+Automated Checks:
+  Diagnostics: 0 errors, 3 warnings
+  Formatting:  2 files need formatting
+  Spec Coverage: 25/28 items have matching code (ast-grep)
+```
+
+Errors block the quality gate. Warnings and format issues are reported but don't block.
+
 ### Step 3: Test Execution
 
 If the project has a test command configured:

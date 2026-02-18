@@ -101,6 +101,25 @@ Please review and decide:
 3. Skip these items
 ```
 
+### Step 3.5: Lint & Format Before Completion
+
+Before marking a work package as complete, ensure code quality:
+
+1. **Run project formatter** (if configured): Auto-format modified files
+   - Use `/sdd-lint format --fix` or the project's configured formatter
+2. **Run project linter** (if configured): Check for lint errors
+   - Use `/sdd-lint diagnostics` or the project's configured diagnostic tool
+3. **Fix any issues** before marking checklist items `[x]`
+
+```
+Pre-completion Checks:
+  1. Formatting: prettier --write src/ ✓
+  2. Diagnostics: tsc --noEmit ✓ (0 errors)
+  3. All checklist items verified [x]
+```
+
+This step is recommended but not mandatory. The `/sdd-review` quality gate will catch any remaining issues.
+
 ### Step 4: Phase Transition
 
 When all work packages in a phase are complete:

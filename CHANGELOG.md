@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.2.0] - 2026-02-19
+
+### Added
+
+- **`/sdd-lint` skill**: Code analysis with 4 subcommands (diagnostics, search, symbols, format)
+- **`sdd-code-analyzer` agent**: Automated code analysis using native diagnostic tools and ast-grep
+- **`scripts/sdd-detect-tools.sh`**: Auto-detection of project language and available lint/format tools
+- **`templates/project-init/lint-config.yaml.tmpl`**: Lint/format configuration template for sdd-config.yaml
+- **ast-grep support**: Optional structural code search and symbol extraction (7 languages)
+- **Automated diagnostics in quality gate**: `/sdd-review` Step 2.5 with zero-error enforcement
+
+### Changed
+
+- **`/sdd-review`**: Added Step 2.5 for automated diagnostics via sdd-code-analyzer
+- **`/sdd-build`**: Added Step 3.5 for lint/format checks before work package completion
+- **`sdd-reviewer` agent**: Added Step 4 (Diagnostics Check) to verification process
+- **`sdd-implementer` agent**: Added pre-completion lint/format guidance
+- **Quality gate template**: Added Gate 2.5 for automated diagnostics criteria
+- **`lib/checker.mjs`**: Added ast-grep (sg) check in new 'tools' category (5 categories)
+- **`lib/doctor.mjs`**: Added integrity checks for 3 new files + sdd-detect-tools.sh script
+- **`plugin.json`**: Registered sdd-lint skill and sdd-code-analyzer agent
+- **`marketplace.json`**: Added new components and ast-grep optional dependency
+
 ## [0.1.0] - 2026-02-18
 
 ### Added

@@ -16,7 +16,7 @@ claude-sdd is a Claude Code plugin that implements the Spec-Driven Development (
 
 ```
 claude-sdd/
-├── Skills (9)         # User-facing slash commands
+├── Skills (10)        # User-facing slash commands
 │   ├── /sdd           # Orchestrator (auto-detects phase)
 │   ├── /sdd-init      # Project initialization
 │   ├── /sdd-intake    # Requirements gathering
@@ -25,13 +25,15 @@ claude-sdd/
 │   ├── /sdd-build     # Agent Teams implementation
 │   ├── /sdd-review    # Quality gate
 │   ├── /sdd-integrate # PR & documentation
-│   └── /sdd-status    # Dashboard
+│   ├── /sdd-status    # Dashboard
+│   └── /sdd-lint      # Code analysis & diagnostics
 │
-├── Agents (4)         # Subagents for specialized tasks
+├── Agents (5)         # Subagents for specialized tasks
 │   ├── requirements-analyst  # Source parsing
 │   ├── spec-writer           # Spec generation
 │   ├── implementer           # Code implementation
-│   └── reviewer              # Quality verification
+│   ├── reviewer              # Quality verification
+│   └── code-analyzer         # Code analysis (diagnostics, ast-grep)
 │
 ├── Templates (10)     # Document templates
 │   ├── claude-md/     # CLAUDE.md templates for leader/member
@@ -98,6 +100,30 @@ Leader Session (Opus)
   |-- Launch sequential phases
   |-- ...
 ```
+
+## Code Analysis Layer
+
+The code analysis layer provides automated quality checks across the SDD lifecycle:
+
+```
+/sdd-lint                         sdd-code-analyzer agent
+    |                                     |
+    |-- diagnostics [path]  <--- Native tools (tsc, ruff, cargo check, go vet)
+    |-- search <pattern>    <--- ast-grep structural search
+    |-- symbols [path]      <--- ast-grep symbol extraction
+    |-- format [path]       <--- Formatters (prettier, ruff format, gofmt)
+    |
+    v
+scripts/sdd-detect-tools.sh      Auto-detects language & available tools
+    |
+    v
+sdd-config.yaml (lint section)   Per-project tool configuration
+```
+
+Integration points:
+- `/sdd-spec` (legacy): Symbol extraction for codebase understanding
+- `/sdd-build`: Lint/format before marking work packages complete
+- `/sdd-review`: Diagnostics check as part of quality gate (Step 2.5)
 
 ## Quality Loop
 

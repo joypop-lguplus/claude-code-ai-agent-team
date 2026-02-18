@@ -186,6 +186,47 @@ Checklist: 8/12 complete (67%)
 | PERF | Performance | Response times, optimization |
 | UI | UI | User interface components |
 
+## Code Analysis (`/sdd-lint`)
+
+Automated code analysis with 4 subcommands:
+
+```bash
+# Run project diagnostics (errors/warnings)
+/sdd-lint diagnostics
+
+# Structural code search via ast-grep
+/sdd-lint search "export async function $NAME($$$) { $$$ }"
+
+# Extract function/class/export symbols
+/sdd-lint symbols src/
+
+# Check code formatting (dry-run)
+/sdd-lint format
+
+# Auto-format files
+/sdd-lint format --fix
+```
+
+### Language Support
+
+| Language | Diagnostics | Formatter | ast-grep |
+|----------|------------|-----------|----------|
+| TypeScript/JS | `tsc --noEmit` / `biome check` | `prettier` / `biome format` | Supported |
+| Python | `ruff check` / `pyright` | `ruff format` / `black` | Supported |
+| Go | `go vet ./...` | `gofmt` | Supported |
+| Rust | `cargo check` | `rustfmt` | Supported |
+| Java | `gradle build --dry-run` | `google-java-format` | Supported |
+| Kotlin | `gradle build --dry-run` | `ktfmt` | Supported |
+| C/C++ | `clang-tidy` | `clang-format` | Supported |
+
+Tools are auto-detected from project files (package.json, pyproject.toml, Cargo.toml, etc.). Override in `sdd-config.yaml` under the `lint` section.
+
+### Integration with SDD Lifecycle
+
+- During `/sdd-build`: Run diagnostics + format before marking work packages complete
+- During `/sdd-review`: Diagnostics results included in quality gate (zero errors required)
+- During `/sdd-spec` (legacy): Use symbols to understand existing codebase structure
+
 ## Tips
 
 - **Re-enter any phase**: Run any `/sdd-*` command at any time to redo or refine a phase.

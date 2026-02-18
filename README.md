@@ -81,6 +81,7 @@ claude --plugin-dir .
 | `/sdd-review` | Quality gate verification |
 | `/sdd-integrate` | Integration, PR creation, documentation |
 | `/sdd-status` | Status dashboard with progress tracking |
+| `/sdd-lint` | Code analysis: diagnostics, search, symbols, format |
 
 ### Agents
 
@@ -90,6 +91,7 @@ claude --plugin-dir .
 | `sdd-spec-writer` | Generates technical specs and checklists |
 | `sdd-implementer` | Implements work packages (Agent Teams member) |
 | `sdd-reviewer` | Verifies implementation against spec checklist |
+| `sdd-code-analyzer` | Automated code analysis with native tools and ast-grep |
 
 ### The Quality Loop
 
@@ -114,6 +116,7 @@ Leader: Verifies checklist
 | Node.js 18+ | **Yes** | For CLI tools |
 | Agent Teams | **Yes** | `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` |
 | `gh` CLI | Recommended | For PR creation |
+| ast-grep (`sg`) | Optional | For `/sdd-lint search` and `/sdd-lint symbols` |
 | Confluence MCP | Optional | For `/sdd-intake confluence:...` |
 | Jira MCP | Optional | For `/sdd-intake jira:...` |
 
@@ -144,7 +147,8 @@ claude-sdd/
 │   ├── sdd-requirements-analyst.md
 │   ├── sdd-spec-writer.md
 │   ├── sdd-implementer.md
-│   └── sdd-reviewer.md
+│   ├── sdd-reviewer.md
+│   └── sdd-code-analyzer.md
 ├── skills/
 │   ├── sdd/SKILL.md
 │   ├── sdd-init/SKILL.md
@@ -154,14 +158,16 @@ claude-sdd/
 │   ├── sdd-build/SKILL.md
 │   ├── sdd-review/SKILL.md
 │   ├── sdd-integrate/SKILL.md
-│   └── sdd-status/SKILL.md
+│   ├── sdd-status/SKILL.md
+│   └── sdd-lint/SKILL.md
 ├── templates/
 │   ├── claude-md/
 │   ├── specs/
 │   ├── checklists/
 │   └── project-init/
 ├── scripts/
-│   └── sdd-session-init.sh
+│   ├── sdd-session-init.sh
+│   └── sdd-detect-tools.sh
 ├── bin/cli.mjs
 ├── lib/
 │   ├── utils.mjs
