@@ -101,6 +101,14 @@ rustup component add rust-analyzer
 # C/C++
 # macOS: brew install llvm
 # Ubuntu: apt install clangd
+
+# Java
+# macOS: brew install jdtls
+# 또는: https://projects.eclipse.org/projects/eclipse.jdt.ls
+
+# Kotlin
+# macOS: brew install kotlin-language-server
+# 또는: https://github.com/fwcd/kotlin-language-server
 ```
 
 Language Server 없이도 SDD를 사용할 수 있습니다. `/claude-sdd:sdd-lint`가 네이티브 도구로 대체합니다.

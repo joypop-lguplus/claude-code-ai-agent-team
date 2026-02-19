@@ -39,6 +39,8 @@ Language Server Protocol을 활용한 의미 수준 코드 분석을 수행합�
 | Go | `gopls` | `go install golang.org/x/tools/gopls@latest` |
 | Rust | `rust-analyzer` | `rustup component add rust-analyzer` |
 | C/C++ | `clangd` | OS 패키지 매니저 또는 LLVM 설치 |
+| Java | `jdtls` | [eclipse.org/jdtls](https://projects.eclipse.org/projects/eclipse.jdt.ls) 또는 OS 패키지 매니저 |
+| Kotlin | `kotlin-language-server` | [github.com/fwcd/kotlin-language-server](https://github.com/fwcd/kotlin-language-server) |
 
 ## 동작
 
@@ -66,7 +68,9 @@ node <plugin-root>/scripts/sdd-lsp.mjs status
     "python": { "command": "pyright-langserver", "installed": false },
     "go": { "command": "gopls", "installed": true },
     "rust": { "command": "rust-analyzer", "installed": false },
-    "cpp": { "command": "clangd", "installed": false }
+    "cpp": { "command": "clangd", "installed": false },
+    "java": { "command": "jdtls", "installed": false },
+    "kotlin": { "command": "kotlin-language-server", "installed": false }
   }
 }
 ```

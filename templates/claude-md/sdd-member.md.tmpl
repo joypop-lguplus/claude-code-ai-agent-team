@@ -16,6 +16,24 @@
 - **스펙 섹션**: {{SPEC_SECTIONS}}
 - **체크리스트 항목**: {{CHECKLIST_ITEMS}}
 
+{{#if DOMAIN_ID}}
+## 도메인 경계
+
+이 워크 패키지는 **{{DOMAIN_NAME}}** 도메인에 속합니다.
+
+### 도메인 스펙 위치
+- 스펙 디렉토리: `docs/specs/domains/{{DOMAIN_ID}}/`
+- 체크리스트: `docs/specs/domains/{{DOMAIN_ID}}/06-spec-checklist.md`
+- 크로스 도메인 계약: `docs/specs/cross-domain/integration-points.md`
+
+### 도메인 경계 규칙
+1. **이 도메인의 스펙만 참조하세요**: `docs/specs/domains/{{DOMAIN_ID}}/` 내의 스펙 파일만 기준으로 합니다.
+2. **이 도메인의 체크리스트만 업데이트하세요**: `docs/specs/domains/{{DOMAIN_ID}}/06-spec-checklist.md`의 항목만 `[x]`로 표시합니다.
+3. **다른 도메인의 코드를 수정하지 마세요**: 다른 도메인의 소스 코드에 절대 손대지 않습니다.
+4. **크로스 도메인 인터페이스를 따르세요**: 다른 도메인의 API나 엔티티를 사용할 때는 `docs/specs/cross-domain/integration-points.md`에 정의된 계약을 따릅니다.
+5. **도메인 경계 위반 발견 시 보고**: 스펙에 도메인 경계를 넘는 요구사항이 있으면 팀 리더에게 보고합니다.
+{{/if}}
+
 ## 워크플로우
 
 1. 참조된 모든 스펙 섹션을 철저히 읽으세요.
@@ -32,6 +50,48 @@
    추가된 테스트: 단위 테스트 3개, 통합 테스트 1개
    수정된 파일: src/user/controller.ts, src/user/model.ts, tests/user.test.ts
    ```
+
+{{#if TDD_MODE}}
+## TDD 모드
+
+이 빌드는 **TDD(테스트 주도 개발) 모드**로 실행됩니다.
+
+### 테스트 파일 목록
+
+다음 테스트 파일이 `sdd-test-writer`에 의해 작성되었습니다:
+{{TEST_FILE_LIST}}
+
+### TDD 5대 규칙
+
+1. **테스트 파일을 먼저 읽으세요.** 코드 작성 전에 모든 테스트 파일을 읽고 기대 동작을 파악합니다.
+2. **테스트를 통과하는 코드를 작성하세요.** 테스트에 정의된 기대 동작을 충족하도록 구현합니다.
+3. **테스트 파일을 절대 수정하지 마세요.** 테스트 파일의 어떤 부분도 변경, 삭제, 추가하지 않습니다.
+4. **최소 구현 원칙을 따르세요.** 테스트를 통과하는 가장 단순한 코드를 작성합니다.
+5. **테스트를 실행하여 결과를 보고하세요.** 구현 후 `{{TEST_COMMAND}}`로 테스트를 실행하고 결과를 보고합니다.
+
+### 위반 시
+
+- 테스트 파일 수정 = 즉시 재작업 지시
+- 테스트 미실행 = 완료 보고 거부
+{{/if}}
+
+## LSP 도구
+
+코드 분석에 Language Server Protocol을 활용할 수 있습니다. Language Server가 설치되어 있지 않으면 이 단계를 건너뜁니다.
+
+```bash
+# 구현 완료 후 의미 에러 확인
+node <plugin-root>/scripts/sdd-lsp.mjs diagnostics <file>
+
+# 변경할 심볼의 영향 범위 확인
+node <plugin-root>/scripts/sdd-lsp.mjs references <file> <line> <col>
+
+# 인터페이스/추상 클래스의 구현체 확인
+node <plugin-root>/scripts/sdd-lsp.mjs implementations <file> <line> <col>
+
+# 타입 정보 확인
+node <plugin-root>/scripts/sdd-lsp.mjs hover <file> <line> <col>
+```
 
 ## 중요 사항
 

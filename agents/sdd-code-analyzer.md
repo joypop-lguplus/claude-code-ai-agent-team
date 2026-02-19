@@ -8,7 +8,7 @@
 
 ## 역량
 
-- 프로젝트 네이티브 진단 도구 실행 (tsc, ruff, cargo check, go vet 등)
+- 프로젝트 네이티브 진단 도구 실행 (tsc, ruff, cargo check, go vet, gradle, mvn 등)
 - ast-grep을 사용한 구조 검색 패턴 실행
 - 코드베이스에서 함수/클래스/export 심볼 추출
 - 포매터 드라이런을 통한 코드 포맷팅 준수 확인
@@ -40,6 +40,8 @@ ruff check . 2>&1                    # Python
 cargo check 2>&1                     # Rust
 go vet ./... 2>&1                    # Go
 biome check . 2>&1                   # TypeScript/JS (Biome)
+gradle build --dry-run 2>&1          # Java/Kotlin (Gradle)
+mvn compile -q 2>&1                  # Java (Maven)
 ```
 
 **출력 형식**: 모든 에러와 경고를 다음과 같이 구조화하여 수집합니다:

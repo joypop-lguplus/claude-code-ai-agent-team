@@ -34,6 +34,80 @@
 - **스펙 디렉토리**: `docs/specs/`
 - **설정**: `docs/specs/sdd-config.yaml`
 
+{{#if DOMAINS}}
+## 멀티 도메인 프로젝트
+
+이 프로젝트는 **{{DOMAIN_COUNT}}개 도메인**으로 구성됩니다:
+
+{{#each DOMAINS}}
+- **{{this.id}}**: {{this.name}} — {{this.description}}
+{{/each}}
+
+### 도메인 관리 규칙
+
+1. **도메인별 독립 라이프사이클**: 각 도메인은 독립적으로 intake → spec → plan → build → review를 진행할 수 있습니다.
+2. **도메인별 스펙**: `docs/specs/domains/<domain-id>/` 내에 도메인별 스펙이 위치합니다.
+3. **크로스 도메인 통합**: `docs/specs/cross-domain/`에 도메인 간 계약과 통합 체크리스트가 있습니다.
+4. **의존성 순서 빌드**: 도메인 의존성 순서에 따라 빌드합니다 (의존 없는 도메인 먼저).
+5. **프로젝트 통합 체크리스트**: `docs/specs/06-spec-checklist.md`는 모든 도메인 체크리스트의 자동 집계입니다.
+6. **팀 멤버에게 도메인 경계를 명확히 전달**: 각 워크 패키지에 도메인 ID를 포함하여 멤버가 다른 도메인 코드를 수정하지 않도록 합니다.
+
+### 도메인별 명령
+
+```
+/claude-sdd:sdd-intake --domain=<id>     # 특정 도메인 요구사항
+/claude-sdd:sdd-spec --domain=<id>       # 특정 도메인 스펙
+/claude-sdd:sdd-plan --domain=<id>       # 특정 도메인 태스크
+/claude-sdd:sdd-build --domain=<id>      # 특정 도메인 빌드
+/claude-sdd:sdd-review --domain=<id>     # 특정 도메인 리뷰
+/claude-sdd:sdd-build --integration      # 크로스 도메인 통합
+```
+{{/if}}
+
+{{#if TDD_MODE}}
+## TDD 모드 규칙
+
+이 빌드는 **TDD(테스트 주도 개발) 모드**로 실행됩니다.
+
+### Phase A/B/C 빌드 루프
+
+각 워크 패키지에 대해 다음 순서를 엄격히 따릅니다:
+
+1. **Phase A (Red)**: `sdd-test-writer` 에이전트로 팀 멤버를 생성하여 스펙 기반 실패 테스트를 작성합니다.
+   - 테스트가 모두 실패하는지 확인합니다 (Red 상태).
+   - 테스트가 통과하면 이미 구현이 존재하는 것이므로 확인 후 진행합니다.
+
+2. **Phase B (Green)**: `sdd-implementer` 에이전트로 팀 멤버를 생성하여 테스트 통과 코드를 작성합니다.
+   - 멤버에게 테스트 파일 목록을 전달합니다.
+   - **테스트 파일 수정 금지** 규칙을 명확히 전달합니다.
+
+3. **Phase C (Verify)**: 테스트를 실행하여 전체 통과를 확인합니다.
+   - `sdd-config.yaml`의 `test.command`로 테스트를 실행합니다.
+   - 모든 테스트 통과 = 워크 패키지 완료.
+   - 실패 테스트 존재 = Phase B 재작업 (최대 3회).
+
+### TDD 검증 규칙
+
+1. **테스트 파일 무결성 확인**: Phase B 완료 후 테스트 파일이 수정되지 않았는지 확인합니다.
+2. **테스트 수정 발견 시**: 즉시 재작업을 지시합니다. "테스트 파일을 수정하지 마세요. 테스트를 통과하도록 구현 코드만 수정하세요."
+3. **테스트 커버리지 확인**: 체크리스트 항목별로 최소 1개 테스트가 존재하는지 확인합니다.
+{{/if}}
+
+## LSP 활용 지시
+
+팀 멤버에게 워크 패키지를 할당할 때 LSP 활용을 지시합니다:
+
+1. **구현 전**: 멤버에게 `references`로 변경 대상 심볼의 영향 범위를 확인하도록 지시합니다.
+2. **구현 완료 시**: 멤버에게 `diagnostics`로 의미 에러가 0건인지 확인하도록 요구합니다.
+3. **리뷰 시**: `implementations`로 인터페이스에 대한 구현체가 모두 존재하는지 검증합니다.
+
+```bash
+# LSP 서버 설치 상태 확인 (빌드 시작 시 1회)
+node <plugin-root>/scripts/sdd-lsp.mjs status
+```
+
+Language Server가 설치되어 있지 않은 경우 LSP 관련 지시를 생략하고, `/claude-sdd:sdd-lint` 기반 분석만 사용합니다.
+
 ## 사용 가능한 명령어
 
 - `/claude-sdd:sdd-status` — 현재 진행 상황 대시보드 조회

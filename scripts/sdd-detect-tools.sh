@@ -172,11 +172,21 @@ detect_java_kotlin() {
       if cmd_exists ktfmt; then
         FORMATTER="ktfmt"
       fi
+      # LSP 서버
+      if cmd_exists kotlin-language-server; then
+        LSP_SERVER="kotlin-language-server"
+        LSP_AVAILABLE=true
+      fi
     else
       LANGUAGE="java"
       DIAGNOSTICS="gradle build --dry-run"
       if cmd_exists google-java-format; then
         FORMATTER="google-java-format --replace"
+      fi
+      # LSP 서버
+      if cmd_exists jdtls; then
+        LSP_SERVER="jdtls"
+        LSP_AVAILABLE=true
       fi
     fi
     return 0
@@ -185,6 +195,11 @@ detect_java_kotlin() {
     DIAGNOSTICS="mvn compile -q"
     if cmd_exists google-java-format; then
       FORMATTER="google-java-format --replace"
+    fi
+    # LSP 서버
+    if cmd_exists jdtls; then
+      LSP_SERVER="jdtls"
+      LSP_AVAILABLE=true
     fi
     return 0
   fi

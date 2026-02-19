@@ -30,6 +30,27 @@
 - 공개 인터페이스에 대한 테스트가 존재하는지 확인합니다.
 - 테스트가 명세 요구사항을 커버하는지 확인합니다.
 
+### 2.5단계: TDD 준수 확인 (TDD 모드)
+
+TDD 모드(`--tdd` 또는 `sdd-config.yaml teams.tdd: true`)에서는 추가 검증을 수행합니다:
+
+1. **테스트 선작성 여부**: `sdd-test-writer`가 작성한 테스트 파일이 존재하는지 확인합니다.
+2. **테스트 파일 무결성**: `sdd-implementer`가 테스트 파일을 수정하지 않았는지 확인합니다.
+   - Git diff로 테스트 파일의 변경 이력을 확인합니다.
+   - 테스트 파일이 수정된 경우 FAIL로 보고합니다.
+3. **테스트 커버리지**: 체크리스트 항목별로 최소 1개 테스트가 매핑되어 있는지 확인합니다.
+4. **최종 테스트 실행**: `sdd-config.yaml`의 `test.command`로 전체 테스트를 실행합니다.
+   - 모든 테스트 통과 = PASS
+   - 실패 테스트 존재 = FAIL (실패 목록 포함)
+
+```
+TDD 준수 확인:
+  테스트 선작성:     ✓ 8개 테스트 파일 존재
+  테스트 무결성:     ✓ 테스트 파일 미수정
+  항목별 커버리지:   ✓ 12/12 항목에 테스트 매핑
+  최종 테스트 실행:  ✓ 24/24 통과
+```
+
 ### 4단계: 진단 확인
 
 `sdd-code-analyzer` 에이전트를 실행하여 자동화된 분석을 수행합니다:
@@ -56,6 +77,38 @@
 | PASS | 코드 존재, 명세와 일치, 테스트 존재 |
 | FAIL | 코드 누락, 명세와 불일치, 또는 테스트 누락 |
 | PARTIAL | 코드 존재하나 불완전하거나 부분적으로 일치 |
+
+### 4.5단계: LSP 기반 심층 검증
+
+Language Server가 설치되어 있으면 추가 심층 검증을 수행합니다. 서버가 없으면 이 단계를 건너뜁니다.
+
+```bash
+# 의미 수준 에러 확인 (타입 에러, 미해결 참조 등)
+node <plugin-root>/scripts/sdd-lsp.mjs diagnostics <file>
+
+# 명세 항목의 API가 실제 사용되는지 확인
+node <plugin-root>/scripts/sdd-lsp.mjs references <file> <line> <col>
+
+# 구현된 심볼이 명세와 일치하는지 확인
+node <plugin-root>/scripts/sdd-lsp.mjs symbols <file>
+
+# 인터페이스의 구현체가 모두 존재하는지 확인
+node <plugin-root>/scripts/sdd-lsp.mjs implementations <file> <line> <col>
+```
+
+검증 항목:
+1. **diagnostics**: 모든 구현 파일에 대해 LSP 진단을 실행하여 에러 0건 확인
+2. **references**: 명세에 정의된 공개 API가 실제로 사용되는지 참조 추적
+3. **symbols**: 파일의 심볼 테이블을 추출하여 명세에 정의된 인터페이스와 매칭
+4. **implementations**: 인터페이스/추상 클래스에 대한 구현체가 모두 존재하는지 확인
+
+```
+LSP 심층 검증:
+  diagnostics:      0 에러, 2 경고 → 통과
+  API 참조 확인:    12/12 공개 API가 사용됨 → 통과
+  심볼 매칭:        28/28 명세 심볼 존재 → 통과
+  구현체 확인:      4/4 인터페이스에 구현체 존재 → 통과
+```
 
 ## 출력: 리뷰 리포트
 
@@ -107,3 +160,19 @@
 3. **객관적으로 판단합니다.** 코드 품질에 대한 개인 의견이 아니라 명세만이 기준입니다.
 4. **정직하게 표시합니다.** `[x]`로 표시된 항목이 실제로 명세와 일치하지 않으면 FAIL로 보고합니다.
 5. **증거를 포함합니다.** 모든 PASS에는 구현이 존재하는 파일과 줄을 명시합니다.
+
+## 멀티 도메인 모드
+
+멀티 도메인 프로젝트에서 특정 도메인 리뷰 시:
+
+### 도메인 스코프 리뷰
+1. **체크리스트**: `docs/specs/domains/{{DOMAIN_ID}}/06-spec-checklist.md`를 기준으로 검증합니다.
+2. **스펙 참조**: `docs/specs/domains/{{DOMAIN_ID}}/` 내의 스펙을 참조합니다.
+3. **리포트 출력**: `docs/specs/domains/{{DOMAIN_ID}}/08-review-report.md`를 생성합니다.
+4. **크로스 도메인 검증**: `docs/specs/cross-domain/integration-checklist.md`의 해당 도메인 관련 항목도 함께 검증합니다.
+
+### 크로스 도메인 통합 리뷰
+크로스 도메인 통합 리뷰 시:
+1. `docs/specs/cross-domain/integration-checklist.md`의 모든 항목을 검증합니다.
+2. 각 통합 포인트(`integration-points.md`)에 정의된 계약이 양쪽 도메인에서 준수되는지 확인합니다.
+3. 도메인 간 FK 참조, API 호출 규격, 데이터 형식이 일치하는지 검증합니다.

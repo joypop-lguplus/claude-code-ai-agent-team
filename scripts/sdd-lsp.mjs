@@ -30,10 +30,10 @@ import { fileURLToPath } from 'node:url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PLUGIN_ROOT = resolve(__dirname, '..');
 
-// 전체 타임아웃 (60초)
-const GLOBAL_TIMEOUT = 60_000;
+// 전체 타임아웃 (120초 — jdtls 등 느린 서버 대응)
+const GLOBAL_TIMEOUT = 120_000;
 const globalTimer = setTimeout(() => {
-  output({ error: '전체 타임아웃 (60초) 초과' });
+  output({ error: '전체 타임아웃 (120초) 초과' });
   process.exit(1);
 }, GLOBAL_TIMEOUT);
 
@@ -66,7 +66,7 @@ function usage() {
  */
 function detectProjectRoot(startPath) {
   let dir = resolve(startPath);
-  const markers = ['.git', 'package.json', 'go.mod', 'Cargo.toml', 'pyproject.toml', 'setup.py', 'CMakeLists.txt'];
+  const markers = ['.git', 'package.json', 'go.mod', 'Cargo.toml', 'pyproject.toml', 'setup.py', 'CMakeLists.txt', 'build.gradle', 'build.gradle.kts', 'pom.xml', 'settings.gradle', 'settings.gradle.kts'];
 
   for (let i = 0; i < 20; i++) {
     for (const marker of markers) {
