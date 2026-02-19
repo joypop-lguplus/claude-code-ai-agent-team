@@ -37,25 +37,40 @@ description: Agent Teams로 워크 패키지를 구현합니다. 품질 루프(�
 
 ---
 
-## 핵심 메커니즘: 품질 루프
+## 핵심 메커니즘: Agent Teams 병렬 빌드 + 품질 루프
+
+**중요: 같은 단계(stage)의 워크 패키지는 반드시 병렬로 실행합니다.**
 
 ```
 팀 리더 (현재 세션, opus):
   1. 태스크 계획 읽기 (07-task-plan.md)
-  2. 현재 단계의 각 워크 패키지에 대해:
-     a. sdd-implementer 에이전트로 팀 멤버 생성
-     b. 전달: 워크 패키지 태스크 + 스펙 참조 + 멤버 CLAUDE.md
-     c. 완료 대기
-  3. 체크리스트 검증:
+     - 워크 패키지를 실행 단계(stage)별로 그룹화
+     - 예: Stage 1 = [WP-1, WP-2, WP-3] (병렬), Stage 2 = [WP-4] (순차)
+
+  2. 각 실행 단계(stage)에 대해:
+
+     a. TeamCreate로 팀 생성 (team_name: "sdd-build")
+     b. TaskCreate로 각 워크 패키지를 태스크로 등록
+     c. Task 도구로 팀 멤버를 **동시에** 생성 (한 번의 메시지에 여러 Task 호출):
+        - Task(team_name="sdd-build", name="wp-1", subagent_type="general-purpose")
+        - Task(team_name="sdd-build", name="wp-2", subagent_type="general-purpose")
+        - Task(team_name="sdd-build", name="wp-3", subagent_type="general-purpose")
+        ※ 각 팀 멤버의 prompt에 sdd-implementer 에이전트 역할 + WP 태스크 + 스펙 참조 포함
+     d. 모든 팀 멤버의 완료 대기 (idle 알림 수신)
+
+  3. 전체 워크 패키지 완료 후 체크리스트 검증:
      - 06-spec-checklist.md 읽기
      - 배정된 각 항목에 대해:
        - [x]로 표시되었는가?
        - 코드가 실제로 존재하는가?
      - [ ] 항목이 남아있으면 → 재작업 사이클
-     - 모두 [x]이면 → 다음 워크 패키지 또는 완료
+     - 모두 [x]이면 → 다음 단계 또는 완료
+
+  4. 팀 멤버에게 shutdown_request 전송 후 다음 단계로
 
 재작업 사이클:
-  팀 리더가 미완료 항목을 식별하고 구체적인 피드백을 전달합니다:
+  팀 리더가 미완료 항목을 식별하고, 해당 WP 담당 멤버에게 SendMessage로
+  구체적인 피드백을 전달합니다:
   "항목 API-003, DM-005가 미완료입니다.
    API-003: UserController에 422 에러 핸들러가 없습니다.
    DM-005: email 필드 유효성 검사가 구현되지 않았습니다.
@@ -65,43 +80,78 @@ description: Agent Teams로 워크 패키지를 구현합니다. 품질 루프(�
   3회 후 → 사용자에게 에스컬레이션.
 ```
 
+### 병렬 실행 예시
+
+```
+Stage 1 (병렬):
+  ┌─ 팀 멤버 "wp-1" (Sonnet) → WP-1: User 모듈
+  ├─ 팀 멤버 "wp-2" (Sonnet) → WP-2: Auth 모듈
+  └─ 팀 멤버 "wp-3" (Sonnet) → WP-3: Payment 모듈
+  [전원 완료 대기]
+
+체크리스트 검증 → 재작업 필요 시 해당 멤버에게만 메시지 전송
+
+Stage 2 (순차, Stage 1 완료 후):
+  └─ 팀 멤버 "wp-4" (Sonnet) → WP-4: Integration
+  [완료 대기]
+
+체크리스트 검증 → 완료
+```
+
 ---
 
 ## TDD 모드 빌드 루프
 
 `--tdd` 플래그가 있거나 `sdd-config.yaml`의 `teams.tdd: true`인 경우, 각 워크 패키지에 대해 기존 빌드 루프 대신 **Phase A/B/C 빌드 루프**를 실행합니다.
 
-### TDD Phase A (Red): 실패 테스트 작성
+**TDD에서도 같은 단계의 워크 패키지는 병렬로 실행합니다.** 각 WP의 Phase A→B→C는 독립적으로 진행됩니다.
 
-1. **`sdd-test-writer` 에이전트로 팀 멤버 생성**:
-   - 에이전트: `sdd-test-writer`
-   - 컨텍스트: 워크 패키지 태스크, 관련 스펙 파일, 체크리스트 항목
-   - 지시: "이 워크 패키지의 스펙에 기반하여 실패하는 테스트를 작성하세요."
+### TDD Phase A (Red): 실패 테스트 작성 — 병렬
 
-2. **테스트 파일 확인**:
-   - 테스트 파일이 생성되었는지 확인합니다.
-   - `sdd-config.yaml`의 `test.command`로 테스트를 실행하여 모두 실패하는지 확인합니다 (Red 상태).
-   - 테스트가 통과하면 이미 구현이 존재하는 것이므로 사용자에게 알립니다.
+같은 단계의 모든 WP에 대해 `sdd-test-writer` 팀 멤버를 **동시에** 생성합니다:
 
 ```
-TDD Phase A — 워크 패키지 WP-1:
-  테스트 작성: sdd-test-writer 실행 중...
-  생성된 테스트: 3개 파일, 8개 테스트
-  테스트 실행: 8/8 실패 (Red 상태 확인 ✓)
+# 한 번의 메시지에서 여러 Task를 동시에 호출
+Task(team_name="sdd-build", name="wp-1-test", model="sonnet",
+     prompt="당신은 sdd-test-writer입니다. WP-1의 스펙에 기반하여 실패하는 테스트를 작성하세요...")
+Task(team_name="sdd-build", name="wp-2-test", model="sonnet",
+     prompt="당신은 sdd-test-writer입니다. WP-2의 스펙에 기반하여 실패하는 테스트를 작성하세요...")
+```
+
+모든 테스트 작성자가 완료되면:
+- 테스트 파일이 생성되었는지 확인합니다.
+- `sdd-config.yaml`의 `test.command`로 테스트를 실행하여 모두 실패하는지 확인합니다 (Red 상태).
+- 테스트가 통과하면 이미 구현이 존재하는 것이므로 사용자에게 알립니다.
+- 테스트 작성자 멤버에게 `shutdown_request`를 보냅니다.
+
+```
+TDD Phase A — 병렬 실행:
+  WP-1 테스트 작성: sdd-test-writer 실행 중...  ┐
+  WP-2 테스트 작성: sdd-test-writer 실행 중...  ├─ 동시 진행
+  WP-3 테스트 작성: sdd-test-writer 실행 중...  ┘
+  [전원 완료]
+  WP-1: 3개 파일, 8개 테스트 — 8/8 실패 (Red ✓)
+  WP-2: 2개 파일, 5개 테스트 — 5/5 실패 (Red ✓)
+  WP-3: 4개 파일, 12개 테스트 — 12/12 실패 (Red ✓)
   Phase B로 진행합니다.
 ```
 
-### TDD Phase B (Green): 테스트 통과 구현
+### TDD Phase B (Green): 테스트 통과 구현 — 병렬
 
-1. **`sdd-implementer` 에이전트로 팀 멤버 생성**:
-   - 에이전트: `sdd-implementer`
-   - 컨텍스트: 워크 패키지 태스크, 관련 스펙 파일, **테스트 파일 목록**, 체크리스트 항목
-   - CLAUDE.md: TDD 모드 블록이 포함된 멤버 CLAUDE.md
-   - **추가 지시**: "테스트 파일을 먼저 읽고, 모든 테스트가 통과하도록 구현 코드를 작성하세요. 테스트 파일은 절대 수정하지 마세요."
+같은 단계의 모든 WP에 대해 `sdd-implementer` 팀 멤버를 **동시에** 생성합니다:
 
-2. **테스트 파일 무결성 확인**:
-   - Phase B 완료 후 테스트 파일이 수정되지 않았는지 확인합니다.
-   - 수정된 경우 재작업을 지시합니다: "테스트 파일이 수정되었습니다. 테스트 파일을 원래대로 복원하고 구현 코드만 수정하세요."
+```
+Task(team_name="sdd-build", name="wp-1-impl", model="sonnet",
+     prompt="당신은 sdd-implementer입니다. TDD 모드입니다.
+             테스트 파일을 먼저 읽고, 모든 테스트가 통과하도록 구현하세요.
+             테스트 파일은 절대 수정하지 마세요. ...")
+Task(team_name="sdd-build", name="wp-2-impl", model="sonnet",
+     prompt="당신은 sdd-implementer입니다. TDD 모드입니다. ...")
+```
+
+모든 구현자가 완료되면:
+- **테스트 파일 무결성 확인**: Phase B 완료 후 테스트 파일이 수정되지 않았는지 확인합니다.
+- 수정된 경우 해당 멤버에게 재작업을 지시합니다: "테스트 파일이 수정되었습니다. 테스트 파일을 원래대로 복원하고 구현 코드만 수정하세요."
 
 ### TDD Phase C (Verify): 테스트 실행 검증
 
@@ -119,7 +169,7 @@ TDD Phase C — 워크 패키지 WP-1:
 
 ### TDD 재작업 사이클
 
-Phase C에서 실패 시 Phase B+C를 반복합니다 (최대 3회):
+Phase C에서 실패 시 Phase B+C를 반복합니다 (최대 3회). 해당 WP 담당 멤버에게 `SendMessage`로 재작업을 지시합니다:
 
 ```
 TDD 재작업 사이클 1/3:
@@ -127,10 +177,13 @@ TDD 재작업 사이클 1/3:
   - [FAIL] API-001: GET /users 페이지네이션 — Expected 20 items, got 0
   - [FAIL] DM-001: User 엔티티 email 필드 — Field not found
 
-  sdd-implementer에게 재작업 지시를 전달 중...
-  "다음 테스트가 실패합니다. 테스트를 수정하지 말고 구현 코드만 수정하세요:
-   1. API-001: 페이지네이션 로직 구현 필요
-   2. DM-001: User 모델에 email 필드 추가 필요"
+  → SendMessage(recipient="wp-1-impl", content="다음 테스트가 실패합니다.
+    테스트를 수정하지 말고 구현 코드만 수정하세요:
+    1. API-001: 페이지네이션 로직 구현 필요
+    2. DM-001: User 모델에 email 필드 추가 필요")
+
+  여러 WP에 실패가 있으면 동시에 메시지 전송:
+  → SendMessage(recipient="wp-2-impl", content="...")
 ```
 
 3회 재작업 후에도 실패 → 기존 에스컬레이션 프로세스와 동일하게 사용자에게 보고합니다.
@@ -146,37 +199,66 @@ TDD 재작업 사이클 1/3:
 - 실행 단계 (병렬 vs 순차)
 - 현재 진행 상황 (완료된 WP 확인)
 
-### 2단계: 워크 패키지 실행
+### 2단계: 팀 생성 및 병렬 워크 패키지 실행
 
-현재 실행 단계의 각 워크 패키지에 대해:
+현재 실행 단계(stage)의 모든 워크 패키지를 **동시에** 실행합니다.
 
-1. **팀 멤버 실행** (Agent Teams 사용):
-   - 에이전트: `sdd-implementer`
-   - 컨텍스트: 워크 패키지 태스크, 관련 스펙 파일, 체크리스트 항목
-   - CLAUDE.md: `docs/specs/wp-N-member.md`의 내용
+1. **팀 생성**: `TeamCreate`로 팀을 생성합니다 (team_name: `"sdd-build"`)
 
-2. **진행 상황 모니터링**:
-   - 체크리스트 항목 완료 추적
-   - 멤버가 보고한 문제 또는 모호한 사항 기록
+2. **태스크 등록**: `TaskCreate`로 각 워크 패키지를 태스크로 등록합니다
+
+3. **팀 멤버 동시 생성**: `Task` 도구를 **한 번의 메시지에 여러 개 호출**하여 팀 멤버를 병렬로 생성합니다:
+   ```
+   # 반드시 하나의 메시지에서 여러 Task를 동시에 호출합니다!
+   Task(
+     team_name="sdd-build", name="wp-1",
+     subagent_type="general-purpose", model="sonnet",
+     prompt="당신은 sdd-implementer입니다. [agents/sdd-implementer.md 내용]
+             워크 패키지 WP-1: [태스크 목록]
+             스펙 참조: [파일 경로]
+             체크리스트 항목: [항목 목록]
+             멤버 규칙: [wp-1-member.md 내용]"
+   )
+   Task(
+     team_name="sdd-build", name="wp-2",
+     subagent_type="general-purpose", model="sonnet",
+     prompt="당신은 sdd-implementer입니다. [...]
+             워크 패키지 WP-2: [태스크 목록] ..."
+   )
+   Task(
+     team_name="sdd-build", name="wp-3",
+     subagent_type="general-purpose", model="sonnet",
+     prompt="당신은 sdd-implementer입니다. [...]
+             워크 패키지 WP-3: [태스크 목록] ..."
+   )
+   ```
+
+4. **전원 완료 대기**: 모든 팀 멤버가 idle/완료될 때까지 대기합니다
+   - 팀 멤버가 완료 보고를 보내면 해당 태스크를 `TaskUpdate`로 completed 처리
+   - 문제 보고를 받으면 기록
 
 ### 3단계: 품질 검증 루프
 
-팀 멤버가 완료를 보고한 후:
+**모든 병렬 워크 패키지가 완료된 후** 체크리스트를 일괄 검증합니다:
 
 1. `docs/specs/06-spec-checklist.md` 읽기
-2. 배정된 모든 체크리스트 항목 확인
+2. 각 워크 패키지별 배정된 체크리스트 항목 확인
 3. 여전히 `[ ]`인 항목에 대해:
    - 누락된 사항 식별
-   - 구체적인 재작업 지시 생성
-   - 팀 멤버에게 재배정
+   - 해당 WP 담당 팀 멤버에게 `SendMessage`로 구체적인 재작업 지시 전달
+   - 여러 팀 멤버에게 재작업이 필요하면 **동시에 메시지 전송**
 
 ```
 재작업 사이클 1/3:
-  미완료 항목:
+  WP-1 미완료 항목:
   - API-003: UserController에 422 에러 핸들러 누락
-  - DM-005: User 모델에 email 유효성 검사 미구현
+  → SendMessage(recipient="wp-1", content="API-003: 422 에러 핸들러를 추가하세요...")
 
-  팀 멤버 1에게 재작업 지시를 전달 중...
+  WP-2 미완료 항목:
+  - DM-005: User 모델에 email 유효성 검사 미구현
+  → SendMessage(recipient="wp-2", content="DM-005: email 유효성 검사를 구현하세요...")
+
+  [재작업 완료 대기]
 ```
 
 4. 3회 실패 후:
@@ -193,6 +275,8 @@ TDD 재작업 사이클 1/3:
 2. 스펙 조정
 3. 이 항목들 건너뛰기
 ```
+
+5. **팀 정리**: 현재 단계 완료 시 `SendMessage(type="shutdown_request")`로 팀 멤버를 종료하고, 다음 단계로 진행합니다
 
 ### 3.5단계: 완료 전 린트 및 포맷
 
@@ -213,11 +297,13 @@ TDD 재작업 사이클 1/3:
 
 이 단계는 권장 사항이지만 필수는 아닙니다. `/claude-sdd:sdd-review` 품질 게이트에서 나머지 문제를 잡아냅니다.
 
-### 4단계: 단계 전환
+### 4단계: 단계 전환 및 팀 정리
 
 한 단계의 모든 워크 패키지가 완료되면:
-- 다음 실행 단계로 이동
-- 또는 모든 단계가 완료된 경우 완료 보고
+1. 현재 팀 멤버에게 `SendMessage(type="shutdown_request")`로 종료 요청
+2. 모든 멤버 종료 확인 후 `TeamDelete`로 팀 리소스 정리
+3. 다음 실행 단계로 이동 (새 `TeamCreate` + 새 멤버 생성)
+4. 모든 단계가 완료된 경우 완료 보고
 
 ```
 빌드 단계 완료!
@@ -266,21 +352,27 @@ TDD 재작업 사이클 1/3:
 1. `docs/specs/domains/<id>/07-task-plan.md`를 읽어 워크 패키지를 파싱합니다.
 2. `docs/specs/domains/<id>/06-spec-checklist.md`를 읽어 체크리스트를 확인합니다.
 
-3. 각 워크 패키지에 대해 **팀 멤버를 실행**합니다:
-   - 에이전트: `sdd-implementer`
+3. **팀 생성 및 병렬 워크 패키지 실행**: 단일 도메인 모드와 동일한 병렬 패턴을 사용합니다.
+   - `TeamCreate`로 팀 생성 (team_name: `"sdd-build-<domain-id>"`)
+   - 같은 실행 단계의 모든 WP를 `Task` 도구로 **동시에** 생성:
+     ```
+     Task(team_name="sdd-build-device-mgmt", name="dev-wp-1",
+          subagent_type="general-purpose", model="sonnet",
+          prompt="당신은 sdd-implementer입니다. [...]
+                  도메인 경계 규칙:
+                  - 이 도메인(device-mgmt)에 속하는 코드만 생성/수정하세요.
+                  - 다른 도메인의 코드를 직접 수정하지 마세요.
+                  - 다른 도메인의 기능이 필요한 경우 공개 인터페이스(API)를 통해 호출하세요.
+                  - 공유 코드(shared/, common/ 등)를 수정해야 하는 경우 리더에게 보고하세요.")
+     Task(team_name="sdd-build-device-mgmt", name="dev-wp-2", ...)
+     Task(team_name="sdd-build-device-mgmt", name="dev-wp-3", ...)
+     ```
    - 컨텍스트: 도메인 워크 패키지 태스크, 도메인 스펙 파일, 도메인 체크리스트 항목
    - CLAUDE.md: `docs/specs/domains/<id>/wp-<PREFIX>-WP-N-member.md`의 내용
-   - **도메인 경계 규칙 추가 전달**:
-     ```
-     도메인 경계 규칙:
-     - 이 도메인(device-mgmt)에 속하는 코드만 생성/수정하세요.
-     - 다른 도메인(subscription, rate-plan 등)의 코드를 직접 수정하지 마세요.
-     - 다른 도메인의 기능이 필요한 경우, 해당 도메인의 공개 인터페이스(API)를 통해 호출하세요.
-     - 공유 코드(shared/, common/ 등)를 수정해야 하는 경우 리더에게 보고하세요.
-     ```
 
-4. **품질 검증 루프**: 단일 도메인과 동일 (최대 3회 재작업)
+4. **품질 검증 루프**: 단일 도메인과 동일한 병렬 패턴 (최대 3회 재작업)
    - 도메인 체크리스트 (`domains/<id>/06-spec-checklist.md`) 기준으로 검증
+   - 재작업 시 해당 WP 담당 멤버에게 `SendMessage`로 구체적 피드백 전달
 
 5. **프로젝트 통합 체크리스트 자동 업데이트**:
    - 도메인 빌드가 완료되면, 프로젝트 수준 `docs/specs/06-spec-checklist.md`에서 해당 도메인 섹션의 항목을 자동으로 `[x]`로 업데이트합니다.
@@ -333,13 +425,15 @@ TDD 재작업 사이클 1/3:
 2. `cross-domain/integration-points.md`를 읽어 통합 포인트를 파싱합니다.
 3. `cross-domain/integration-checklist.md`를 읽어 통합 체크리스트를 확인합니다.
 
-4. 통합 워크 패키지를 생성하고 팀 멤버에게 배정합니다:
-   - 도메인 간 API 연동 검증
-   - 공유 엔티티 정합성 확인
-   - 이벤트 기반 통합 검증 (해당하는 경우)
-   - 통합 테스트 작성
+4. **팀 생성 및 병렬 통합 워크 패키지 실행**:
+   - `TeamCreate`로 통합 팀 생성 (team_name: `"sdd-build-integration"`)
+   - 통합 워크 패키지를 `Task` 도구로 **동시에** 생성:
+     - 도메인 간 API 연동 검증
+     - 공유 엔티티 정합성 확인
+     - 이벤트 기반 통합 검증 (해당하는 경우)
+     - 통합 테스트 작성
 
-5. 품질 검증 루프 (최대 3회 재작업)
+5. 품질 검증 루프: 단일 도메인과 동일한 병렬 패턴 (최대 3회 재작업)
 
 6. 프로젝트 통합 체크리스트의 크로스 도메인 섹션 업데이트
 
