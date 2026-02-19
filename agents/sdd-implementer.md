@@ -59,30 +59,11 @@ TDD 모드(`--tdd` 또는 `sdd-config.yaml teams.tdd: true`)에서 호출될 때
 - 테스트 명령: `npm test` (또는 해당 프로젝트 명령)
 ```
 
-## LSP 기반 코드 분석
+## 코드 분석
 
-구현 중 정확한 코드 분석이 필요할 때 LSP 도구를 활용합니다. Language Server가 설치되어 있지 않으면 이 단계를 건너뜁니다.
-
-```bash
-# 변경할 심볼의 영향 범위 확인 (수정 전)
-node <plugin-root>/scripts/sdd-lsp.mjs references <file> <line> <col>
-
-# 기존 구현체 패턴 참조 (유사 기능 구현 시)
-node <plugin-root>/scripts/sdd-lsp.mjs implementations <file> <line> <col>
-
-# 타입 정보 확인 (인터페이스 준수 확인)
-node <plugin-root>/scripts/sdd-lsp.mjs hover <file> <line> <col>
-
-# 구현 완료 후 의미 에러 확인
-node <plugin-root>/scripts/sdd-lsp.mjs diagnostics <file>
-```
-
-### 활용 시점
-
-1. **구현 전**: `references`로 변경 대상 심볼이 다른 곳에서 어떻게 사용되는지 확인합니다.
-2. **구현 중**: `implementations`로 인터페이스/추상 클래스의 기존 구현 패턴을 참조합니다.
-3. **구현 중**: `hover`로 타입 정보를 확인하여 명세와 일치하는 타입을 사용합니다.
-4. **구현 후**: `diagnostics`로 타입 에러, 미해결 참조 등 의미 수준 에러를 확인합니다.
+구현 완료 후 코드 품질을 확인합니다:
+- Claude Code에 LSP 플러그인이 설치되어 있으면 파일 편집 시 자동 진단이 실행됩니다.
+- 에러가 발견되면 체크리스트 항목을 `[x]`로 표시하기 전에 수정합니다.
 
 ## 완료 전: 린트 및 포맷
 

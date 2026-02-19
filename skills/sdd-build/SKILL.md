@@ -207,31 +207,33 @@ TDD 재작업 사이클 1/3:
 
 2. **태스크 등록**: `TaskCreate`로 각 워크 패키지를 태스크로 등록합니다
 
-3. **팀 멤버 동시 생성**: `Task` 도구를 **한 번의 메시지에 여러 개 호출**하여 팀 멤버를 병렬로 생성합니다:
+3. **팀 멤버 동시 생성**: `Task` 도구를 **한 번의 메시지에 여러 개 호출**하여 병렬 생성:
+
+   **프롬프트 구성** (각 멤버마다):
+   1. `agents/sdd-implementer.md` 파일을 Read 도구로 **먼저 읽고** 전체 내용을 프롬프트 시작 부분에 포함합니다.
+      (TDD Phase A: `agents/sdd-test-writer.md` 사용)
+   2. 워크 패키지 컨텍스트 추가: 태스크 목록, 스펙 참조 경로, 체크리스트 항목.
+   3. 대상 프로젝트에 `docs/specs/wp-N-member.md`가 있으면 추가.
+
    ```
    # 반드시 하나의 메시지에서 여러 Task를 동시에 호출합니다!
    Task(
      team_name="sdd-build", name="wp-1",
      subagent_type="general-purpose", model="sonnet",
-     prompt="당신은 sdd-implementer입니다. [agents/sdd-implementer.md 내용]
+     prompt="[agents/sdd-implementer.md 전체 내용을 여기에 삽입]
+
+             --- 워크 패키지 할당 ---
              워크 패키지 WP-1: [태스크 목록]
              스펙 참조: [파일 경로]
              체크리스트 항목: [항목 목록]
-             멤버 규칙: [wp-1-member.md 내용]"
-   )
-   Task(
-     team_name="sdd-build", name="wp-2",
-     subagent_type="general-purpose", model="sonnet",
-     prompt="당신은 sdd-implementer입니다. [...]
-             워크 패키지 WP-2: [태스크 목록] ..."
-   )
-   Task(
-     team_name="sdd-build", name="wp-3",
-     subagent_type="general-purpose", model="sonnet",
-     prompt="당신은 sdd-implementer입니다. [...]
-             워크 패키지 WP-3: [태스크 목록] ..."
+
+             --- 멤버 규칙 ---
+             [wp-1-member.md 내용]"
    )
    ```
+
+   **중요**: `[agents/sdd-implementer.md 전체 내용을 여기에 삽입]`은 플레이스홀더가 아닙니다.
+   실제로 해당 파일을 Read 도구로 읽어서 그 텍스트를 프롬프트에 삽입하세요.
 
 4. **전원 완료 대기**: 모든 팀 멤버가 idle/완료될 때까지 대기합니다
    - 팀 멤버가 완료 보고를 보내면 해당 태스크를 `TaskUpdate`로 completed 처리
