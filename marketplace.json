@@ -27,6 +27,9 @@
       "requirements",
       "specifications",
       "quality-gate",
+      "tdd",
+      "test-driven-development",
+      "change-management",
       "confluence",
       "jira",
       "checklist",
@@ -43,6 +46,10 @@
         {
           "name": "sdd-auto",
           "description": "SDD lifecycle orchestrator (auto-detect phase)"
+        },
+        {
+          "name": "sdd-kickstart",
+          "description": "Deep interview + full pipeline auto-execution"
         },
         {
           "name": "sdd-init",
@@ -62,7 +69,7 @@
         },
         {
           "name": "sdd-build",
-          "description": "Implementation with Agent Teams quality loop"
+          "description": "Implementation with Agent Teams quality loop (TDD mode supported)"
         },
         {
           "name": "sdd-review",
@@ -71,6 +78,10 @@
         {
           "name": "sdd-integrate",
           "description": "Integration, PR creation, and documentation"
+        },
+        {
+          "name": "sdd-change",
+          "description": "Change management: impact analysis, partial checklist update, TDD delta build"
         },
         {
           "name": "sdd-status",
@@ -96,15 +107,23 @@
         },
         {
           "name": "sdd-implementer",
-          "description": "Implements work packages as Agent Teams member"
+          "description": "Implements work packages as Agent Teams member (TDD mode supported)"
         },
         {
           "name": "sdd-reviewer",
-          "description": "Verifies implementation against spec checklist"
+          "description": "Verifies implementation against spec checklist (TDD compliance check)"
         },
         {
           "name": "sdd-code-analyzer",
           "description": "Automated code analysis with native tools, ast-grep, and LSP"
+        },
+        {
+          "name": "sdd-test-writer",
+          "description": "TDD test writer: generates failing tests from specs (no implementation code)"
+        },
+        {
+          "name": "sdd-change-analyst",
+          "description": "Change impact analysis: LSP/code analysis, spec delta generation, minimal impact principle"
         }
       ],
       "mcp_servers": [],

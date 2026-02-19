@@ -1,6 +1,6 @@
 ---
 name: sdd-init
-description: 새 프로젝트 또는 기존 프로젝트를 스펙 주도 개발(SDD)로 초기화합니다.
+description: 새 프로젝트 또는 기존 프로젝트를 스펙 주도 개발(SDD)로 초기화합니다. 멀티 도메인 프로젝트를 지원합니다.
 ---
 
 # /claude-sdd:sdd-init — SDD 프로젝트 초기화
@@ -10,14 +10,21 @@ description: 새 프로젝트 또는 기존 프로젝트를 스펙 주도 개발
 ## 사용법
 
 ```
-/claude-sdd:sdd-init new          # 신규 프로젝트 (greenfield)
-/claude-sdd:sdd-init legacy       # 기존 프로젝트 (brownfield)
+/claude-sdd:sdd-init new               # 신규 프로젝트 (greenfield)
+/claude-sdd:sdd-init legacy            # 기존 프로젝트 (brownfield)
+/claude-sdd:sdd-init new --domains     # 신규 멀티 도메인 프로젝트
+/claude-sdd:sdd-init legacy --domains  # 기존 멀티 도메인 프로젝트
+/claude-sdd:sdd-init add-domain <id>   # 기존 프로젝트에 도메인 추가
+/claude-sdd:sdd-init remove-domain <id> # 도메인 제거
 ```
 
 ## 인자
 
 - `new` — 완전히 새로운 프로젝트에 SDD를 설정
 - `legacy` — 변경 사항이 있는 기존 코드베이스에 SDD를 설정
+- `--domains` — 멀티 도메인 프로젝트로 초기화 (도메인 정의 인터뷰 진행)
+- `add-domain <id>` — 기존 프로젝트에 새 도메인을 추가
+- `remove-domain <id>` — 기존 도메인을 제거 (확인 필요)
 
 ## 동작
 
@@ -36,6 +43,48 @@ description: 새 프로젝트 또는 기존 프로젝트를 스펙 주도 개발
 
 템플릿을 채우고 `docs/specs/sdd-config.yaml`에 저장합니다.
 
+### 2.5단계: 도메인 정의 (`--domains` 인자가 있는 경우)
+
+사용자에게 도메인을 정의하기 위한 인터랙티브 인터뷰를 진행합니다:
+
+1. **도메인 수 질문**: "이 프로젝트에는 몇 개의 도메인이 있나요?"
+
+2. **각 도메인에 대해 질문**:
+   - **도메인 ID**: 영문 kebab-case (예: `device-mgmt`, `subscription`, `rate-plan`)
+   - **도메인 이름**: 표시용 이름 (예: "단말관리", "구독 서비스")
+   - **도메인 설명**: 1줄 설명
+   - **의존성**: 이 도메인이 의존하는 다른 도메인 ID 목록 (없으면 빈 배열)
+   - **도메인별 소스** (선택): Jira 에픽/스토리 키, Confluence 페이지 ID
+
+3. **도메인 구조 확인**: 전체 도메인 목록과 의존성 그래프를 표시하고 사용자에게 확인을 받습니다.
+
+4. `sdd-config.yaml`에 `domains` 섹션을 추가합니다:
+
+```yaml
+domains:
+  - id: "device-mgmt"
+    name: "단말관리"
+    description: "단말 등록, 조회, 상태 관리"
+    sources:
+      confluence: []
+      jira: ["DEV-100"]
+    dependencies: []
+
+  - id: "subscription"
+    name: "구독 서비스"
+    description: "구독 생성, 변경, 해지 관리"
+    sources:
+      confluence: ["PAGE-201"]
+      jira: ["SUB-100"]
+    dependencies: ["device-mgmt"]
+```
+
+5. 도메인별 디렉토리를 생성합니다:
+```
+docs/specs/domains/<domain-id>/   (각 도메인에 대해)
+docs/specs/cross-domain/
+```
+
 ### 3단계: CLAUDE.md 규칙 주입
 
 프로젝트 루트에 `CLAUDE.md`가 있는지 확인합니다. 없으면 생성합니다.
@@ -43,10 +92,11 @@ description: 새 프로젝트 또는 기존 프로젝트를 스펙 주도 개발
 `templates/claude-md/sdd-leader.md.tmpl`의 SDD 리더 규칙을 프로젝트의 `CLAUDE.md`에 추가합니다:
 - `{{PROJECT_NAME}}`을 실제 프로젝트 이름으로 교체
 - `{{PROJECT_TYPE}}`을 `new` 또는 `legacy`로 교체
+- 멀티 도메인인 경우: `{{DOMAINS}}` 관련 섹션을 활성화하고 도메인 정보를 채움
 
 ### 4단계: 설정 확인
 
-요약을 출력합니다:
+**단일 도메인인 경우**:
 ```
 SDD가 [project-name]에 대해 초기화되었습니다 (유형: new/legacy)
 
@@ -59,6 +109,74 @@ SDD가 [project-name]에 대해 초기화되었습니다 (유형: new/legacy)
   2. /claude-sdd:sdd-status — 프로젝트 대시보드 보기
 ```
 
+**멀티 도메인인 경우**:
+```
+SDD가 [project-name]에 대해 초기화되었습니다 (유형: new, 멀티 도메인)
+
+도메인:
+  - device-mgmt: 단말관리
+  - subscription: 구독 서비스 (의존: device-mgmt)
+  - rate-plan: 요금제
+  - rate-benefit: 요금제혜택 (의존: rate-plan, subscription)
+
+생성된 파일:
+  - docs/specs/sdd-config.yaml
+  - docs/specs/domains/device-mgmt/
+  - docs/specs/domains/subscription/
+  - docs/specs/domains/rate-plan/
+  - docs/specs/domains/rate-benefit/
+  - docs/specs/cross-domain/
+  - CLAUDE.md에 SDD 규칙 업데이트 완료
+
+다음 단계:
+  1. /claude-sdd:sdd-intake [--domain=<id> | --all] — 요구사항 수집
+  2. /claude-sdd:sdd-status — 프로젝트 대시보드 보기
+```
+
+---
+
+## add-domain 서브커맨드
+
+기존 프로젝트에 새 도메인을 추가합니다.
+
+### 동작
+
+1. `sdd-config.yaml`을 읽어 기존 도메인 목록을 확인합니다.
+2. 새 도메인 정보를 인터랙티브하게 질문합니다:
+   - 도메인 ID, 이름, 설명, 의존성, 소스 (2.5단계의 개별 도메인 질문과 동일)
+3. 기존 도메인 ID와 충돌하지 않는지 확인합니다.
+4. `sdd-config.yaml`의 `domains` 배열에 추가합니다.
+5. `docs/specs/domains/<new-domain-id>/` 디렉토리를 생성합니다.
+
+**단일 도메인 → 멀티 도메인 전환 시**:
+
+프로젝트가 기존에 단일 도메인 모드(`domains` 키 없음)로 진행되었고, 이미 스펙 파일(03~07)이 존재하는 경우:
+
+1. 사용자에게 질문합니다:
+   ```
+   이 프로젝트에는 이미 단일 도메인 스펙 파일이 존재합니다.
+   기존 스펙을 첫 번째 도메인으로 마이그레이션하시겠습니까?
+   1. 예 — 기존 파일을 domains/<first-domain-id>/로 복사합니다
+   2. 아니오 — 기존 파일을 유지하고 새 도메인만 추가합니다
+   ```
+2. "예"인 경우: 기존 `docs/specs/03-*.md` ~ `docs/specs/07-*.md`를 `docs/specs/domains/<id>/`로 복사합니다.
+3. `docs/specs/cross-domain/` 디렉토리를 생성합니다.
+
+## remove-domain 서브커맨드
+
+도메인을 제거합니다.
+
+### 동작
+
+1. 사용자에게 확인합니다: "정말로 [domain-name] 도메인을 제거하시겠습니까? 도메인의 모든 스펙 파일이 삭제됩니다."
+2. 확인 시:
+   - `sdd-config.yaml`에서 해당 도메인 항목을 제거합니다.
+   - `docs/specs/domains/<domain-id>/` 디렉토리를 삭제합니다.
+   - 다른 도메인의 `dependencies`에서 이 도메인 ID를 제거합니다.
+   - 프로젝트 통합 체크리스트를 업데이트합니다.
+
+---
+
 ## 의존성
 
 - 없음 (첫 번째 단계)
@@ -67,3 +185,4 @@ SDD가 [project-name]에 대해 초기화되었습니다 (유형: new/legacy)
 
 - `docs/specs/sdd-config.yaml`
 - `CLAUDE.md` (생성 또는 업데이트)
+- 멀티 도메인 시: `docs/specs/domains/*/` 디렉토리, `docs/specs/cross-domain/` 디렉토리

@@ -99,6 +99,31 @@
 | Configuration | 설정 | |
 | Dashboard | 대시보드 | |
 
+## TDD 및 변경 관리
+
+| 영어 | 한국어 | 비고 |
+|------|--------|------|
+| TDD (Test-Driven Development) | TDD (테스트 주도 개발) | 약어 TDD 병기 |
+| Red Phase | Red 단계 | 실패 테스트 작성 |
+| Green Phase | Green 단계 | 테스트 통과 코드 작성 |
+| Verify Phase | Verify 단계 | 전체 테스트 실행 |
+| Test Writer | 테스트 작성자 | |
+| Change Management | 변경 관리 | |
+| Change Request (CR) | 변경 요청 (CR) | 약어 CR 병기 |
+| Change Analyst | 변경 분석가 | |
+| Impact Analysis | 영향 분석 | |
+| Direct Impact | 직접 영향 | |
+| Indirect Impact | 간접 영향 | |
+| Regression Risk | 회귀 위험 | |
+| Regression Test | 회귀 테스트 | |
+| Spec Delta | 스펙 델타 | 변경된 스펙 부분 |
+| Partial Checklist Update | 체크리스트 부분 갱신 | |
+| Minimal Impact Principle | 최소 영향 원칙 | |
+| Change Work Package (CWP) | 변경 워크 패키지 (CWP) | |
+| Delta Build | 델타 빌드 | 변경분만 빌드 |
+| CHG- (Change Item) | CHG- (변경 항목) | 체크리스트 접두사 |
+| CHG-REG- (Regression Item) | CHG-REG- (회귀 항목) | 체크리스트 접두사 |
+
 ## 기타
 
 | 영어 | 한국어 | 비고 |

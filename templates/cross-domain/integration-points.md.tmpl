@@ -1,0 +1,80 @@
+# 도메인 간 통합 포인트
+
+> `/claude-sdd:sdd-spec`이 도메인 분석 결과로 자동 생성
+
+## 통합 포인트 목록
+
+| ID | 소스 도메인 | 대상 도메인 | 통합 유형 | 요약 |
+|----|-------------|-------------|-----------|------|
+| INT-001 | {{SOURCE_DOMAIN}} | {{TARGET_DOMAIN}} | {{INTEGRATION_TYPE}} | {{SUMMARY}} |
+| INT-002 | {{SOURCE_DOMAIN}} | {{TARGET_DOMAIN}} | {{INTEGRATION_TYPE}} | {{SUMMARY}} |
+
+> **통합 유형 범례**:
+> - `FK 참조` — 외래 키를 통한 직접 DB 참조
+> - `API 호출` — 동기 REST/gRPC 호출
+> - `이벤트` — 비동기 이벤트 기반 통신
+> - `공유 엔티티` — 여러 도메인이 공유하는 데이터 모델
+
+---
+
+## 통합 포인트 상세
+
+### INT-001: {{INTEGRATION_TITLE}}
+
+| 항목 | 값 |
+|------|-----|
+| 소스 도메인 | {{SOURCE_DOMAIN}} |
+| 대상 도메인 | {{TARGET_DOMAIN}} |
+| 통합 유형 | {{INTEGRATION_TYPE}} |
+| 방향 | {{DIRECTION}} |
+
+**설명**:
+
+{{INTEGRATION_DESCRIPTION}}
+
+**계약 상세**:
+
+{{CONTRACT_DETAILS}}
+
+```
+{{CONTRACT_SCHEMA_OR_SIGNATURE}}
+```
+
+**에러 시나리오**:
+
+| 시나리오 | 처리 방식 |
+|----------|-----------|
+| {{ERROR_SCENARIO}} | {{ERROR_HANDLING}} |
+
+---
+
+### INT-002: {{INTEGRATION_TITLE}}
+
+| 항목 | 값 |
+|------|-----|
+| 소스 도메인 | {{SOURCE_DOMAIN}} |
+| 대상 도메인 | {{TARGET_DOMAIN}} |
+| 통합 유형 | {{INTEGRATION_TYPE}} |
+| 방향 | {{DIRECTION}} |
+
+**설명**:
+
+{{INTEGRATION_DESCRIPTION}}
+
+**계약 상세**:
+
+{{CONTRACT_DETAILS}}
+
+```
+{{CONTRACT_SCHEMA_OR_SIGNATURE}}
+```
+
+**에러 시나리오**:
+
+| 시나리오 | 처리 방식 |
+|----------|-----------|
+| {{ERROR_SCENARIO}} | {{ERROR_HANDLING}} |
+
+---
+
+*생성 원본: 도메인 아키텍처 분석 | 관련 문서: cross-domain/dependency-map.md*

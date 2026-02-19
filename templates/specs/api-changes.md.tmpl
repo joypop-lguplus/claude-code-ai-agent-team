@@ -1,0 +1,87 @@
+# 03 — API 변경 사항
+
+> 변경 요청 `{{CR_ID}}`에 의해 `/claude-sdd:sdd-change`가 자동 생성
+
+## 변경 요약
+
+- **변경 요청**: {{CR_ID}} — {{CR_TITLE}}
+- **영향 범위**: {{AFFECTED_ENDPOINT_COUNT}}개 엔드포인트
+- **호환성**: {{BREAKING_CHANGE}} (호환성 깨짐 여부)
+
+## 변경된 엔드포인트
+
+### {{ENDPOINT_GROUP}}
+
+#### {{METHOD}} {{PATH}} — {{CHANGE_TYPE}}
+
+- **변경 유형**: {{ADD/MODIFY/DELETE}}
+- **스펙 ID**: {{SPEC_ID}}
+- **원본 스펙**: 03-api-spec.md#{{SECTION_REF}}
+- **변경 사유**: {{CHANGE_REASON}}
+
+**변경 전** (기존):
+
+```json
+{{BEFORE_SCHEMA}}
+```
+
+**변경 후** (신규):
+
+```json
+{{AFTER_SCHEMA}}
+```
+
+**변경 상세**:
+
+| 필드 | 변경 유형 | 이전 | 이후 | 설명 |
+|------|-----------|------|------|------|
+| {{FIELD}} | {{ADD/MODIFY/DELETE}} | {{BEFORE}} | {{AFTER}} | {{DESCRIPTION}} |
+
+**영향받는 에러 응답**:
+
+| 상태 코드 | 에러 코드 | 변경 내용 |
+|-----------|-----------|-----------|
+| {{STATUS}} | {{ERROR_CODE}} | {{CHANGE_DESCRIPTION}} |
+
+---
+
+## 신규 엔드포인트
+
+### {{METHOD}} {{PATH}}
+
+- **설명**: {{DESCRIPTION}}
+- **인증**: {{AUTH_REQUIRED}}
+- **스펙 ID**: {{SPEC_ID}}
+- **추가 사유**: {{ADDITION_REASON}}
+
+**요청**:
+
+```json
+{{REQUEST_SCHEMA}}
+```
+
+**응답** ({{STATUS_CODE}}):
+
+```json
+{{RESPONSE_SCHEMA}}
+```
+
+---
+
+## 삭제된 엔드포인트
+
+| 엔드포인트 | 스펙 ID | 삭제 사유 | 대안 |
+|------------|---------|-----------|------|
+| {{METHOD}} {{PATH}} | {{SPEC_ID}} | {{REASON}} | {{ALTERNATIVE}} |
+
+## 하위 호환성 계획
+
+{{BACKWARD_COMPATIBILITY_PLAN}}
+
+## 마이그레이션 가이드
+
+{{MIGRATION_GUIDE}}
+
+---
+
+*변경 요청: {{CR_ID}} | 원본: 09-change-request.md | 참조: 03-api-spec.md*

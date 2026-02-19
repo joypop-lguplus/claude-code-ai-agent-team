@@ -1,0 +1,76 @@
+# 스펙 준수 체크리스트: {{DOMAIN_NAME}} 도메인
+
+> 품질 게이트 검증을 위한 단일 진실 소스.
+> 완전히 구현 및 테스트된 항목만 `[x]`로 표시하세요.
+> 각 항목은 도메인 스펙 문서를 참조합니다.
+
+## 아키텍처 (ARCH)
+
+- [ ] {{DOMAIN_PREFIX}}-ARCH-001: 모듈 구조가 domains/{{DOMAIN_ID}}/02-architecture.md#modules와 일치
+- [ ] {{DOMAIN_PREFIX}}-ARCH-002: 모듈 의존성이 스펙 다이어그램과 일치
+- [ ] {{DOMAIN_PREFIX}}-ARCH-003: 다른 도메인과의 연동이 domains/{{DOMAIN_ID}}/02-architecture.md#integration과 일치
+
+{{ARCH_CHECKLIST_ITEMS}}
+
+## API (API)
+
+- [ ] {{DOMAIN_PREFIX}}-API-001: {{API_CHECKLIST_ITEM}} — domains/{{DOMAIN_ID}}/03-api-spec.md#{{SECTION}}
+
+{{API_CHECKLIST_ITEMS}}
+
+## 데이터 모델 (DM)
+
+- [ ] {{DOMAIN_PREFIX}}-DM-001: {{DM_CHECKLIST_ITEM}} — domains/{{DOMAIN_ID}}/04-data-model.md#{{SECTION}}
+
+{{DM_CHECKLIST_ITEMS}}
+
+## 컴포넌트 (COMP)
+
+- [ ] {{DOMAIN_PREFIX}}-COMP-001: {{COMP_CHECKLIST_ITEM}} — domains/{{DOMAIN_ID}}/05-components.md#{{SECTION}}
+
+{{COMP_CHECKLIST_ITEMS}}
+
+## 테스트 (TEST)
+
+- [ ] {{DOMAIN_PREFIX}}-TEST-001: {{TEST_CHECKLIST_ITEM}} — domains/{{DOMAIN_ID}}/05-components.md#tests
+
+{{TEST_CHECKLIST_ITEMS}}
+
+## 보안 (SEC)
+
+- [ ] {{DOMAIN_PREFIX}}-SEC-001: {{SEC_CHECKLIST_ITEM}} — domains/{{DOMAIN_ID}}/03-api-spec.md#auth
+
+{{SEC_CHECKLIST_ITEMS}}
+
+## 성능 (PERF)
+
+- [ ] {{DOMAIN_PREFIX}}-PERF-001: {{PERF_CHECKLIST_ITEM}} — domains/{{DOMAIN_ID}}/02-architecture.md#performance
+
+{{PERF_CHECKLIST_ITEMS}}
+
+## UI (UI)
+
+- [ ] {{DOMAIN_PREFIX}}-UI-001: {{UI_CHECKLIST_ITEM}} — domains/{{DOMAIN_ID}}/05-components.md#ui
+
+{{UI_CHECKLIST_ITEMS}}
+
+---
+
+## 진행률: 0/{{TOTAL}} 완료 (0%)
+
+### 카테고리 요약
+
+| 카테고리 | 완료 | 전체 | 상태 |
+|----------|------|------|------|
+| ARCH | 0 | {{ARCH_TOTAL}} | 대기 |
+| API | 0 | {{API_TOTAL}} | 대기 |
+| DM | 0 | {{DM_TOTAL}} | 대기 |
+| COMP | 0 | {{COMP_TOTAL}} | 대기 |
+| TEST | 0 | {{TEST_TOTAL}} | 대기 |
+| SEC | 0 | {{SEC_TOTAL}} | 대기 |
+| PERF | 0 | {{PERF_TOTAL}} | 대기 |
+| UI | 0 | {{UI_TOTAL}} | 대기 |
+
+---
+
+*스펙 ID: {{DOMAIN_ID}}-CHECKLIST | 도메인: {{DOMAIN_NAME}} | 프로젝트 체크리스트: docs/06-spec-checklist.md*

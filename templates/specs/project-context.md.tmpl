@@ -1,0 +1,95 @@
+# 00 — 프로젝트 컨텍스트
+
+> `/claude-sdd:sdd-intake` 킥스타트 인터뷰 결과로 자동 생성
+
+## 프로젝트 기본 정보
+
+| 항목 | 값 |
+|------|-----|
+| 프로젝트 이름 | {{PROJECT_NAME}} |
+| 프로젝트 유형 | {{PROJECT_TYPE}} |
+| 설명 | {{PROJECT_DESCRIPTION}} |
+| 대상 사용자 | {{TARGET_USERS}} |
+| 예상 규모 | {{EXPECTED_SCALE}} |
+
+## 기술 스택 결정사항
+
+| 항목 | 기술 | 선정 근거 |
+|------|------|-----------|
+| 언어 | {{LANGUAGE}} | {{LANGUAGE_RATIONALE}} |
+| 프레임워크 | {{FRAMEWORK}} | {{FRAMEWORK_RATIONALE}} |
+| 데이터베이스 | {{DATABASE}} | {{DB_RATIONALE}} |
+| 캐시 | {{CACHE}} | {{CACHE_RATIONALE}} |
+| 메시지 큐 | {{MESSAGE_QUEUE}} | {{MQ_RATIONALE}} |
+| API 스타일 | {{API_STYLE}} | {{API_STYLE_RATIONALE}} |
+| 인증 | {{AUTH}} | {{AUTH_RATIONALE}} |
+| 인프라 | {{INFRA}} | {{INFRA_RATIONALE}} |
+| 관측성 | {{OBSERVABILITY}} | {{OBSERVABILITY_RATIONALE}} |
+
+## 도메인 구조
+
+> 멀티 도메인 프로젝트인 경우 아래 테이블을 작성합니다.
+> 단일 도메인 프로젝트인 경우 "단일 도메인"으로 표기합니다.
+
+{{DOMAIN_STRUCTURE}}
+
+| 도메인 ID | 도메인 이름 | 설명 | 의존성 |
+|-----------|-------------|------|--------|
+| {{DOMAIN_ID}} | {{DOMAIN_NAME}} | {{DOMAIN_DESCRIPTION}} | {{DOMAIN_DEPENDENCIES}} |
+
+## 요구사항 소스
+
+| 소스 유형 | URL / 경로 | 설명 |
+|-----------|------------|------|
+| Confluence | {{CONFLUENCE_URL}} | {{CONFLUENCE_DESCRIPTION}} |
+| Jira | {{JIRA_URL}} | {{JIRA_DESCRIPTION}} |
+| Figma | {{FIGMA_URL}} | {{FIGMA_DESCRIPTION}} |
+| 파일 | {{FILE_PATH}} | {{FILE_DESCRIPTION}} |
+
+## 비기능 요구사항
+
+### 성능
+
+{{PERFORMANCE_REQUIREMENTS}}
+
+### 보안
+
+{{SECURITY_REQUIREMENTS}}
+
+### 확장성
+
+{{SCALABILITY_REQUIREMENTS}}
+
+### 가용성
+
+{{AVAILABILITY_REQUIREMENTS}}
+
+## 코드 규칙
+
+### 네이밍 컨벤션
+
+{{NAMING_CONVENTION}}
+
+### 디렉토리 구조
+
+```
+{{DIRECTORY_STRUCTURE}}
+```
+
+### 에러 처리
+
+{{ERROR_HANDLING_CONVENTION}}
+
+### 테스트 커버리지
+
+{{TEST_COVERAGE_TARGET}}
+
+## 스펙 생성 설정
+
+| 항목 | 값 |
+|------|-----|
+| spec_depth | thorough |
+
+---
+
+*생성 원본: 킥스타트 인터뷰 | `/claude-sdd:sdd-intake`*

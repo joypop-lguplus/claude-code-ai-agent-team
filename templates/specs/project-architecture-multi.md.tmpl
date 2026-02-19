@@ -1,0 +1,70 @@
+# 02 — 프로젝트 아키텍처 (멀티 도메인)
+
+> `01-requirements.md`로부터 `/claude-sdd:sdd-spec`이 자동 생성
+
+## 프로젝트 개요
+
+{{PROJECT_OVERVIEW}}
+
+## 도메인 경계 다이어그램
+
+```
+{{DOMAIN_BOUNDARY_DIAGRAM}}
+```
+
+## 도메인 목록
+
+| 도메인 ID | 이름 | 설명 | 의존성 |
+|-----------|------|------|--------|
+| {{DOMAIN_ID}} | {{DOMAIN_NAME}} | {{DOMAIN_DESCRIPTION}} | {{DOMAIN_DEPENDENCIES}} |
+
+## 기술 스택
+
+| 계층 | 기술 | 선정 근거 |
+|------|------|-----------|
+| {{LAYER}} | {{TECHNOLOGY}} | {{RATIONALE}} |
+
+## 공유 인프라
+
+### 인증/인가
+
+{{AUTH_STRATEGY}}
+
+### 공통 미들웨어
+
+{{SHARED_MIDDLEWARE}}
+
+### DB 전략
+
+{{DB_STRATEGY}}
+
+## 도메인 간 통신 방식
+
+| 통신 유형 | 적용 대상 | 설명 |
+|-----------|-----------|------|
+| 동기 (API 호출) | {{SYNC_TARGETS}} | {{SYNC_DESCRIPTION}} |
+| 비동기 (이벤트) | {{ASYNC_TARGETS}} | {{ASYNC_DESCRIPTION}} |
+| DB 참조 (FK) | {{FK_TARGETS}} | {{FK_DESCRIPTION}} |
+| 공유 엔티티 | {{SHARED_ENTITY_TARGETS}} | {{SHARED_ENTITY_DESCRIPTION}} |
+
+## 횡단 관심사
+
+### 에러 처리
+
+{{ERROR_HANDLING_STRATEGY}}
+
+### 로깅
+
+{{LOGGING_STRATEGY}}
+
+### 설정
+
+{{CONFIG_STRATEGY}}
+
+## 배포 아키텍처
+
+{{DEPLOYMENT_DESCRIPTION}}
+
+---
+
+*스펙 ID: PROJ-ARCH | 생성 원본: 01-requirements.md*

@@ -1,0 +1,53 @@
+# 02 — 도메인 아키텍처: {{DOMAIN_NAME}}
+
+> `01-requirements.md`로부터 `/claude-sdd:sdd-spec`이 자동 생성
+
+## 프로젝트 아키텍처 참조
+
+> 프로젝트 전체 아키텍처는 [docs/specs/02-architecture.md](../../docs/specs/02-architecture.md)를 참조하세요.
+> 이 문서는 **{{DOMAIN_NAME}}** 도메인의 내부 아키텍처만 다룹니다.
+
+## 도메인 개요
+
+| 항목 | 값 |
+|------|-----|
+| 도메인 ID | {{DOMAIN_ID}} |
+| 도메인 이름 | {{DOMAIN_NAME}} |
+| 설명 | {{DOMAIN_DESCRIPTION}} |
+| 담당 범위 | {{DOMAIN_SCOPE}} |
+
+## 도메인 모듈 구조
+
+```
+{{DOMAIN_MODULE_TREE}}
+```
+
+## 다른 도메인과의 연동
+
+| 대상 도메인 | 연동 유형 | 방향 | 설명 |
+|-------------|-----------|------|------|
+| {{TARGET_DOMAIN}} | {{INTEGRATION_TYPE}} | {{DIRECTION}} | {{INTEGRATION_DESCRIPTION}} |
+
+## 도메인 내부 모듈 상세
+
+### {{MODULE_NAME}}
+
+- **목적**: {{MODULE_PURPOSE}}
+- **공개 인터페이스**: {{MODULE_INTERFACE}}
+- **의존성**: {{MODULE_DEPENDENCIES}}
+
+### {{MODULE_NAME}}
+
+- **목적**: {{MODULE_PURPOSE}}
+- **공개 인터페이스**: {{MODULE_INTERFACE}}
+- **의존성**: {{MODULE_DEPENDENCIES}}
+
+## 도메인 내부 의존성 다이어그램
+
+```
+{{DOMAIN_DEPENDENCY_DIAGRAM}}
+```
+
+---
+
+*스펙 ID: {{DOMAIN_ID}}-ARCH | 생성 원본: 01-requirements.md | 프로젝트 아키텍처: docs/specs/02-architecture.md*
