@@ -1,6 +1,6 @@
 ---
 name: sdd-plan
-description: Use when the user wants to decompose specs into work packages and assign to Agent Teams.
+description: 스펙을 워크 패키지로 분해하고 Agent Teams에 할당합니다.
 ---
 
 # /claude-sdd:sdd-plan — 태스크 분해 및 팀 배정

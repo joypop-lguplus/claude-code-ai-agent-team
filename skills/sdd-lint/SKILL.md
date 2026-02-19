@@ -1,6 +1,6 @@
 ---
 name: sdd-lint
-description: Use when the user wants to run code analysis — diagnostics, structural search, symbol extraction, or formatting.
+description: 코드 분석을 실행합니다 — 진단, 구조 검색, 심볼 추출, 포매팅.
 ---
 
 # /claude-sdd:sdd-lint — 코드 분석 및 진단

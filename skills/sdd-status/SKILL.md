@@ -1,6 +1,6 @@
 ---
 name: sdd-status
-description: Use when the user wants to check SDD lifecycle progress, phase status, or checklist completion.
+description: SDD 라이프사이클 진행 상황, 단계 상태, 체크리스트 완료율을 확인합니다.
 ---
 
 # /claude-sdd:sdd-status — SDD 상태 대시보드

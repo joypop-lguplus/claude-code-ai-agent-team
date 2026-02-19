@@ -1,6 +1,6 @@
 ---
 name: sdd-init
-description: Use when the user wants to initialize a new or legacy project for Spec-Driven Development.
+description: 새 프로젝트 또는 기존 프로젝트를 스펙 주도 개발(SDD)로 초기화합니다.
 ---
 
 # /claude-sdd:sdd-init — SDD 프로젝트 초기화

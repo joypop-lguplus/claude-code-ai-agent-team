@@ -1,6 +1,6 @@
 ---
 name: sdd-build
-description: Use when the user wants to implement work packages using Agent Teams with quality loops.
+description: Agent Teams로 워크 패키지를 구현합니다. 품질 루프(최대 3회 재작업)를 통해 스펙 준수를 보장합니다.
 ---
 
 # /claude-sdd:sdd-build — Agent Teams를 통한 구현

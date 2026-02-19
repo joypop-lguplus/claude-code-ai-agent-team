@@ -1,6 +1,6 @@
 ---
 name: sdd-spec
-description: Use when the user wants to generate technical specifications and compliance checklists from requirements.
+description: 요구사항으로부터 기술 스펙과 준수 체크리스트를 생성합니다.
 ---
 
 # /claude-sdd:sdd-spec — 기술 명세서 생성

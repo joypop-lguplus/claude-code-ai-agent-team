@@ -1,6 +1,6 @@
 ---
 name: sdd-lsp
-description: Use when the user wants LSP-based semantic code analysis — diagnostics, go-to-definition, references, hover, symbols, implementations, or call hierarchy.
+description: LSP 기반 의미 분석 — 진단, 정의 이동, 참조 찾기, 호버, 심볼, 구현 찾기, 호출 계층.
 ---
 
 # /claude-sdd:sdd-lsp — LSP 기반 의미 분석

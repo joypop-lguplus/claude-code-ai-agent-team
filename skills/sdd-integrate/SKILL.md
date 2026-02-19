@@ -1,6 +1,6 @@
 ---
 name: sdd-integrate
-description: Use when the user wants to finalize implementation with tests, documentation, and PR creation.
+description: 테스트, 문서화, PR 생성으로 구현을 마무리합니다.
 ---
 
 # /claude-sdd:sdd-integrate — 통합, PR 및 문서화

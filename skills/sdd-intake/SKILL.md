@@ -1,6 +1,6 @@
 ---
 name: sdd-intake
-description: Use when the user wants to gather requirements from Confluence, Jira, Figma, files, or interviews for the SDD lifecycle.
+description: Confluence, Jira, Figma, 파일, 인터뷰 등에서 요구사항을 수집합니다.
 ---
 
 # /claude-sdd:sdd-intake — 요구사항 수집

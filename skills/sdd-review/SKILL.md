@@ -1,6 +1,6 @@
 ---
 name: sdd-review
-description: Use when the user wants to verify quality gates against spec compliance checklists.
+description: 스펙 준수 체크리스트 대비 품질 게이트를 검증합니다.
 ---
 
 # /claude-sdd:sdd-review — 품질 게이트 검증

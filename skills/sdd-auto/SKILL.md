@@ -1,6 +1,6 @@
 ---
 name: sdd-auto
-description: Use when the user wants to continue the SDD lifecycle or asks "what's next". Auto-detects the current phase and routes to the appropriate step.
+description: SDD 라이프사이클을 계속 진행합니다. 현재 단계를 자동 감지하여 적절한 다음 단계로 라우팅합니다.
 ---
 
 # /claude-sdd:sdd-auto — SDD 라이프사이클 오케스트레이터
