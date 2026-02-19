@@ -1,99 +1,99 @@
-# /sdd-intake — Requirements Gathering
+# /sdd-intake — 요구사항 수집
 
-Collect and structure requirements from various sources into a standardized requirements document.
+다양한 소스에서 요구사항을 수집하고 표준화된 요구사항 문서로 구조화합니다.
 
-## Usage
+## 사용법
 
 ```
-/sdd-intake confluence:<page-id>     # Fetch from Confluence page
-/sdd-intake jira:<epic-key>          # Fetch from Jira epic + stories
-/sdd-intake figma:<url>              # Analyze Figma design via vision
-/sdd-intake file:<path>              # Read local document
-/sdd-intake interview                # Interactive requirements interview
-/sdd-intake                          # Ask user to choose source
+/sdd-intake confluence:<page-id>     # Confluence 페이지에서 가져오기
+/sdd-intake jira:<epic-key>          # Jira 에픽 + 스토리에서 가져오기
+/sdd-intake figma:<url>              # Figma 디자인 비전 분석
+/sdd-intake file:<path>              # 로컬 문서 읽기
+/sdd-intake interview                # 대화형 요구사항 인터뷰
+/sdd-intake                          # 사용자에게 소스 선택 요청
 ```
 
-## Arguments
+## 인자
 
-- `confluence:<page-id>` — Confluence page ID to fetch via MCP
-- `jira:<epic-key>` — Jira epic key (e.g., `PROJ-100`) to fetch via MCP
-- `figma:<url>` — Figma file URL for visual analysis
-- `file:<path>` — Path to a local requirements document
-- `interview` — Start an interactive interview session
-- (none) — Prompt the user to select a source type
+- `confluence:<page-id>` — MCP를 통해 가져올 Confluence 페이지 ID
+- `jira:<epic-key>` — MCP를 통해 가져올 Jira 에픽 키 (예: `PROJ-100`)
+- `figma:<url>` — 시각 분석을 위한 Figma 파일 URL
+- `file:<path>` — 로컬 요구사항 문서 경로
+- `interview` — 대화형 인터뷰 세션 시작
+- (없음) — 사용자에게 소스 유형 선택을 요청
 
-## Behavior
+## 동작
 
-### Source: Confluence
+### 소스: Confluence
 
-1. Use the `confluence_get_page` MCP tool with the given page ID.
-2. If MCP is not available, inform the user:
+1. 주어진 페이지 ID로 `confluence_get_page` MCP 도구를 사용합니다.
+2. MCP를 사용할 수 없는 경우, 사용자에게 안내합니다:
    ```
-   Confluence MCP is not configured in your environment.
-   To set it up, add mcp-atlassian to your Claude Code MCP settings.
-   Alternatively, export the page and use: /sdd-intake file:<exported-file>
+   Confluence MCP가 환경에 구성되어 있지 않습니다.
+   설정하려면 Claude Code MCP 설정에 mcp-atlassian을 추가하세요.
+   또는 페이지를 내보낸 후 다음을 사용하세요: /sdd-intake file:<exported-file>
    ```
-3. Parse the page content and extract requirements.
-4. Check for child pages with `confluence_get_page_children` and offer to include them.
+3. 페이지 콘텐츠를 파싱하고 요구사항을 추출합니다.
+4. `confluence_get_page_children`로 하위 페이지를 확인하고 포함 여부를 제안합니다.
 
-### Source: Jira
+### 소스: Jira
 
-1. Use the `jira_get_issue` MCP tool to fetch the epic.
-2. Use `jira_search` with JQL `"Epic Link" = <epic-key>` to find child stories.
-3. If MCP is not available, provide the same guidance as Confluence.
-4. Extract acceptance criteria and user stories.
+1. `jira_get_issue` MCP 도구를 사용하여 에픽을 가져옵니다.
+2. JQL `"Epic Link" = <epic-key>`로 `jira_search`를 사용하여 하위 스토리를 찾습니다.
+3. MCP를 사용할 수 없는 경우, Confluence와 동일한 안내를 제공합니다.
+4. 인수 조건과 사용자 스토리를 추출합니다.
 
-### Source: Figma
+### 소스: Figma
 
-1. Ask the user to paste a screenshot of the design, or provide the Figma URL.
-2. Use Claude's vision capabilities to analyze the design.
-3. Extract UI components, flows, and interaction patterns.
-4. Transform visual elements into functional requirements.
+1. 사용자에게 디자인 스크린샷을 붙여넣거나 Figma URL을 제공하도록 요청합니다.
+2. Claude의 비전 기능을 사용하여 디자인을 분석합니다.
+3. UI 컴포넌트, 플로우 및 인터랙션 패턴을 추출합니다.
+4. 시각적 요소를 기능 요구사항으로 변환합니다.
 
-### Source: Local File
+### 소스: 로컬 파일
 
-1. Read the specified file.
-2. Parse based on format (markdown, text, HTML).
-3. Extract and structure requirements.
+1. 지정된 파일을 읽습니다.
+2. 형식(markdown, text, HTML)에 따라 파싱합니다.
+3. 요구사항을 추출하고 구조화합니다.
 
-### Source: Interview
+### 소스: 인터뷰
 
-Ask the user these questions in sequence:
-1. What is the main goal of this project?
-2. Who are the target users?
-3. What are the 3-5 core features?
-4. What is the tech stack (or preferred stack)?
-5. What are the constraints (timeline, team size, budget)?
-6. Are there performance requirements?
-7. Are there security requirements?
-8. What is explicitly out of scope?
+사용자에게 다음 질문을 순서대로 합니다:
+1. 이 프로젝트의 주요 목표는 무엇인가요?
+2. 대상 사용자는 누구인가요?
+3. 3-5개의 핵심 기능은 무엇인가요?
+4. 기술 스택(또는 선호하는 스택)은 무엇인가요?
+5. 제약 조건(일정, 팀 규모, 예산)은 무엇인가요?
+6. 성능 요구사항이 있나요?
+7. 보안 요구사항이 있나요?
+8. 명시적으로 범위에서 제외되는 사항은 무엇인가요?
 
-### Multiple Sources
+### 다중 소스
 
-Multiple `/sdd-intake` calls can be combined. Each call appends to or updates the existing `01-requirements.md`.
+여러 번의 `/sdd-intake` 호출을 결합할 수 있습니다. 각 호출은 기존 `01-requirements.md`에 추가하거나 업데이트합니다.
 
-## Output
+## 출력
 
-Generate or update `docs/specs/01-requirements.md` using the `sdd-requirements-analyst` agent.
+`sdd-requirements-analyst` 에이전트를 사용하여 `docs/specs/01-requirements.md`를 생성하거나 업데이트합니다.
 
-The document follows this structure:
-- Project Overview
-- Functional Requirements (FR-001, FR-002, ...)
-- Non-Functional Requirements (NFR-001, NFR-002, ...)
-- Constraints
-- Assumptions
-- Out of Scope
+문서는 다음 구조를 따릅니다:
+- 프로젝트 개요
+- 기능 요구사항 (FR-001, FR-002, ...)
+- 비기능 요구사항 (NFR-001, NFR-002, ...)
+- 제약 조건
+- 가정 사항
+- 범위 제외 사항
 
-After generation, print:
+생성 후 출력:
 ```
-Requirements document generated: docs/specs/01-requirements.md
-  - X functional requirements
-  - Y non-functional requirements
+요구사항 문서가 생성되었습니다: docs/specs/01-requirements.md
+  - X개의 기능 요구사항
+  - Y개의 비기능 요구사항
 
-Next step: /sdd-spec — Generate technical specifications
+다음 단계: /sdd-spec — 기술 명세서 생성
 ```
 
-## Dependencies
+## 의존성
 
-- `docs/specs/sdd-config.yaml` must exist (run `/sdd-init` first)
-- Confluence/Jira MCP tools (optional, for remote sources)
+- `docs/specs/sdd-config.yaml`이 존재해야 함 (먼저 `/sdd-init` 실행)
+- Confluence/Jira MCP 도구 (원격 소스의 경우, 선택 사항)

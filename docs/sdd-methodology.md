@@ -1,142 +1,142 @@
-# SDD Methodology -- Spec-Driven Development
+# SDD 방법론 -- 스펙 주도 개발 (Spec-Driven Development)
 
-## What is SDD?
+## SDD란?
 
-Spec-Driven Development (SDD) is a software development methodology where **specifications are the single source of truth** throughout the entire development lifecycle. Every line of code must trace back to a spec item, and quality is measured by a compliance checklist rather than subjective review.
+스펙 주도 개발 (SDD)은 **스펙이 전체 개발 라이프사이클의 단일 진실 소스**가 되는 소프트웨어 개발 방법론입니다. 모든 코드는 스펙 항목으로 추적 가능해야 하며, 품질은 주관적 리뷰가 아닌 스펙 준수 체크리스트로 측정됩니다.
 
-## Core Principles
+## 핵심 원칙
 
-### 1. Specification Before Implementation
+### 1. 구현 전 스펙 작성
 
-No code is written until a spec is approved. This prevents:
-- Feature creep
-- Misaligned implementations
-- Wasted rework
+스펙이 승인되기 전까지 코드를 작성하지 않습니다. 이를 통해 다음을 방지합니다:
+- 기능 범위 확장 (Feature creep)
+- 잘못된 구현
+- 불필요한 재작업
 
-### 2. Checklist as Quality Gate
+### 2. 체크리스트를 품질 게이트로 활용
 
-A spec compliance checklist is the sole quality criterion. Each item is:
-- **Verifiable**: Can be checked by reading code
-- **Atomic**: One item = one verifiable thing
-- **Traceable**: References a specific spec section
+스펙 준수 체크리스트가 유일한 품질 기준입니다. 각 항목은 다음 조건을 충족해야 합니다:
+- **검증 가능**: 코드를 읽어서 확인할 수 있어야 함
+- **원자적**: 하나의 항목 = 하나의 검증 가능한 사항
+- **추적 가능**: 특정 스펙 섹션을 참조해야 함
 
-### 3. Parallel Execution with Accountability
+### 3. 책임 기반의 병렬 실행
 
-Work is decomposed into independent packages that can run in parallel. Each package has:
-- Explicit spec references
-- Assigned checklist items
-- Clear completion criteria
+작업은 병렬로 실행 가능한 독립적인 워크 패키지로 분해됩니다. 각 워크 패키지는 다음을 포함합니다:
+- 명시적인 스펙 참조
+- 할당된 체크리스트 항목
+- 명확한 완료 기준
 
-### 4. Leader-Driven Quality Loop
+### 4. 리더 주도의 품질 루프
 
-A team leader verifies checklist completion with specific, actionable feedback. The loop:
-1. Assign work with spec references
-2. Verify completion against checklist
-3. Provide specific feedback for incomplete items
-4. Escalate after repeated failures
+팀 리더가 구체적이고 실행 가능한 피드백을 통해 체크리스트 완료를 검증합니다. 루프 동작:
+1. 스펙 참조와 함께 작업 할당
+2. 체크리스트 대비 완료 여부 검증
+3. 미완료 항목에 대한 구체적인 피드백 제공
+4. 반복 실패 시 에스컬레이션
 
-## The 7 Phases
+## 7단계 라이프사이클
 
-### Phase 1: Intake
+### 1단계: 요구사항 수집 (Intake)
 
-**Goal**: Gather and structure all requirements.
+**목표**: 모든 요구사항을 수집하고 구조화합니다.
 
-**Sources**: Confluence pages, Jira epics, Figma designs, local documents, interactive interviews.
+**소스**: Confluence 페이지, Jira 에픽, Figma 디자인, 로컬 문서, 대화형 인터뷰.
 
-**Output**: `01-requirements.md` with numbered functional requirements (FR-001), non-functional requirements (NFR-001), constraints, and assumptions.
+**산출물**: `01-requirements.md` — 기능 요구사항(FR-001), 비기능 요구사항(NFR-001), 제약 조건, 가정 사항을 번호 매겨 정리합니다.
 
-### Phase 2: Spec
+### 2단계: 스펙 작성 (Spec)
 
-**Goal**: Transform requirements into precise technical specifications.
+**목표**: 요구사항을 정밀한 기술 스펙으로 변환합니다.
 
-**For new projects**:
-- System architecture (tech stack, modules, dependencies)
-- API specification (endpoints, schemas, error codes)
-- Data model (entities, fields, relations, indexes)
-- Component breakdown (responsibilities, interfaces)
-- Spec compliance checklist
+**신규 프로젝트의 경우**:
+- 시스템 아키텍처 (기술 스택, 모듈, 의존성)
+- API 스펙 (엔드포인트, 스키마, 에러 코드)
+- 데이터 모델 (엔티티, 필드, 관계, 인덱스)
+- 컴포넌트 분해 (책임, 인터페이스)
+- 스펙 준수 체크리스트
 
-**For legacy projects**:
-- Change impact analysis (affected modules, risks)
-- API changes (new, modified, deleted endpoints)
-- Data migration (schema changes, migration strategy)
-- Component changes (modified modules, dependencies)
-- Spec compliance checklist
+**레거시 프로젝트의 경우**:
+- 변경 영향 분석 (영향받는 모듈, 리스크)
+- API 변경 사항 (신규, 수정, 삭제 엔드포인트)
+- 데이터 마이그레이션 (스키마 변경, 마이그레이션 전략)
+- 컴포넌트 변경 사항 (수정 모듈, 의존성)
+- 스펙 준수 체크리스트
 
-### Phase 3: Plan
+### 3단계: 계획 수립 (Plan)
 
-**Goal**: Decompose specs into parallelizable work packages.
+**목표**: 스펙을 병렬 실행 가능한 워크 패키지로 분해합니다.
 
-Each work package contains:
-- Tasks with spec references
-- Assigned checklist items
-- Dependencies on other packages
-- Team member configuration
+각 워크 패키지에 포함되는 내용:
+- 스펙 참조가 있는 태스크 목록
+- 할당된 체크리스트 항목
+- 다른 워크 패키지와의 의존성
+- 팀 멤버 구성
 
-### Phase 4: Build
+### 4단계: 구현 (Build)
 
-**Goal**: Implement all work packages with quality enforcement.
+**목표**: 품질 관리를 적용하며 모든 워크 패키지를 구현합니다.
 
-The quality loop:
+품질 루프:
 ```
-Assign --> Implement --> Verify --> [Rework | Accept]
+할당 --> 구현 --> 검증 --> [재작업 | 승인]
 ```
 
-Maximum 3 rework cycles before escalation to human.
+에스컬레이션까지 최대 3회 재작업 사이클.
 
-### Phase 5: Review
+### 5단계: 리뷰 (Review)
 
-**Goal**: Comprehensive quality gate verification.
+**목표**: 종합 품질 게이트 검증.
 
-For each checklist item:
-1. Does the code exist?
-2. Does it match the spec?
-3. Are there tests?
+각 체크리스트 항목에 대해:
+1. 코드가 존재하는가?
+2. 스펙과 일치하는가?
+3. 테스트가 있는가?
 
-Result: PASS, FAIL, or PARTIAL for each item.
+결과: 각 항목별 PASS, FAIL, 또는 PARTIAL.
 
-### Phase 6: Integrate
+### 6단계: 통합 (Integrate)
 
-**Goal**: Create a traceable pull request.
+**목표**: 추적 가능한 풀 리퀘스트를 생성합니다.
 
-Includes:
-- Full test execution
-- Documentation updates
-- PR with spec traceability table
+포함 사항:
+- 전체 테스트 실행
+- 문서 업데이트
+- 스펙 추적 테이블이 포함된 PR
 
-### Phase 7: Document
+### 7단계: 문서화 (Document)
 
-**Goal**: Ensure all documentation reflects the implementation.
+**목표**: 모든 문서가 구현 내용을 반영하도록 합니다.
 
-Updates CHANGELOG, README, and spec documents to their final state.
+CHANGELOG, README, 스펙 문서를 최종 상태로 업데이트합니다.
 
-## New vs Legacy Workflows
+## 신규 프로젝트 vs 레거시 프로젝트 워크플로우
 
-| Aspect | New (Greenfield) | Legacy (Brownfield) |
-|--------|------------------|---------------------|
-| Architecture | Design from scratch | Change impact analysis |
-| API | Full specification | Changes only (new/modify/delete) |
-| Data | Complete model | Migration plan |
-| Components | Full breakdown | Change analysis |
-| Risk | Lower (no existing code) | Higher (backward compatibility) |
+| 관점 | 신규 프로젝트 (Greenfield) | 레거시 프로젝트 (Brownfield) |
+|------|---------------------------|------------------------------|
+| 아키텍처 | 처음부터 설계 | 변경 영향 분석 |
+| API | 전체 스펙 작성 | 변경 사항만 (신규/수정/삭제) |
+| 데이터 | 전체 모델 설계 | 마이그레이션 계획 |
+| 컴포넌트 | 전체 분해 | 변경 분석 |
+| 리스크 | 낮음 (기존 코드 없음) | 높음 (하위 호환성 필요) |
 
-## Checklist Categories
+## 체크리스트 카테고리
 
-| Category | Description | Example |
-|----------|-------------|---------|
-| ARCH | Architecture | Module structure matches spec |
-| API | API | Endpoint returns correct schema |
-| DM | Data Model | Entity has all specified fields |
-| COMP | Component | Module implements specified interface |
-| TEST | Test | Unit test exists for public function |
-| SEC | Security | Input validation implemented |
-| PERF | Performance | Query uses specified index |
-| UI | UI | Component renders specified elements |
+| 카테고리 | 설명 | 예시 |
+|----------|------|------|
+| ARCH | 아키텍처 | 모듈 구조가 스펙과 일치 |
+| API | API | 엔드포인트가 올바른 스키마를 반환 |
+| DM | 데이터 모델 | 엔티티가 명시된 모든 필드를 보유 |
+| COMP | 컴포넌트 | 모듈이 명시된 인터페이스를 구현 |
+| TEST | 테스트 | 공개 함수에 대한 단위 테스트 존재 |
+| SEC | 보안 | 입력 검증이 구현됨 |
+| PERF | 성능 | 쿼리가 명시된 인덱스를 사용 |
+| UI | UI | 컴포넌트가 명시된 요소를 렌더링 |
 
-## Benefits
+## 장점
 
-1. **Traceability**: Every code change maps to a spec item.
-2. **Predictability**: Progress is measured objectively (0% to 100%).
-3. **Parallelism**: Independent work packages execute simultaneously.
-4. **Quality**: Automated verification against the spec, not opinions.
-5. **Accountability**: Clear ownership of work packages and checklist items.
+1. **추적 가능성**: 모든 코드 변경이 스펙 항목에 매핑됩니다.
+2. **예측 가능성**: 진행 상황을 객관적으로 측정합니다 (0%에서 100%).
+3. **병렬 처리**: 독립적인 워크 패키지가 동시에 실행됩니다.
+4. **품질 보증**: 주관적 의견이 아닌 스펙 기반의 자동 검증.
+5. **책임 소재**: 워크 패키지와 체크리스트 항목에 대한 명확한 소유권.

@@ -1,42 +1,42 @@
-# /sdd-lint — Code Analysis & Diagnostics
+# /sdd-lint — 코드 분석 및 진단
 
-Run automated code analysis: diagnostics, structural search, symbol extraction, and formatting.
+자동화된 코드 분석을 실행합니다: 진단, 구조 검색, 심볼 추출, 포맷팅.
 
-## Usage
+## 사용법
 
 ```
-/sdd-lint diagnostics [path]       # Run project diagnostics (errors/warnings)
-/sdd-lint search <pattern> [path]  # Structural code search via ast-grep
-/sdd-lint symbols [path]           # Extract function/class/export symbols
-/sdd-lint format [path]            # Check/fix code formatting
+/sdd-lint diagnostics [path]       # 프로젝트 진단 실행 (에러/경고)
+/sdd-lint search <pattern> [path]  # ast-grep을 통한 구조 검색
+/sdd-lint symbols [path]           # 함수/클래스/export 심볼 추출
+/sdd-lint format [path]            # 코드 포맷팅 확인/수정
 ```
 
-If no subcommand is given, run `diagnostics` by default.
+서브커맨드가 지정되지 않으면 기본적으로 `diagnostics`를 실행합니다.
 
-## Prerequisites
+## 사전 조건
 
-- Project must have native diagnostic tools installed (tsc, ruff, cargo, etc.)
-- ast-grep (`sg`) is optional but recommended for `search` and `symbols`
+- 프로젝트에 고유 진단 도구가 설치되어 있어야 함 (tsc, ruff, cargo 등)
+- ast-grep (`sg`)은 선택 사항이지만 `search` 및 `symbols`에 권장
 
-## Behavior
+## 동작
 
-### Step 0: Detect Tools
+### 0단계: 도구 감지
 
-Run `scripts/sdd-detect-tools.sh` against the project root to determine available tools:
+프로젝트 루트에서 `scripts/sdd-detect-tools.sh`를 실행하여 사용 가능한 도구를 확인합니다:
 
 ```bash
 bash <plugin-root>/scripts/sdd-detect-tools.sh <project-root>
 ```
 
-If `sdd-config.yaml` exists with a `lint` section, use those configured tools instead.
+`sdd-config.yaml`에 `lint` 섹션이 있으면 해당 설정된 도구를 대신 사용합니다.
 
-### Subcommand: `diagnostics [path]`
+### 서브커맨드: `diagnostics [path]`
 
-Run the project's native diagnostic tool to collect errors and warnings.
+프로젝트의 고유 진단 도구를 실행하여 에러와 경고를 수집합니다.
 
-**Language-tool mapping:**
+**언어-도구 매핑:**
 
-| Language | Primary Tool | Fallback |
+| 언어 | 주요 도구 | 대체 도구 |
 |----------|-------------|----------|
 | TypeScript/JS | `tsc --noEmit` | `biome check` |
 | Python | `ruff check` | `pyright` / `mypy` |
@@ -46,77 +46,77 @@ Run the project's native diagnostic tool to collect errors and warnings.
 | Kotlin | `gradle build --dry-run` | — |
 | C/C++ | `clang-tidy` | — |
 
-**Output:**
+**출력:**
 
 ```
-Diagnostics Report — TypeScript project
-Tool: tsc --noEmit
+진단 리포트 — TypeScript 프로젝트
+도구: tsc --noEmit
 
-Errors (2):
+에러 (2):
   src/user/controller.ts:45:12 — TS2339: Property 'email' does not exist on type 'Request'
   src/user/model.ts:12:5 — TS2304: Cannot find name 'Schema'
 
-Warnings (1):
+경고 (1):
   src/utils/logger.ts:8:1 — TS6133: 'debug' is declared but its value is never read
 
-Summary: 2 errors, 1 warning
+요약: 2개 에러, 1개 경고
 ```
 
-If `[path]` is provided, limit diagnostics to that path only.
+`[path]`가 제공되면 해당 경로로만 진단을 제한합니다.
 
-### Subcommand: `search <pattern> [path]`
+### 서브커맨드: `search <pattern> [path]`
 
-Use ast-grep (`sg`) for structural AST-based code search.
+AST 기반 구조 코드 검색을 위해 ast-grep (`sg`)을 사용합니다.
 
-**Requires:** ast-grep (`sg`) must be installed.
+**필요 사항:** ast-grep (`sg`)이 설치되어 있어야 합니다.
 
-**Examples:**
+**예시:**
 
 ```bash
-# Find all exported async functions
+# 모든 export된 async 함수 찾기
 /sdd-lint search "export async function $NAME($$$) { $$$ }"
 
-# Find React components
+# React 컴포넌트 찾기
 /sdd-lint search "function $COMP($$$): JSX.Element { $$$ }"
 
-# Find specific function calls
+# 특정 함수 호출 찾기
 /sdd-lint search "fetch($URL, $$$)"
 
-# Find class methods
+# 클래스 메서드 찾기
 /sdd-lint search "class $NAME { $$$ async $METHOD($$$) { $$$ } $$$ }"
 ```
 
-The `$NAME`, `$$$`, etc. are ast-grep metavariables:
-- `$NAME` — matches a single AST node
-- `$$$` — matches zero or more nodes
-- `$$$$` — matches a sequence
+`$NAME`, `$$$` 등은 ast-grep 메타변수입니다:
+- `$NAME` — 단일 AST 노드와 매칭
+- `$$$` — 0개 이상의 노드와 매칭
+- `$$$$` — 시퀀스와 매칭
 
-**Output:**
+**출력:**
 
 ```
-Structural Search Results — pattern: "export async function $NAME($$$) { $$$ }"
+구조 검색 결과 — 패턴: "export async function $NAME($$$) { $$$ }"
 
-Matches (4):
+매칭 (4):
   src/user/controller.ts:28 — export async function createUser(req, res) { ... }
   src/user/controller.ts:45 — export async function getUsers(req, res) { ... }
   src/auth/middleware.ts:12 — export async function authenticate(req, res, next) { ... }
   src/health/check.ts:5 — export async function healthCheck(req, res) { ... }
 ```
 
-If `sg` is not installed, fall back to Grep for basic text-based search.
+`sg`가 설치되지 않은 경우, 기본 텍스트 기반 검색을 위해 Grep으로 대체합니다.
 
-### Subcommand: `symbols [path]`
+### 서브커맨드: `symbols [path]`
 
-Extract a structural overview of the codebase: functions, classes, exports, types.
+코드베이스의 구조적 개요를 추출합니다: 함수, 클래스, exports, 타입.
 
-**Requires:** ast-grep (`sg`) recommended. Falls back to grep-based extraction if unavailable.
+**필요 사항:** ast-grep (`sg`) 권장. 사용할 수 없으면 grep 기반 추출로 대체합니다.
 
-**Output:**
+**출력:**
 
 ```
-Symbol Table — src/
+심볼 테이블 — src/
 
-| Symbol | Type | File | Line | Exported |
+| 심볼 | 타입 | 파일 | 라인 | Export 여부 |
 |--------|------|------|------|----------|
 | UserController | class | src/user/controller.ts | 15 | yes |
 | createUser | function | src/user/controller.ts | 28 | yes |
@@ -125,23 +125,23 @@ Symbol Table — src/
 | validateEmail | function | src/utils/validation.ts | 12 | yes |
 | hashPassword | function | src/utils/crypto.ts | 8 | no |
 
-Total: 6 symbols (5 exported, 1 internal)
+전체: 6개 심볼 (5개 export, 1개 internal)
 ```
 
-Use this to:
-- Understand legacy codebase structure during `/sdd-spec`
-- Verify expected exports exist during `/sdd-review`
-- Map spec items to actual code locations
+활용 사례:
+- `/sdd-spec` 시 레거시 프로젝트의 코드베이스 구조 파악
+- `/sdd-review` 시 예상 exports 존재 여부 확인
+- 스펙 항목을 실제 코드 위치에 매핑
 
-### Subcommand: `format [path]`
+### 서브커맨드: `format [path]`
 
-Check and optionally fix code formatting using the project's formatter.
+프로젝트의 포매터를 사용하여 코드 포맷팅을 확인하고 선택적으로 수정합니다.
 
-**Default behavior:** Check mode (dry-run) — report files that need formatting without modifying them.
+**기본 동작:** 확인 모드 (dry-run) — 파일을 수정하지 않고 포맷팅이 필요한 파일을 보고합니다.
 
-**Language-tool mapping:**
+**언어-도구 매핑:**
 
-| Language | Primary Formatter | Fallback |
+| 언어 | 주요 포매터 | 대체 도구 |
 |----------|------------------|----------|
 | TypeScript/JS | `prettier` | `biome format` |
 | Python | `ruff format` | `black` |
@@ -151,48 +151,48 @@ Check and optionally fix code formatting using the project's formatter.
 | Kotlin | `ktfmt` | — |
 | C/C++ | `clang-format` | — |
 
-**Check mode output:**
+**확인 모드 출력:**
 
 ```
-Format Check — prettier
+포맷 확인 — prettier
 
-Files needing formatting (3):
+포맷팅이 필요한 파일 (3):
   src/user/controller.ts
   src/user/model.ts
   src/utils/helpers.ts
 
-Run "/sdd-lint format --fix" to auto-format these files.
+이 파일들을 자동 포맷하려면 "/sdd-lint format --fix"를 실행하세요.
 ```
 
-When the user explicitly passes `--fix`, run the formatter in write mode to auto-format files.
+사용자가 명시적으로 `--fix`를 전달하면, 쓰기 모드로 포매터를 실행하여 파일을 자동 포맷합니다.
 
-## Integration with SDD Lifecycle
+## SDD 라이프사이클과의 통합
 
-### With `/sdd-build`
+### `/sdd-build`와 함께
 
-Before marking work package as complete, team members should:
-1. Run `/sdd-lint diagnostics` — fix all errors
-2. Run `/sdd-lint format --fix` — auto-format code
+워크 패키지를 완료로 표시하기 전에 팀 멤버는 다음을 수행해야 합니다:
+1. `/sdd-lint diagnostics` 실행 — 모든 에러 수정
+2. `/sdd-lint format --fix` 실행 — 코드 자동 포맷
 
-### With `/sdd-review`
+### `/sdd-review`와 함께
 
-The review process automatically includes:
-1. Diagnostics check (zero errors required for PASS)
-2. Format verification (warnings if files need formatting)
-3. Results included in review report under "Automated Checks"
+리뷰 프로세스에는 자동으로 다음이 포함됩니다:
+1. 진단 검사 (PASS를 위해 에러 0건 필요)
+2. 포맷 검증 (파일에 포맷팅이 필요하면 경고)
+3. 리뷰 리포트의 "자동화된 검사" 섹션에 결과 포함
 
-### With `/sdd-spec` (Legacy Projects)
+### `/sdd-spec`와 함께 (레거시 프로젝트)
 
-When analyzing existing code for spec generation:
-1. Run `/sdd-lint symbols` to understand code structure
-2. Run `/sdd-lint diagnostics` to identify existing technical debt
+스펙 생성을 위해 기존 코드를 분석할 때:
+1. `/sdd-lint symbols` 실행으로 코드 구조 파악
+2. `/sdd-lint diagnostics` 실행으로 기존 기술 부채 식별
 
-## Agent
+## 에이전트
 
-This skill delegates analysis to the `sdd-code-analyzer` agent for complex analysis tasks.
+이 스킬은 복잡한 분석 작업을 `sdd-code-analyzer` 에이전트에 위임합니다.
 
-## Dependencies
+## 의존성
 
-- Native diagnostic/formatter tools for the project's language
-- ast-grep (`sg`) — optional, enhances `search` and `symbols` subcommands
-- `scripts/sdd-detect-tools.sh` — tool auto-detection
+- 프로젝트 언어에 맞는 고유 진단/포매터 도구
+- ast-grep (`sg`) — 선택 사항, `search` 및 `symbols` 서브커맨드 향상
+- `scripts/sdd-detect-tools.sh` — 도구 자동 감지

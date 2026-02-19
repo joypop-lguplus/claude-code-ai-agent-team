@@ -1,235 +1,235 @@
-# Usage Guide
+# 사용 가이드
 
-## Quick Start
+## 빠른 시작
 
 ```bash
-# 1. Initialize SDD for a new project
+# 1. 새 프로젝트에 SDD 초기화
 /sdd-init new
 
-# 2. Gather requirements (interactive interview)
+# 2. 요구사항 수집 (대화형 인터뷰)
 /sdd-intake interview
 
-# 3. Generate technical specs
+# 3. 기술 스펙 생성
 /sdd-spec
 
-# 4. Decompose into tasks
+# 4. 태스크 분해
 /sdd-plan
 
-# 5. Build with Agent Teams
+# 5. Agent Teams로 구현
 /sdd-build
 
-# 6. Quality verification
+# 6. 품질 검증
 /sdd-review
 
-# 7. Create PR
+# 7. PR 생성
 /sdd-integrate
 ```
 
-Or simply use `/sdd` to auto-detect the current phase and continue.
+또는 `/sdd`를 사용하여 현재 단계를 자동 감지하고 계속 진행할 수 있습니다.
 
-## Phase Details
+## 단계별 상세 설명
 
-### 1. Initialize (`/sdd-init`)
+### 1. 초기화 (`/sdd-init`)
 
 ```bash
-/sdd-init new       # Greenfield project
-/sdd-init legacy    # Brownfield/existing codebase
+/sdd-init new       # 신규 프로젝트
+/sdd-init legacy    # 레거시/기존 코드베이스
 ```
 
-Creates:
-- `docs/specs/sdd-config.yaml` -- Project configuration
-- Updates `CLAUDE.md` with SDD leader rules
+생성되는 파일:
+- `docs/specs/sdd-config.yaml` -- 프로젝트 설정
+- `CLAUDE.md`에 SDD 리더 규칙 추가
 
-### 2. Requirements Intake (`/sdd-intake`)
+### 2. 요구사항 수집 (`/sdd-intake`)
 
-Multiple sources supported:
+다양한 소스를 지원합니다:
 
 ```bash
-# From Confluence (requires MCP)
+# Confluence에서 가져오기 (MCP 필요)
 /sdd-intake confluence:PAGE-123
 
-# From Jira (requires MCP)
+# Jira에서 가져오기 (MCP 필요)
 /sdd-intake jira:PROJ-100
 
-# From Figma (vision analysis)
+# Figma에서 가져오기 (비전 분석)
 /sdd-intake figma:https://figma.com/file/...
 
-# From local document
+# 로컬 문서에서 가져오기
 /sdd-intake file:docs/prd.md
 
-# Interactive interview
+# 대화형 인터뷰
 /sdd-intake interview
 ```
 
-You can run `/sdd-intake` multiple times to combine requirements from multiple sources.
+`/sdd-intake`를 여러 번 실행하여 다양한 소스의 요구사항을 결합할 수 있습니다.
 
-### 3. Spec Generation (`/sdd-spec`)
+### 3. 스펙 생성 (`/sdd-spec`)
 
-Automatically generates technical specifications based on project type:
+프로젝트 유형에 따라 기술 스펙을 자동 생성합니다:
 
-**New projects** get:
-- Architecture document
-- API specification
-- Data model
-- Component breakdown
-- Spec compliance checklist
+**신규 프로젝트** 산출물:
+- 아키텍처 문서
+- API 스펙
+- 데이터 모델
+- 컴포넌트 분해
+- 스펙 준수 체크리스트
 
-**Legacy projects** get:
-- Change impact analysis
-- API changes
-- Data migration plan
-- Component changes
-- Spec compliance checklist
+**레거시 프로젝트** 산출물:
+- 변경 영향 분석
+- API 변경 사항
+- 데이터 마이그레이션 계획
+- 컴포넌트 변경 사항
+- 스펙 준수 체크리스트
 
-### 4. Task Planning (`/sdd-plan`)
+### 4. 태스크 계획 (`/sdd-plan`)
 
-Decomposes the spec into parallelizable work packages:
-
-```
-WP-1: User Module    (parallel)
-WP-2: Auth Module    (parallel)
-WP-3: Integration    (sequential, after WP-1 & WP-2)
-```
-
-Each work package includes:
-- Task list with spec references
-- Assigned checklist items
-- Team member CLAUDE.md configuration
-
-### 5. Build (`/sdd-build`)
-
-The core of SDD. Uses Agent Teams with a quality loop:
+스펙을 병렬 실행 가능한 워크 패키지로 분해합니다:
 
 ```
-Leader assigns work packages
+WP-1: User 모듈     (병렬)
+WP-2: Auth 모듈     (병렬)
+WP-3: Integration   (순차, WP-1 & WP-2 이후)
+```
+
+각 워크 패키지에 포함되는 내용:
+- 스펙 참조가 있는 태스크 목록
+- 할당된 체크리스트 항목
+- 팀 멤버 CLAUDE.md 설정
+
+### 5. 구현 (`/sdd-build`)
+
+SDD의 핵심 단계입니다. 품질 루프가 적용된 Agent Teams를 사용합니다:
+
+```
+리더가 워크 패키지 할당
   |
-Team members implement in parallel
+팀 멤버가 병렬로 구현
   |
-Leader verifies checklist items
-  |-- Incomplete? --> Specific feedback + rework
-  |-- Complete? --> Next phase
-  |-- 3 failures? --> Escalate to user
+리더가 체크리스트 항목 검증
+  |-- 미완료? --> 구체적 피드백 + 재작업
+  |-- 완료? --> 다음 단계
+  |-- 3회 실패? --> 사용자에게 에스컬레이션
 ```
 
-You can target specific work packages:
+특정 워크 패키지를 지정할 수 있습니다:
 
 ```bash
-/sdd-build            # All pending work packages
-/sdd-build wp-1       # Specific work package
-/sdd-build wp-1 rework   # Rework with feedback
+/sdd-build            # 대기 중인 모든 워크 패키지
+/sdd-build wp-1       # 특정 워크 패키지
+/sdd-build wp-1 rework   # 피드백 기반 재작업
 ```
 
-### 6. Review (`/sdd-review`)
+### 6. 리뷰 (`/sdd-review`)
 
-Quality gate verification:
+품질 게이트 검증:
 
 ```bash
-/sdd-review           # Full review (code + spec verification)
-/sdd-review quick     # Checklist status only
+/sdd-review           # 전체 리뷰 (코드 + 스펙 검증)
+/sdd-review quick     # 체크리스트 상태만 확인
 ```
 
-Checks:
-- All checklist items verified against code
-- Spec compliance (code matches spec)
-- Test existence for public interfaces
-- Generates detailed review report
+검사 항목:
+- 모든 체크리스트 항목을 코드와 대조 검증
+- 스펙 준수 확인 (코드가 스펙과 일치하는지)
+- 공개 인터페이스에 대한 테스트 존재 여부
+- 상세 리뷰 리포트 생성
 
-### 7. Integrate (`/sdd-integrate`)
+### 7. 통합 (`/sdd-integrate`)
 
-Finalizes the development cycle:
+개발 사이클을 마무리합니다:
 
 ```bash
-/sdd-integrate        # Full workflow (tests + docs + PR)
-/sdd-integrate pr     # PR creation only
-/sdd-integrate docs   # Documentation update only
+/sdd-integrate        # 전체 워크플로우 (테스트 + 문서 + PR)
+/sdd-integrate pr     # PR 생성만
+/sdd-integrate docs   # 문서 업데이트만
 ```
 
-Creates:
-- Feature branch (`sdd/<feature-name>`)
-- PR with spec traceability
-- Updated CHANGELOG and documentation
+생성되는 산출물:
+- 기능 브랜치 (`sdd/<feature-name>`)
+- 스펙 추적성이 포함된 PR
+- 업데이트된 CHANGELOG 및 문서
 
-## Status Dashboard (`/sdd-status`)
+## 상태 대시보드 (`/sdd-status`)
 
-View progress at any time:
+언제든지 진행 상황을 확인할 수 있습니다:
 
 ```
-SDD Status Dashboard
+SDD 상태 대시보드
 
-Project: my-project (type: new)
+프로젝트: my-project (유형: new)
 
-Phase Progress:
-  [x] 1. Intake      -- Requirements gathered
-  [x] 2. Spec        -- 5 spec documents generated
-  [x] 3. Plan        -- 12 tasks in 4 work packages
-  [ ] 4. Build       -- 8/12 checklist items (67%)
-  [ ] 5. Review      -- Not started
-  [ ] 6. Integrate   -- Not started
+단계별 진행 상황:
+  [x] 1. Intake      -- 요구사항 수집 완료
+  [x] 2. Spec        -- 스펙 문서 5개 생성
+  [x] 3. Plan        -- 4개 워크 패키지에 12개 태스크
+  [ ] 4. Build       -- 체크리스트 8/12 항목 (67%)
+  [ ] 5. Review      -- 시작 전
+  [ ] 6. Integrate   -- 시작 전
 
-Checklist: 8/12 complete (67%)
+체크리스트: 8/12 완료 (67%)
   ARCH:  2/2  100%
   API:   3/4   75%
   DM:    2/2  100%
   TEST:  1/4   25%
 ```
 
-## Checklist Categories
+## 체크리스트 카테고리
 
-| Prefix | Category | Description |
-|--------|----------|-------------|
-| ARCH | Architecture | Module structure, dependencies |
-| API | API | Endpoints, validation, error handling |
-| DM | Data Model | Entities, fields, relations |
-| COMP | Components | Module implementation |
-| TEST | Tests | Unit and integration tests |
-| SEC | Security | Auth, validation, data protection |
-| PERF | Performance | Response times, optimization |
-| UI | UI | User interface components |
+| 접두사 | 카테고리 | 설명 |
+|--------|----------|------|
+| ARCH | 아키텍처 | 모듈 구조, 의존성 |
+| API | API | 엔드포인트, 검증, 에러 처리 |
+| DM | 데이터 모델 | 엔티티, 필드, 관계 |
+| COMP | 컴포넌트 | 모듈 구현 |
+| TEST | 테스트 | 단위 테스트 및 통합 테스트 |
+| SEC | 보안 | 인증, 검증, 데이터 보호 |
+| PERF | 성능 | 응답 시간, 최적화 |
+| UI | UI | 사용자 인터페이스 컴포넌트 |
 
-## Code Analysis (`/sdd-lint`)
+## 코드 분석 (`/sdd-lint`)
 
-Automated code analysis with 4 subcommands:
+4개 서브커맨드를 통한 자동화된 코드 분석:
 
 ```bash
-# Run project diagnostics (errors/warnings)
+# 프로젝트 진단 실행 (에러/경고)
 /sdd-lint diagnostics
 
-# Structural code search via ast-grep
+# ast-grep을 통한 구조 검색
 /sdd-lint search "export async function $NAME($$$) { $$$ }"
 
-# Extract function/class/export symbols
+# 함수/클래스/export 심볼 추출
 /sdd-lint symbols src/
 
-# Check code formatting (dry-run)
+# 코드 포매팅 검사 (dry-run)
 /sdd-lint format
 
-# Auto-format files
+# 자동 포매팅 적용
 /sdd-lint format --fix
 ```
 
-### Language Support
+### 언어 지원
 
-| Language | Diagnostics | Formatter | ast-grep |
-|----------|------------|-----------|----------|
-| TypeScript/JS | `tsc --noEmit` / `biome check` | `prettier` / `biome format` | Supported |
-| Python | `ruff check` / `pyright` | `ruff format` / `black` | Supported |
-| Go | `go vet ./...` | `gofmt` | Supported |
-| Rust | `cargo check` | `rustfmt` | Supported |
-| Java | `gradle build --dry-run` | `google-java-format` | Supported |
-| Kotlin | `gradle build --dry-run` | `ktfmt` | Supported |
-| C/C++ | `clang-tidy` | `clang-format` | Supported |
+| 언어 | 진단 | 포매터 | ast-grep |
+|------|------|--------|----------|
+| TypeScript/JS | `tsc --noEmit` / `biome check` | `prettier` / `biome format` | 지원 |
+| Python | `ruff check` / `pyright` | `ruff format` / `black` | 지원 |
+| Go | `go vet ./...` | `gofmt` | 지원 |
+| Rust | `cargo check` | `rustfmt` | 지원 |
+| Java | `gradle build --dry-run` | `google-java-format` | 지원 |
+| Kotlin | `gradle build --dry-run` | `ktfmt` | 지원 |
+| C/C++ | `clang-tidy` | `clang-format` | 지원 |
 
-Tools are auto-detected from project files (package.json, pyproject.toml, Cargo.toml, etc.). Override in `sdd-config.yaml` under the `lint` section.
+프로젝트 파일(package.json, pyproject.toml, Cargo.toml 등)에서 도구를 자동 감지합니다. `sdd-config.yaml`의 `lint` 섹션에서 재정의할 수 있습니다.
 
-### Integration with SDD Lifecycle
+### SDD 라이프사이클과의 통합
 
-- During `/sdd-build`: Run diagnostics + format before marking work packages complete
-- During `/sdd-review`: Diagnostics results included in quality gate (zero errors required)
-- During `/sdd-spec` (legacy): Use symbols to understand existing codebase structure
+- `/sdd-build` 단계: 워크 패키지 완료 전 진단 + 포맷 실행
+- `/sdd-review` 단계: 품질 게이트에 진단 결과 포함 (에러 0건 필수)
+- `/sdd-spec` 단계 (레거시): 심볼 추출을 통한 기존 코드베이스 구조 파악
 
-## Tips
+## 팁
 
-- **Re-enter any phase**: Run any `/sdd-*` command at any time to redo or refine a phase.
-- **Edit specs manually**: Spec files are plain markdown. Edit them before proceeding.
-- **Multiple intake sources**: Combine requirements from Confluence + Jira + interviews.
-- **Check progress often**: Use `/sdd-status` to see the overall dashboard.
+- **단계 재진입**: 언제든지 `/sdd-*` 명령어를 실행하여 특정 단계를 다시 수행하거나 개선할 수 있습니다.
+- **스펙 수동 편집**: 스펙 파일은 일반 마크다운입니다. 다음 단계로 진행하기 전에 편집할 수 있습니다.
+- **다중 소스 요구사항 수집**: Confluence + Jira + 인터뷰의 요구사항을 결합할 수 있습니다.
+- **진행 상황 자주 확인**: `/sdd-status`로 전체 대시보드를 확인하세요.

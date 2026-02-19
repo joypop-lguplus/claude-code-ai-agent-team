@@ -1,111 +1,111 @@
-# /sdd-review — Quality Gate Verification
+# /sdd-review — 품질 게이트 검증
 
-Perform comprehensive quality verification against the spec checklist.
+스펙 준수 체크리스트에 대한 종합적인 품질 검증을 수행합니다.
 
-## Usage
-
-```
-/sdd-review              # Full review
-/sdd-review quick        # Checklist status only (no code verification)
-```
-
-## Behavior
-
-### Step 1: Checklist Audit
-
-Read `docs/specs/06-spec-checklist.md` and categorize all items:
-- `[x]` items → verify code exists and matches spec
-- `[ ]` items → report as incomplete
-
-### Step 2: Code Verification (Full Review)
-
-For each `[x]` item, use the `sdd-reviewer` agent to:
-
-1. **Find the code**: Locate the implementation file(s) referenced by the spec.
-2. **Check spec compliance**: Compare implementation against the spec section.
-3. **Check tests**: Verify test files exist for public interfaces.
-
-Classify each item:
-- **PASS**: Code exists, matches spec, tests present
-- **FAIL**: Missing code, spec mismatch, or missing tests
-- **PARTIAL**: Partially implemented
-
-### Step 2.5: Automated Diagnostics
-
-Run the `sdd-code-analyzer` agent to perform automated checks:
-
-1. **Run diagnostics**: Execute project-native diagnostic tool (tsc, ruff, cargo check, etc.)
-2. **Collect errors/warnings**: Parse output into structured error list
-3. **Map to checklist items**: Correlate diagnostic results with spec checklist item IDs where possible
-4. **Run format verification**: Check if modified files follow project formatting rules
-
-Include results in the review report under an "Automated Checks" section:
+## 사용법
 
 ```
-Automated Checks:
-  Diagnostics: 0 errors, 3 warnings
-  Formatting:  2 files need formatting
-  Spec Coverage: 25/28 items have matching code (ast-grep)
+/sdd-review              # 전체 리뷰
+/sdd-review quick        # 체크리스트 상태만 확인 (코드 검증 없음)
 ```
 
-Errors block the quality gate. Warnings and format issues are reported but don't block.
+## 동작
 
-### Step 3: Test Execution
+### 1단계: 체크리스트 감사
 
-If the project has a test command configured:
-1. Run the test suite
-2. Report results (pass/fail/skip counts)
-3. Associate failures with checklist items if possible
+`docs/specs/06-spec-checklist.md`를 읽고 모든 항목을 분류합니다:
+- `[x]` 항목 → 코드가 존재하고 스펙과 일치하는지 검증
+- `[ ]` 항목 → 미완료로 보고
 
-### Step 4: Generate Review Report
+### 2단계: 코드 검증 (전체 리뷰)
 
-Create `docs/specs/08-review-report.md` with:
-- Summary statistics
-- Detailed per-item results
-- Failed items with specific remediation instructions
-- Overall recommendation (proceed to integration or rework)
+각 `[x]` 항목에 대해 `sdd-reviewer` 에이전트를 사용하여:
 
-### Step 5: Decision
+1. **코드 찾기**: 스펙이 참조하는 구현 파일을 찾습니다.
+2. **스펙 준수 확인**: 구현과 스펙 섹션을 비교합니다.
+3. **테스트 확인**: 공개 인터페이스에 대한 테스트 파일이 존재하는지 확인합니다.
+
+각 항목을 분류합니다:
+- **PASS**: 코드 존재, 스펙 일치, 테스트 존재
+- **FAIL**: 코드 누락, 스펙 불일치, 또는 테스트 누락
+- **PARTIAL**: 부분적으로 구현됨
+
+### 2.5단계: 자동화된 진단
+
+`sdd-code-analyzer` 에이전트를 사용하여 자동화된 검사를 수행합니다:
+
+1. **진단 실행**: 프로젝트 고유의 진단 도구 실행 (tsc, ruff, cargo check 등)
+2. **에러/경고 수집**: 출력을 구조화된 에러 목록으로 파싱
+3. **체크리스트 항목에 매핑**: 가능한 경우 진단 결과를 스펙 체크리스트 항목 ID와 연결
+4. **포맷 검증 실행**: 수정된 파일이 프로젝트 포맷팅 규칙을 따르는지 확인
+
+리뷰 리포트의 "자동화된 검사" 섹션에 결과를 포함합니다:
 
 ```
-Quality Gate Results:
-  Total: 28 items
+자동화된 검사:
+  진단: 0개 에러, 3개 경고
+  포맷팅: 2개 파일 포맷팅 필요
+  스펙 커버리지: 25/28 항목에 매칭되는 코드 존재 (ast-grep)
+```
+
+에러는 품질 게이트를 차단합니다. 경고와 포맷 문제는 보고되지만 차단하지 않습니다.
+
+### 3단계: 테스트 실행
+
+프로젝트에 테스트 명령이 설정된 경우:
+1. 테스트 스위트 실행
+2. 결과 보고 (통과/실패/건너뛰기 수)
+3. 가능한 경우 실패를 체크리스트 항목과 연결
+
+### 4단계: 리뷰 리포트 생성
+
+다음 내용으로 `docs/specs/08-review-report.md`를 생성합니다:
+- 요약 통계
+- 항목별 상세 결과
+- 실패 항목에 대한 구체적인 개선 지침
+- 전체 권장 사항 (통합 진행 또는 재작업)
+
+### 5단계: 판정
+
+```
+품질 게이트 결과:
+  전체: 28개 항목
   PASS:  25
   FAIL:   2
   PARTIAL: 1
-  Pass Rate: 89%
+  통과율: 89%
 
-Failed Items:
-  - API-003: 422 error handler → Missing in UserController
-  - TEST-002: Integration tests → No test file found
+실패 항목:
+  - API-003: 422 에러 핸들러 → UserController에 누락
+  - TEST-002: 통합 테스트 → 테스트 파일 없음
 
-Recommendation: Return to /sdd-build for rework
+권장 사항: /sdd-build로 돌아가 재작업
 ```
 
-If all items pass:
+모든 항목이 통과한 경우:
 ```
-Quality Gate: PASSED (28/28 items, 100%)
-All tests passing.
+품질 게이트: 통과 (28/28 항목, 100%)
+모든 테스트 통과.
 
-Next step: /sdd-integrate — Create PR and finalize
+다음 단계: /sdd-integrate — PR 생성 및 마무리
 ```
 
-If items fail:
+항목이 실패한 경우:
 ```
-Quality Gate: FAILED (25/28 items, 89%)
-3 items need rework.
+품질 게이트: 실패 (25/28 항목, 89%)
+3개 항목 재작업 필요.
 
-Run /sdd-build to fix the following items:
+다음 항목을 수정하려면 /sdd-build를 실행하세요:
   - API-003, TEST-002, SEC-001
 
-Or run /sdd-review quick to check progress after fixes.
+또는 수정 후 진행 상황을 확인하려면 /sdd-review quick을 실행하세요.
 ```
 
-## Output
+## 출력
 
 - `docs/specs/08-review-report.md`
 
-## Dependencies
+## 의존성
 
-- `docs/specs/06-spec-checklist.md` (from `/sdd-spec`)
-- Implementation code (from `/sdd-build`)
+- `docs/specs/06-spec-checklist.md` (`/sdd-spec`에서 생성)
+- 구현 코드 (`/sdd-build`에서 생성)

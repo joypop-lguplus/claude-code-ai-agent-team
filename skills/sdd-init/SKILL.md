@@ -1,64 +1,64 @@
-# /sdd-init — Initialize SDD Project
+# /sdd-init — SDD 프로젝트 초기화
 
-Initialize the current project for Spec-Driven Development.
+현재 프로젝트를 스펙 주도 개발 (SDD)용으로 초기화합니다.
 
-## Usage
+## 사용법
 
 ```
-/sdd-init new          # New (greenfield) project
-/sdd-init legacy       # Existing (brownfield) project
+/sdd-init new          # 신규 프로젝트 (greenfield)
+/sdd-init legacy       # 기존 프로젝트 (brownfield)
 ```
 
-## Arguments
+## 인자
 
-- `new` — Set up SDD for a brand new project
-- `legacy` — Set up SDD for an existing codebase with changes
+- `new` — 완전히 새로운 프로젝트에 SDD를 설정
+- `legacy` — 변경 사항이 있는 기존 코드베이스에 SDD를 설정
 
-## Behavior
+## 동작
 
-### Step 1: Create Spec Directory
+### 1단계: 스펙 디렉토리 생성
 
-Create `docs/specs/` if it doesn't exist.
+`docs/specs/`가 존재하지 않으면 생성합니다.
 
-### Step 2: Generate SDD Config
+### 2단계: SDD 설정 파일 생성
 
-Create `docs/specs/sdd-config.yaml` from the template at `templates/project-init/sdd-config.yaml.tmpl`.
+`templates/project-init/sdd-config.yaml.tmpl` 템플릿을 사용하여 `docs/specs/sdd-config.yaml`을 생성합니다.
 
-Ask the user:
-1. **Project name**: What is this project called?
-2. **Description**: Brief description of the project.
-3. **Project type**: Confirm `new` or `legacy` based on the argument.
+사용자에게 질문합니다:
+1. **프로젝트 이름**: 이 프로젝트의 이름은 무엇인가요?
+2. **설명**: 프로젝트에 대한 간략한 설명
+3. **프로젝트 유형**: 인자에 따라 `new` 또는 `legacy`를 확인
 
-Fill in the template and write to `docs/specs/sdd-config.yaml`.
+템플릿을 채우고 `docs/specs/sdd-config.yaml`에 저장합니다.
 
-### Step 3: Inject CLAUDE.md Rules
+### 3단계: CLAUDE.md 규칙 주입
 
-Check if `CLAUDE.md` exists in the project root. If not, create it.
+프로젝트 루트에 `CLAUDE.md`가 있는지 확인합니다. 없으면 생성합니다.
 
-Append the SDD Leader rules from `templates/claude-md/sdd-leader.md.tmpl` to the project's `CLAUDE.md`:
-- Replace `{{PROJECT_NAME}}` with the actual project name
-- Replace `{{PROJECT_TYPE}}` with `new` or `legacy`
+`templates/claude-md/sdd-leader.md.tmpl`의 SDD 리더 규칙을 프로젝트의 `CLAUDE.md`에 추가합니다:
+- `{{PROJECT_NAME}}`을 실제 프로젝트 이름으로 교체
+- `{{PROJECT_TYPE}}`을 `new` 또는 `legacy`로 교체
 
-### Step 4: Confirm Setup
+### 4단계: 설정 확인
 
-Print a summary:
+요약을 출력합니다:
 ```
-SDD initialized for [project-name] (type: new/legacy)
+SDD가 [project-name]에 대해 초기화되었습니다 (유형: new/legacy)
 
-Created:
+생성된 파일:
   - docs/specs/sdd-config.yaml
-  - CLAUDE.md updated with SDD rules
+  - CLAUDE.md에 SDD 규칙 업데이트 완료
 
-Next steps:
-  1. /sdd-intake — Gather requirements
-  2. /sdd-status — View project dashboard
+다음 단계:
+  1. /sdd-intake — 요구사항 수집
+  2. /sdd-status — 프로젝트 대시보드 보기
 ```
 
-## Dependencies
+## 의존성
 
-- None (this is the first step)
+- 없음 (첫 번째 단계)
 
-## Output
+## 출력
 
 - `docs/specs/sdd-config.yaml`
-- `CLAUDE.md` (created or updated)
+- `CLAUDE.md` (생성 또는 업데이트)

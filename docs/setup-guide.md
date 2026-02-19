@@ -1,27 +1,27 @@
-# Setup Guide
+# 설치 가이드
 
-## Prerequisites
+## 사전 요구사항
 
-| Component | Version | Required |
-|-----------|---------|----------|
-| Claude Code | Latest | Yes |
-| Node.js | 18+ | Yes |
-| Agent Teams | Enabled | Yes |
-| `gh` CLI | Latest | Recommended |
-| Confluence MCP | - | Optional |
-| Jira MCP | - | Optional |
+| 구성 요소 | 버전 | 필수 여부 |
+|-----------|------|-----------|
+| Claude Code | 최신 | 필수 |
+| Node.js | 18+ | 필수 |
+| Agent Teams | 활성화 | 필수 |
+| `gh` CLI | 최신 | 권장 |
+| Confluence MCP | - | 선택 |
+| Jira MCP | - | 선택 |
 
-## Step 1: Install the Plugin
+## 1단계: 플러그인 설치
 
-### Option A: npx (Recommended)
+### 방법 A: npx (권장)
 
 ```bash
 npx github:joypop-lguplus/claude-sdd install
 ```
 
-This runs an interactive setup wizard that checks all dependencies and registers the plugin.
+대화형 설치 마법사를 실행하여 모든 의존성을 검사하고 플러그인을 등록합니다.
 
-### Option B: Git Clone
+### 방법 B: Git Clone
 
 ```bash
 git clone https://github.com/joypop-lguplus/claude-sdd.git
@@ -29,16 +29,16 @@ cd claude-sdd
 node bin/cli.mjs install
 ```
 
-### Option C: Manual
+### 방법 C: 수동 설치
 
 ```bash
 git clone https://github.com/joypop-lguplus/claude-sdd.git
 claude --plugin-dir ./claude-sdd
 ```
 
-## Step 2: Enable Agent Teams
+## 2단계: Agent Teams 활성화
 
-Add to your Claude Code settings:
+Claude Code 설정에 다음을 추가합니다:
 
 ```json
 // ~/.claude/settings.json
@@ -49,13 +49,13 @@ Add to your Claude Code settings:
 }
 ```
 
-This is required for the `/sdd-build` phase, which uses parallel Agent Teams for implementation.
+이 설정은 병렬 Agent Teams를 사용하는 `/sdd-build` 단계에 필수입니다.
 
-## Step 3: Configure MCP (Optional)
+## 3단계: MCP 설정 (선택)
 
 ### Confluence
 
-If you need to pull requirements from Confluence:
+Confluence에서 요구사항을 가져와야 하는 경우:
 
 ```bash
 claude mcp add mcp-atlassian -s user -- \
@@ -67,7 +67,7 @@ claude mcp add mcp-atlassian -s user -- \
 
 ### Jira
 
-If you need to pull requirements from Jira:
+Jira에서 요구사항을 가져와야 하는 경우:
 
 ```bash
 claude mcp add mcp-atlassian -s user -- \
@@ -77,40 +77,40 @@ claude mcp add mcp-atlassian -s user -- \
   --jira-token YOUR_TOKEN
 ```
 
-Note: The `mcp-atlassian` package supports both Confluence and Jira in a single MCP server.
+참고: `mcp-atlassian` 패키지는 하나의 MCP 서버에서 Confluence와 Jira를 모두 지원합니다.
 
-## Step 4: Verify Installation
+## 4단계: 설치 확인
 
 ```bash
-# Check dependency status
+# 의존성 상태 확인
 npx github:joypop-lguplus/claude-sdd check
 
-# Deep diagnostics
+# 심층 진단
 npx github:joypop-lguplus/claude-sdd doctor
 ```
 
-## Step 5: Start Using SDD
+## 5단계: SDD 사용 시작
 
 ```bash
-# Start Claude Code with the plugin
+# 플러그인과 함께 Claude Code 실행
 claude
 
-# Initialize your project
-/sdd-init new      # For new projects
-/sdd-init legacy   # For existing codebases
+# 프로젝트 초기화
+/sdd-init new      # 신규 프로젝트
+/sdd-init legacy   # 기존 코드베이스
 
-# Check status
+# 상태 확인
 /sdd-status
 
-# Start the lifecycle
+# 라이프사이클 시작
 /sdd
 ```
 
-## Troubleshooting
+## 문제 해결
 
 ### "Agent Teams not enabled"
 
-Make sure `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` is in your settings:
+`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`이 설정에 포함되어 있는지 확인하세요:
 
 ```bash
 cat ~/.claude/settings.json
@@ -118,20 +118,20 @@ cat ~/.claude/settings.json
 
 ### "Confluence/Jira MCP not configured"
 
-You can still use SDD without MCP. Use these alternatives for requirements intake:
-- `/sdd-intake file:path/to/doc.md` -- Read local documents
-- `/sdd-intake interview` -- Interactive requirements gathering
-- `/sdd-intake figma:URL` -- Analyze Figma designs
+MCP 없이도 SDD를 사용할 수 있습니다. 요구사항 수집에 다음 대안을 사용하세요:
+- `/sdd-intake file:path/to/doc.md` -- 로컬 문서 읽기
+- `/sdd-intake interview` -- 대화형 요구사항 수집
+- `/sdd-intake figma:URL` -- Figma 디자인 분석
 
-### Plugin not found
+### 플러그인을 찾을 수 없는 경우
 
-If Claude Code doesn't recognize the skills, try:
+Claude Code가 스킬을 인식하지 못하면 다음을 시도하세요:
 
 ```bash
-# Register plugin explicitly
+# 플러그인을 명시적으로 등록
 mkdir -p ~/.claude/plugins
 ln -s $(pwd) ~/.claude/plugins/claude-sdd
 
-# Or use plugin-dir flag
+# 또는 plugin-dir 플래그 사용
 claude --plugin-dir /path/to/claude-sdd
 ```

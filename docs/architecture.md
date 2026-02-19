@@ -1,148 +1,148 @@
-# Architecture
+# 아키텍처
 
-## Overview
+## 개요
 
-claude-sdd is a Claude Code plugin that implements the Spec-Driven Development (SDD) lifecycle. It uses Claude Code's Agent Teams feature for parallel implementation, with a leader-driven quality loop to ensure spec compliance.
+claude-sdd는 스펙 주도 개발 (SDD) 라이프사이클을 구현하는 Claude Code 플러그인입니다. Claude Code의 Agent Teams 기능을 활용한 병렬 구현과, 리더 주도의 품질 루프를 통해 스펙 준수를 보장합니다.
 
-## Core Design Principles
+## 핵심 설계 원칙
 
-1. **Checklist = Markdown**: All tracking is done in git-versioned markdown files, readable by both humans and Claude.
-2. **No MCP Bundling**: Confluence/Jira MCP servers are not bundled. The plugin guides users to use their existing MCP configurations.
-3. **9 Independent Skills**: Each lifecycle phase is a separate skill, allowing re-entry at any point.
-4. **Agent Model = Sonnet**: All agents use Sonnet for real analysis and implementation work.
-5. **Figma = Vision**: No separate MCP needed; designs are analyzed via screenshots/URLs.
+1. **체크리스트 = 마크다운**: 모든 추적은 git으로 버전 관리되는 마크다운 파일에서 이루어지며, 사람과 Claude 모두 읽을 수 있습니다.
+2. **MCP 미번들**: Confluence/Jira MCP 서버를 번들하지 않습니다. 플러그인은 사용자의 기존 MCP 설정을 활용하도록 안내합니다.
+3. **9개의 독립 스킬**: 각 라이프사이클 단계가 별도의 스킬이므로, 어느 지점에서든 재진입이 가능합니다.
+4. **에이전트 모델 = Sonnet**: 모든 에이전트는 실제 분석 및 구현 작업에 Sonnet을 사용합니다.
+5. **Figma = 비전**: 별도의 MCP 없이 스크린샷/URL을 통해 디자인을 분석합니다.
 
-## Plugin Components
+## 플러그인 구성 요소
 
 ```
 claude-sdd/
-├── Skills (10)        # User-facing slash commands
-│   ├── /sdd           # Orchestrator (auto-detects phase)
-│   ├── /sdd-init      # Project initialization
-│   ├── /sdd-intake    # Requirements gathering
-│   ├── /sdd-spec      # Spec generation
-│   ├── /sdd-plan      # Task decomposition
-│   ├── /sdd-build     # Agent Teams implementation
-│   ├── /sdd-review    # Quality gate
-│   ├── /sdd-integrate # PR & documentation
-│   ├── /sdd-status    # Dashboard
-│   └── /sdd-lint      # Code analysis & diagnostics
+├── Skills (10)        # 사용자용 슬래시 명령어
+│   ├── /sdd           # 오케스트레이터 (단계 자동 감지)
+│   ├── /sdd-init      # 프로젝트 초기화
+│   ├── /sdd-intake    # 요구사항 수집
+│   ├── /sdd-spec      # 스펙 생성
+│   ├── /sdd-plan      # 태스크 분해
+│   ├── /sdd-build     # Agent Teams 구현
+│   ├── /sdd-review    # 품질 게이트
+│   ├── /sdd-integrate # PR 및 문서화
+│   ├── /sdd-status    # 대시보드
+│   └── /sdd-lint      # 코드 분석 및 진단
 │
-├── Agents (5)         # Subagents for specialized tasks
-│   ├── requirements-analyst  # Source parsing
-│   ├── spec-writer           # Spec generation
-│   ├── implementer           # Code implementation
-│   ├── reviewer              # Quality verification
-│   └── code-analyzer         # Code analysis (diagnostics, ast-grep)
+├── Agents (5)         # 전문 작업용 서브에이전트
+│   ├── requirements-analyst  # 소스 파싱
+│   ├── spec-writer           # 스펙 생성
+│   ├── implementer           # 코드 구현
+│   ├── reviewer              # 품질 검증
+│   └── code-analyzer         # 코드 분석 (진단, ast-grep)
 │
-├── Templates (10)     # Document templates
-│   ├── claude-md/     # CLAUDE.md templates for leader/member
-│   ├── specs/         # Spec document templates
-│   ├── checklists/    # Quality checklist templates
-│   └── project-init/  # Project config template
+├── Templates (10)     # 문서 템플릿
+│   ├── claude-md/     # 리더/멤버용 CLAUDE.md 템플릿
+│   ├── specs/         # 스펙 문서 템플릿
+│   ├── checklists/    # 품질 체크리스트 템플릿
+│   └── project-init/  # 프로젝트 설정 템플릿
 │
-├── Hooks (1)          # Event hooks
-│   └── SessionStart   # SDD project detection
+├── Hooks (1)          # 이벤트 훅
+│   └── SessionStart   # SDD 프로젝트 감지
 │
-└── CLI (4 modules)    # npx CLI for setup
-    ├── cli.mjs        # Entry point
-    ├── checker.mjs    # Dependency checks
-    ├── installer.mjs  # Setup wizard
-    └── doctor.mjs     # Diagnostics
+└── CLI (4 modules)    # npx CLI (설치용)
+    ├── cli.mjs        # 진입점
+    ├── checker.mjs    # 의존성 검사
+    ├── installer.mjs  # 설치 마법사
+    └── doctor.mjs     # 진단
 ```
 
-## Data Flow
+## 데이터 흐름
 
 ```
-User Requirements
+사용자 요구사항
     |
     v
 [/sdd-intake] --> 01-requirements.md
     |
     v
-[/sdd-spec]   --> 02-architecture.md (or 02-change-impact.md)
-              --> 03-api-spec.md (or 03-api-changes.md)
-              --> 04-data-model.md (or 04-data-migration.md)
-              --> 05-component-breakdown.md (or 05-component-changes.md)
+[/sdd-spec]   --> 02-architecture.md (또는 02-change-impact.md)
+              --> 03-api-spec.md (또는 03-api-changes.md)
+              --> 04-data-model.md (또는 04-data-migration.md)
+              --> 05-component-breakdown.md (또는 05-component-changes.md)
               --> 06-spec-checklist.md
     |
     v
 [/sdd-plan]   --> 07-task-plan.md + wp-*-member.md
     |
     v
-[/sdd-build]  --> Source code + tests
-              --> Updated 06-spec-checklist.md
+[/sdd-build]  --> 소스 코드 + 테스트
+              --> 업데이트된 06-spec-checklist.md
     |
     v
 [/sdd-review] --> 08-review-report.md
-    |           (loop back to build if items fail)
+    |           (항목 실패 시 빌드 단계로 루프백)
     v
-[/sdd-integrate] --> Git branch, PR, CHANGELOG
+[/sdd-integrate] --> Git 브랜치, PR, CHANGELOG
 ```
 
-## Agent Teams Architecture
+## Agent Teams 아키텍처
 
-During `/sdd-build`, the plugin uses Claude Code Agent Teams:
+`/sdd-build` 단계에서 플러그인은 Claude Code Agent Teams를 사용합니다:
 
 ```
-Leader Session (Opus)
+리더 세션 (Opus)
   |
-  |-- Launch Team Member 1 (Sonnet) --> WP-1: User Module
-  |-- Launch Team Member 2 (Sonnet) --> WP-2: Auth Module
-  |-- Launch Team Member 3 (Sonnet) --> WP-3: Payment Module
+  |-- 팀 멤버 1 실행 (Sonnet) --> WP-1: User 모듈
+  |-- 팀 멤버 2 실행 (Sonnet) --> WP-2: Auth 모듈
+  |-- 팀 멤버 3 실행 (Sonnet) --> WP-3: Payment 모듈
   |
-  |-- [All complete]
+  |-- [전원 완료]
   |
-  |-- Verify checklist
-  |   |-- [ ] items --> Rework instructions (max 3 cycles)
-  |   |-- All [x] --> Next phase or done
+  |-- 체크리스트 검증
+  |   |-- [ ] 항목 --> 재작업 지시 (최대 3회 사이클)
+  |   |-- 전부 [x] --> 다음 단계 또는 완료
   |
-  |-- Launch sequential phases
+  |-- 순차 단계 실행
   |-- ...
 ```
 
-## Code Analysis Layer
+## 코드 분석 레이어
 
-The code analysis layer provides automated quality checks across the SDD lifecycle:
+코드 분석 레이어는 SDD 라이프사이클 전반에 걸쳐 자동화된 품질 검사를 제공합니다:
 
 ```
-/sdd-lint                         sdd-code-analyzer agent
+/sdd-lint                         sdd-code-analyzer 에이전트
     |                                     |
-    |-- diagnostics [path]  <--- Native tools (tsc, ruff, cargo check, go vet)
-    |-- search <pattern>    <--- ast-grep structural search
-    |-- symbols [path]      <--- ast-grep symbol extraction
-    |-- format [path]       <--- Formatters (prettier, ruff format, gofmt)
+    |-- diagnostics [path]  <--- 네이티브 도구 (tsc, ruff, cargo check, go vet)
+    |-- search <pattern>    <--- ast-grep 구조 검색
+    |-- symbols [path]      <--- ast-grep 심볼 추출
+    |-- format [path]       <--- 포매터 (prettier, ruff format, gofmt)
     |
     v
-scripts/sdd-detect-tools.sh      Auto-detects language & available tools
+scripts/sdd-detect-tools.sh      언어 및 사용 가능한 도구 자동 감지
     |
     v
-sdd-config.yaml (lint section)   Per-project tool configuration
+sdd-config.yaml (lint 섹션)      프로젝트별 도구 설정
 ```
 
-Integration points:
-- `/sdd-spec` (legacy): Symbol extraction for codebase understanding
-- `/sdd-build`: Lint/format before marking work packages complete
-- `/sdd-review`: Diagnostics check as part of quality gate (Step 2.5)
+통합 지점:
+- `/sdd-spec` (레거시): 코드베이스 이해를 위한 심볼 추출
+- `/sdd-build`: 워크 패키지 완료 전 린트/포맷 실행
+- `/sdd-review`: 품질 게이트 (2.5단계)에 진단 검사 포함
 
-## Quality Loop
+## 품질 루프
 
-The quality loop is the core enforcement mechanism:
+품질 루프는 핵심 품질 관리 메커니즘입니다:
 
-1. Leader assigns work package with explicit spec references
-2. Member implements, tests, and marks checklist items
-3. Leader verifies each `[x]` mark against actual code
-4. Incomplete items get specific, actionable feedback
-5. After 3 rework cycles, escalate to user
-6. Only proceed when 100% of assigned items are `[x]`
+1. 리더가 명시적인 스펙 참조와 함께 워크 패키지를 할당
+2. 멤버가 구현, 테스트하고 체크리스트 항목을 표시
+3. 리더가 각 `[x]` 표시를 실제 코드와 대조하여 검증
+4. 미완료 항목에 구체적이고 실행 가능한 피드백 제공
+5. 3회 재작업 사이클 후 사용자에게 에스컬레이션
+6. 할당된 항목이 100% `[x]`일 때만 다음 단계로 진행
 
-## New vs Legacy Workflows
+## 신규 프로젝트 vs 레거시 프로젝트 워크플로우
 
-| Aspect | New (Greenfield) | Legacy (Brownfield) |
-|--------|------------------|---------------------|
-| Phase 2 Doc | 02-architecture.md | 02-change-impact.md |
-| Phase 3 Doc | 03-api-spec.md | 03-api-changes.md |
-| Phase 4 Doc | 04-data-model.md | 04-data-migration.md |
-| Phase 5 Doc | 05-component-breakdown.md | 05-component-changes.md |
-| Risk Level | Lower | Higher (backward compatibility) |
-| Checklist | Same format | Same format |
+| 관점 | 신규 프로젝트 (Greenfield) | 레거시 프로젝트 (Brownfield) |
+|------|---------------------------|------------------------------|
+| 2단계 문서 | 02-architecture.md | 02-change-impact.md |
+| 3단계 문서 | 03-api-spec.md | 03-api-changes.md |
+| 4단계 문서 | 04-data-model.md | 04-data-migration.md |
+| 5단계 문서 | 05-component-breakdown.md | 05-component-changes.md |
+| 리스크 수준 | 낮음 | 높음 (하위 호환성 필요) |
+| 체크리스트 | 동일 형식 | 동일 형식 |

@@ -1,32 +1,32 @@
-# Lint & Format Configuration for SDD Project
-# This section is added to sdd-config.yaml during /sdd-init
-# Auto-detected values can be overridden here
+# SDD 프로젝트용 린트 및 포맷 설정
+# /sdd-init 실행 시 sdd-config.yaml에 추가되는 섹션
+# 자동 감지된 값을 여기서 재정의할 수 있음
 
 lint:
-  # Auto-detected project language (typescript, python, go, rust, java, kotlin, cpp)
+  # 자동 감지된 프로젝트 언어 (typescript, python, go, rust, java, kotlin, cpp)
   language: "{{LANGUAGE}}"
 
-  # Diagnostic tool command (for error/warning collection)
-  # Examples: "tsc --noEmit", "ruff check", "cargo check", "go vet ./..."
+  # 진단 도구 명령어 (에러/경고 수집용)
+  # 예: "tsc --noEmit", "ruff check", "cargo check", "go vet ./..."
   diagnostics: "{{DIAGNOSTICS_CMD}}"
 
-  # Formatter command (for code style enforcement)
-  # Examples: "prettier --write", "ruff format", "gofmt -w", "rustfmt"
+  # 포매터 명령어 (코드 스타일 강제용)
+  # 예: "prettier --write", "ruff format", "gofmt -w", "rustfmt"
   formatter: "{{FORMATTER_CMD}}"
 
-  # Linter command (for code quality checks)
-  # Examples: "eslint", "ruff check", "cargo clippy", "golangci-lint run"
+  # 린터 명령어 (코드 품질 검사용)
+  # 예: "eslint", "ruff check", "cargo clippy", "golangci-lint run"
   linter: "{{LINTER_CMD}}"
 
-  # ast-grep availability (true/false)
+  # ast-grep 사용 가능 여부 (true/false)
   ast_grep: {{AST_GREP}}
 
-  # Paths to include in analysis (default: project root)
+  # 분석 대상 경로 (기본값: 프로젝트 루트)
   include:
     - "src/"
     - "lib/"
 
-  # Paths to exclude from analysis
+  # 분석 제외 경로
   exclude:
     - "node_modules/"
     - "dist/"
@@ -36,11 +36,11 @@ lint:
     - "target/"
     - "vendor/"
 
-  # Quality gate thresholds
+  # 품질 게이트 임계값
   gates:
-    # Maximum allowed errors (0 = no errors allowed)
+    # 허용되는 최대 에러 수 (0 = 에러 허용 안 함)
     max_errors: 0
-    # Maximum allowed warnings (-1 = unlimited)
+    # 허용되는 최대 경고 수 (-1 = 무제한)
     max_warnings: -1
-    # Require all files to be formatted (true/false)
+    # 모든 파일의 포맷 적용 필수 여부 (true/false)
     require_formatted: false

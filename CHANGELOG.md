@@ -1,27 +1,27 @@
-# Changelog
+# 변경 이력
 
 ## [0.2.0] - 2026-02-19
 
-### Added
+### 추가
 
-- **`/sdd-lint` skill**: Code analysis with 4 subcommands (diagnostics, search, symbols, format)
-- **`sdd-code-analyzer` agent**: Automated code analysis using native diagnostic tools and ast-grep
-- **`scripts/sdd-detect-tools.sh`**: Auto-detection of project language and available lint/format tools
-- **`templates/project-init/lint-config.yaml.tmpl`**: Lint/format configuration template for sdd-config.yaml
-- **ast-grep support**: Optional structural code search and symbol extraction (7 languages)
-- **Automated diagnostics in quality gate**: `/sdd-review` Step 2.5 with zero-error enforcement
+- **`/sdd-lint` 스킬**: 4개 서브커맨드를 통한 코드 분석 (diagnostics, search, symbols, format)
+- **`sdd-code-analyzer` 에이전트**: 네이티브 진단 도구 및 ast-grep을 활용한 자동 코드 분석
+- **`scripts/sdd-detect-tools.sh`**: 프로젝트 언어 및 사용 가능한 린트/포맷 도구 자동 감지
+- **`templates/project-init/lint-config.yaml.tmpl`**: sdd-config.yaml용 린트/포맷 설정 템플릿
+- **ast-grep 지원**: 구조 검색 및 심볼 추출 (7개 언어, 선택 사항)
+- **품질 게이트 자동 진단**: `/sdd-review` 2.5단계에 에러 0건 기준 적용
 
-### Changed
+### 변경
 
-- **`/sdd-review`**: Added Step 2.5 for automated diagnostics via sdd-code-analyzer
-- **`/sdd-build`**: Added Step 3.5 for lint/format checks before work package completion
-- **`sdd-reviewer` agent**: Added Step 4 (Diagnostics Check) to verification process
-- **`sdd-implementer` agent**: Added pre-completion lint/format guidance
-- **Quality gate template**: Added Gate 2.5 for automated diagnostics criteria
-- **`lib/checker.mjs`**: Added ast-grep (sg) check in new 'tools' category (5 categories)
-- **`lib/doctor.mjs`**: Added integrity checks for 3 new files + sdd-detect-tools.sh script
-- **`plugin.json`**: Registered sdd-lint skill and sdd-code-analyzer agent
-- **`marketplace.json`**: Added new components and ast-grep optional dependency
+- **`/sdd-review`**: sdd-code-analyzer를 통한 자동 진단 2.5단계 추가
+- **`/sdd-build`**: 워크 패키지 완료 전 린트/포맷 검사 3.5단계 추가
+- **`sdd-reviewer` 에이전트**: 검증 프로세스에 4단계(진단 검사) 추가
+- **`sdd-implementer` 에이전트**: 완료 전 린트/포맷 가이드 추가
+- **품질 게이트 템플릿**: 자동 진단 기준 게이트 2.5 추가
+- **`lib/checker.mjs`**: 새 'tools' 카테고리에 ast-grep (sg) 검사 추가 (5개 카테고리)
+- **`lib/doctor.mjs`**: 신규 파일 3개 + sdd-detect-tools.sh 스크립트 무결성 검사 추가
+- **`plugin.json`**: sdd-lint 스킬 및 sdd-code-analyzer 에이전트 등록
+- **`marketplace.json`**: 신규 컴포넌트 및 ast-grep 선택적 의존성 추가
 
 ## [0.1.0] - 2026-02-18
 

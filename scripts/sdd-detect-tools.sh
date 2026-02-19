@@ -1,53 +1,53 @@
 #!/usr/bin/env bash
-# sdd-detect-tools.sh — Detect project language and available lint/format tools
-# Usage: ./scripts/sdd-detect-tools.sh [project-root]
-# Output: JSON with detected language, diagnostics, formatter, linter, ast_grep
+# sdd-detect-tools.sh — 프로젝트 언어 및 사용 가능한 린터/포매터 도구 감지
+# 사용법: ./scripts/sdd-detect-tools.sh [프로젝트-루트]
+# 출력: 감지된 언어, 진단, 포매터, 린터, ast_grep 정보가 담긴 JSON
 
 set -euo pipefail
 
 PROJECT_ROOT="${1:-.}"
 
-# Resolve to absolute path
+# 절대 경로로 변환
 PROJECT_ROOT="$(cd "$PROJECT_ROOT" && pwd)"
 
-# Result holders
+# 결과 저장 변수
 LANGUAGE=""
 DIAGNOSTICS=""
 FORMATTER=""
 LINTER=""
 AST_GREP=false
 
-# Check if a command exists
+# 명령어 존재 여부 확인
 cmd_exists() { command -v "$1" &>/dev/null; }
 
-# Check ast-grep availability
+# ast-grep 사용 가능 여부 확인
 if cmd_exists sg; then
   AST_GREP=true
 fi
 
-# --- Detection Logic ---
+# --- 감지 로직 ---
 
 detect_typescript_js() {
   if [[ -f "$PROJECT_ROOT/package.json" ]]; then
     local pkg
     pkg=$(cat "$PROJECT_ROOT/package.json")
 
-    # Check if TypeScript
+    # TypeScript 여부 확인
     if [[ -f "$PROJECT_ROOT/tsconfig.json" ]] || echo "$pkg" | grep -q '"typescript"'; then
       LANGUAGE="typescript"
-      # Diagnostics
+      # 진단
       if echo "$pkg" | grep -q '"biome"' || echo "$pkg" | grep -q '"@biomejs/biome"'; then
         DIAGNOSTICS="biome check"
       elif cmd_exists tsc; then
         DIAGNOSTICS="tsc --noEmit"
       fi
-      # Formatter
+      # 포매터
       if echo "$pkg" | grep -q '"biome"' || echo "$pkg" | grep -q '"@biomejs/biome"'; then
         FORMATTER="biome format --write"
       elif echo "$pkg" | grep -q '"prettier"'; then
         FORMATTER="prettier --write"
       fi
-      # Linter
+      # 린터
       if echo "$pkg" | grep -q '"biome"' || echo "$pkg" | grep -q '"@biomejs/biome"'; then
         LINTER="biome lint"
       elif echo "$pkg" | grep -q '"eslint"'; then
@@ -55,17 +55,17 @@ detect_typescript_js() {
       fi
     else
       LANGUAGE="javascript"
-      # Diagnostics
+      # 진단
       if echo "$pkg" | grep -q '"biome"' || echo "$pkg" | grep -q '"@biomejs/biome"'; then
         DIAGNOSTICS="biome check"
       fi
-      # Formatter
+      # 포매터
       if echo "$pkg" | grep -q '"biome"' || echo "$pkg" | grep -q '"@biomejs/biome"'; then
         FORMATTER="biome format --write"
       elif echo "$pkg" | grep -q '"prettier"'; then
         FORMATTER="prettier --write"
       fi
-      # Linter
+      # 린터
       if echo "$pkg" | grep -q '"biome"' || echo "$pkg" | grep -q '"@biomejs/biome"'; then
         LINTER="biome lint"
       elif echo "$pkg" | grep -q '"eslint"'; then
@@ -80,7 +80,7 @@ detect_typescript_js() {
 detect_python() {
   if [[ -f "$PROJECT_ROOT/pyproject.toml" ]] || [[ -f "$PROJECT_ROOT/setup.py" ]] || [[ -f "$PROJECT_ROOT/setup.cfg" ]]; then
     LANGUAGE="python"
-    # Diagnostics
+    # 진단
     if cmd_exists ruff; then
       DIAGNOSTICS="ruff check"
     elif cmd_exists pyright; then
@@ -88,13 +88,13 @@ detect_python() {
     elif cmd_exists mypy; then
       DIAGNOSTICS="mypy"
     fi
-    # Formatter
+    # 포매터
     if cmd_exists ruff; then
       FORMATTER="ruff format"
     elif cmd_exists black; then
       FORMATTER="black"
     fi
-    # Linter
+    # 린터
     if cmd_exists ruff; then
       LINTER="ruff check"
     elif cmd_exists flake8; then
@@ -166,7 +166,7 @@ detect_java_kotlin() {
 
 detect_cpp() {
   if [[ -f "$PROJECT_ROOT/CMakeLists.txt" ]] || [[ -f "$PROJECT_ROOT/Makefile" ]]; then
-    # Check if there are C/C++ source files
+    # C/C++ 소스 파일 존재 여부 확인
     if find "$PROJECT_ROOT" -maxdepth 3 \( -name "*.cpp" -o -name "*.cc" -o -name "*.c" -o -name "*.h" \) -print -quit 2>/dev/null | grep -q .; then
       LANGUAGE="cpp"
       if cmd_exists clang-tidy; then
@@ -181,15 +181,15 @@ detect_cpp() {
   return 1
 }
 
-# Run detection in priority order
+# 우선순위에 따라 감지 실행
 detect_typescript_js || detect_python || detect_go || detect_rust || detect_java_kotlin || detect_cpp || true
 
-# If no language detected
+# 언어가 감지되지 않은 경우
 if [[ -z "$LANGUAGE" ]]; then
   LANGUAGE="unknown"
 fi
 
-# --- Output JSON ---
+# --- JSON 출력 ---
 cat <<EOF
 {
   "project_root": "$PROJECT_ROOT",

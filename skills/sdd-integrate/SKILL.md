@@ -1,64 +1,64 @@
-# /sdd-integrate — Integration, PR & Documentation
+# /sdd-integrate — 통합, PR 및 문서화
 
-Finalize the implementation with tests, documentation, and a pull request.
+테스트, 문서화, 풀 리퀘스트를 포함하여 구현을 마무리합니다.
 
-## Usage
+## 사용법
 
 ```
-/sdd-integrate              # Full integration workflow
-/sdd-integrate pr           # Create PR only (skip tests/docs)
-/sdd-integrate docs         # Update documentation only
+/sdd-integrate              # 전체 통합 워크플로우
+/sdd-integrate pr           # PR만 생성 (테스트/문서 건너뛰기)
+/sdd-integrate docs         # 문서만 업데이트
 ```
 
-## Prerequisites
+## 사전 조건
 
-- Quality gate must have passed (`08-review-report.md` shows 100% pass)
-- Or user explicitly overrides with `/sdd-integrate` despite failures
+- 품질 게이트가 통과되어야 함 (`08-review-report.md`에 100% 통과 표시)
+- 또는 실패에도 불구하고 사용자가 `/sdd-integrate`로 명시적으로 재정의
 
-## Behavior
+## 동작
 
-### Step 1: Final Test Run
+### 1단계: 최종 테스트 실행
 
-Run the project's full test suite:
+프로젝트의 전체 테스트 스위트를 실행합니다:
 ```
-Running full test suite...
-  Unit tests: 45 passed, 0 failed
-  Integration tests: 12 passed, 0 failed
-  Total: 57 passed
+전체 테스트 스위트 실행 중...
+  단위 테스트: 45개 통과, 0개 실패
+  통합 테스트: 12개 통과, 0개 실패
+  전체: 57개 통과
 
-All tests passing.
+모든 테스트 통과.
 ```
 
-If tests fail, warn and ask whether to proceed.
+테스트가 실패하면 경고하고 진행 여부를 묻습니다.
 
-### Step 2: Documentation Update
+### 2단계: 문서 업데이트
 
-1. **CHANGELOG.md**: Add entry for this development cycle.
+1. **CHANGELOG.md**: 이번 개발 사이클에 대한 항목을 추가합니다.
    ```markdown
    ## [X.Y.Z] - YYYY-MM-DD
 
    ### Added
-   - [Feature from spec]
+   - [스펙의 기능]
 
    ### Changed
-   - [Change from spec]
+   - [스펙의 변경 사항]
    ```
 
-2. **README.md**: Update if user-facing behavior changed.
+2. **README.md**: 사용자 대면 동작이 변경된 경우 업데이트합니다.
 
-3. **Spec docs**: Mark `06-spec-checklist.md` as finalized.
+3. **스펙 문서**: `06-spec-checklist.md`를 최종 확정으로 표시합니다.
 
-### Step 3: Create Branch & PR
+### 3단계: 브랜치 생성 및 PR
 
-1. Create a feature branch:
+1. 기능 브랜치를 생성합니다:
    ```
    git checkout -b sdd/<feature-name>
    ```
 
-2. Stage and commit changes:
+2. 변경 사항을 스테이징하고 커밋합니다:
    ```
    git add .
-   git commit -m "feat: [description based on requirements]
+   git commit -m "feat: [requirements 기반 설명]
 
    SDD Spec Traceability:
    - Requirements: docs/specs/01-requirements.md
@@ -67,18 +67,18 @@ If tests fail, warn and ask whether to proceed.
    - Review: docs/specs/08-review-report.md"
    ```
 
-3. Push and create PR:
+3. 푸시하고 PR을 생성합니다:
    ```
    git push -u origin sdd/<feature-name>
    gh pr create --title "..." --body "..."
    ```
 
-### PR Body Format
+### PR 본문 형식
 
 ```markdown
 ## Summary
 
-[Brief description from requirements]
+[요구사항의 간략한 설명]
 
 ## Spec Traceability
 
@@ -94,7 +94,7 @@ If tests fail, warn and ask whether to proceed.
 
 ## Changes
 
-[List of main changes]
+[주요 변경 사항 목록]
 
 ## Test Plan
 
@@ -103,33 +103,33 @@ If tests fail, warn and ask whether to proceed.
 - [ ] Manual verification of key flows
 ```
 
-### Step 4: Summary
+### 4단계: 요약
 
 ```
-Integration complete!
+통합 완료!
 
-Branch: sdd/<feature-name>
+브랜치: sdd/<feature-name>
 PR: #123 — <title>
 URL: https://github.com/...
 
-Spec Documents:
-  - All specs in docs/specs/ are finalized
-  - Checklist: 28/28 complete
-  - Review: All passed
+스펙 문서:
+  - docs/specs/의 모든 스펙이 최종 확정됨
+  - 체크리스트: 28/28 완료
+  - 리뷰: 모두 통과
 
-Documentation:
-  - CHANGELOG.md updated
-  - README.md updated (if applicable)
+문서:
+  - CHANGELOG.md 업데이트됨
+  - README.md 업데이트됨 (해당하는 경우)
 ```
 
-## Output
+## 출력
 
-- Git branch and commits
-- Pull request via `gh pr create`
-- Updated CHANGELOG.md
-- Updated README.md (if needed)
+- Git 브랜치 및 커밋
+- `gh pr create`를 통한 풀 리퀘스트
+- 업데이트된 CHANGELOG.md
+- 업데이트된 README.md (필요한 경우)
 
-## Dependencies
+## 의존성
 
-- `docs/specs/08-review-report.md` (from `/sdd-review`)
-- `gh` CLI (for PR creation)
+- `docs/specs/08-review-report.md` (`/sdd-review`에서 생성)
+- `gh` CLI (PR 생성용)

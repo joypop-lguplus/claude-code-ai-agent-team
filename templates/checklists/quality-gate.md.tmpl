@@ -1,56 +1,56 @@
-# Quality Gate Criteria
+# 품질 게이트 기준
 
-> All criteria must pass before integration approval.
+> 통합 승인 전 모든 기준을 통과해야 합니다.
 
-## Gate 1: Spec Compliance
+## 게이트 1: 스펙 준수
 
-- [ ] All checklist items in `06-spec-checklist.md` are marked `[x]`
-- [ ] Every `[x]` item has corresponding code that matches the spec
-- [ ] No spec items were skipped or partially implemented
+- [ ] `06-spec-checklist.md`의 모든 체크리스트 항목이 `[x]`로 표시됨
+- [ ] 모든 `[x]` 항목에 스펙과 일치하는 코드가 존재함
+- [ ] 건너뛰거나 부분 구현된 스펙 항목이 없음
 
-## Gate 2: Code Quality
+## 게이트 2: 코드 품질
 
-- [ ] No linting errors in modified files
-- [ ] No TypeScript/type errors (if applicable)
-- [ ] No unused imports or dead code introduced
-- [ ] Naming conventions follow project standards
+- [ ] 수정된 파일에 린트 에러가 없음
+- [ ] TypeScript/타입 에러가 없음 (해당하는 경우)
+- [ ] 미사용 임포트 또는 불필요한 코드가 추가되지 않음
+- [ ] 네이밍 규칙이 프로젝트 표준을 따름
 
-## Gate 2.5: Automated Diagnostics
+## 게이트 2.5: 자동화된 진단
 
-- [ ] Project diagnostic tool reports zero errors (`/sdd-lint diagnostics`)
-- [ ] All modified files pass format check (`/sdd-lint format`)
-- [ ] Structural search confirms spec items have matching implementations (if ast-grep available)
-- [ ] Warnings reviewed and acknowledged (non-blocking)
+- [ ] 프로젝트 진단 도구가 에러 없음을 보고함 (`/sdd-lint diagnostics`)
+- [ ] 모든 수정된 파일이 포맷 검사를 통과함 (`/sdd-lint format`)
+- [ ] 구조적 검색으로 스펙 항목에 대응하는 구현이 확인됨 (ast-grep 사용 가능한 경우)
+- [ ] 경고가 검토 및 확인됨 (비차단)
 
-## Gate 3: Test Coverage
+## 게이트 3: 테스트 커버리지
 
-- [ ] All public interfaces have unit tests
-- [ ] API endpoints have integration tests (if applicable)
-- [ ] All tests pass (`npm test` / project test command)
-- [ ] No test files contain `.skip` or `.only`
+- [ ] 모든 공개 인터페이스에 단위 테스트가 있음
+- [ ] API 엔드포인트에 통합 테스트가 있음 (해당하는 경우)
+- [ ] 모든 테스트가 통과함 (`npm test` / 프로젝트 테스트 명령어)
+- [ ] 테스트 파일에 `.skip` 또는 `.only`가 포함되지 않음
 
-## Gate 4: Documentation
+## 게이트 4: 문서화
 
-- [ ] API documentation is up to date
-- [ ] CHANGELOG entry added for this change
-- [ ] README updated if user-facing behavior changed
+- [ ] API 문서가 최신 상태임
+- [ ] 이번 변경 사항에 대한 CHANGELOG 항목이 추가됨
+- [ ] 사용자 대면 동작이 변경된 경우 README가 업데이트됨
 
-## Gate 5: Integration
+## 게이트 5: 통합
 
-- [ ] No merge conflicts with main branch
-- [ ] CI pipeline passes (if configured)
-- [ ] PR description includes spec traceability
+- [ ] 메인 브랜치와 병합 충돌이 없음
+- [ ] CI 파이프라인이 통과함 (구성된 경우)
+- [ ] PR 설명에 스펙 추적 정보가 포함됨
 
 ---
 
-## Result
+## 결과
 
-| Gate | Status | Notes |
-|------|--------|-------|
-| Spec Compliance | {{STATUS}} | {{NOTES}} |
-| Code Quality | {{STATUS}} | {{NOTES}} |
-| Test Coverage | {{STATUS}} | {{NOTES}} |
-| Documentation | {{STATUS}} | {{NOTES}} |
-| Integration | {{STATUS}} | {{NOTES}} |
+| 게이트 | 상태 | 비고 |
+|--------|------|------|
+| 스펙 준수 | {{STATUS}} | {{NOTES}} |
+| 코드 품질 | {{STATUS}} | {{NOTES}} |
+| 테스트 커버리지 | {{STATUS}} | {{NOTES}} |
+| 문서화 | {{STATUS}} | {{NOTES}} |
+| 통합 | {{STATUS}} | {{NOTES}} |
 
-**Overall**: {{PASS/FAIL}}
+**종합 결과**: {{PASS/FAIL}}
