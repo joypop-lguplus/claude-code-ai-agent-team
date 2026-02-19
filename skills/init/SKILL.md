@@ -1,18 +1,17 @@
 ---
-name: sdd-init
-description: Use when the user wants to initialize a new or legacy project for Spec-Driven Development, or types /sdd-init.
-version: 0.3.0
+name: init
+description: Use when the user wants to initialize a new or legacy project for Spec-Driven Development.
 ---
 
-# /sdd-init — SDD 프로젝트 초기화
+# /claude-sdd:init — SDD 프로젝트 초기화
 
 현재 프로젝트를 스펙 주도 개발 (SDD)용으로 초기화합니다.
 
 ## 사용법
 
 ```
-/sdd-init new          # 신규 프로젝트 (greenfield)
-/sdd-init legacy       # 기존 프로젝트 (brownfield)
+/claude-sdd:init new          # 신규 프로젝트 (greenfield)
+/claude-sdd:init legacy       # 기존 프로젝트 (brownfield)
 ```
 
 ## 인자
@@ -56,8 +55,8 @@ SDD가 [project-name]에 대해 초기화되었습니다 (유형: new/legacy)
   - CLAUDE.md에 SDD 규칙 업데이트 완료
 
 다음 단계:
-  1. /sdd-intake — 요구사항 수집
-  2. /sdd-status — 프로젝트 대시보드 보기
+  1. /claude-sdd:intake — 요구사항 수집
+  2. /claude-sdd:status — 프로젝트 대시보드 보기
 ```
 
 ## 의존성

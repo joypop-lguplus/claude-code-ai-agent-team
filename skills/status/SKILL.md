@@ -1,17 +1,16 @@
 ---
-name: sdd-status
-description: Use when the user wants to check SDD lifecycle progress, phase status, or checklist completion, or types /sdd-status.
-version: 0.3.0
+name: status
+description: Use when the user wants to check SDD lifecycle progress, phase status, or checklist completion.
 ---
 
-# /sdd-status — SDD 상태 대시보드
+# /claude-sdd:status — SDD 상태 대시보드
 
 이 프로젝트의 SDD 라이프사이클 현재 상태를 표시합니다.
 
 ## 사용법
 
 ```
-/sdd-status
+/claude-sdd:status
 ```
 
 ## 동작
@@ -21,7 +20,7 @@ version: 0.3.0
 `docs/specs/sdd-config.yaml`을 읽습니다. 존재하지 않으면:
 ```
 이 프로젝트는 SDD로 초기화되지 않았습니다.
-시작하려면 /sdd-init을 실행하세요.
+시작하려면 /claude-sdd:init을 실행하세요.
 ```
 
 ### 2단계: 현재 단계 감지
@@ -70,7 +69,7 @@ version: 0.3.0
   DM:    2/2  ██████████ 100%
   TEST:  1/4  ██░░░░░░░░  25%
 
-다음 작업: /sdd-build (구현 계속)
+다음 작업: /claude-sdd:build (구현 계속)
 ```
 
 ## 의존성

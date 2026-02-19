@@ -1,25 +1,24 @@
 ---
-name: sdd-integrate
-description: Use when the user wants to finalize implementation with tests, documentation, and PR creation, or types /sdd-integrate.
-version: 0.3.0
+name: integrate
+description: Use when the user wants to finalize implementation with tests, documentation, and PR creation.
 ---
 
-# /sdd-integrate — 통합, PR 및 문서화
+# /claude-sdd:integrate — 통합, PR 및 문서화
 
 테스트, 문서화, 풀 리퀘스트를 포함하여 구현을 마무리합니다.
 
 ## 사용법
 
 ```
-/sdd-integrate              # 전체 통합 워크플로우
-/sdd-integrate pr           # PR만 생성 (테스트/문서 건너뛰기)
-/sdd-integrate docs         # 문서만 업데이트
+/claude-sdd:integrate              # 전체 통합 워크플로우
+/claude-sdd:integrate pr           # PR만 생성 (테스트/문서 건너뛰기)
+/claude-sdd:integrate docs         # 문서만 업데이트
 ```
 
 ## 사전 조건
 
 - 품질 게이트가 통과되어야 함 (`08-review-report.md`에 100% 통과 표시)
-- 또는 실패에도 불구하고 사용자가 `/sdd-integrate`로 명시적으로 재정의
+- 또는 실패에도 불구하고 사용자가 `/claude-sdd:integrate`로 명시적으로 재정의
 
 ## 동작
 
@@ -137,5 +136,5 @@ URL: https://github.com/...
 
 ## 의존성
 
-- `docs/specs/08-review-report.md` (`/sdd-review`에서 생성)
+- `docs/specs/08-review-report.md` (`/claude-sdd:review`에서 생성)
 - `gh` CLI (PR 생성용)

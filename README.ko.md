@@ -15,13 +15,13 @@
 ## SDD 라이프사이클
 
 ```
-/sdd-init  -->  /sdd-intake  -->  /sdd-spec  -->  /sdd-plan
-   |                |                 |               |
-   v                v                 v               v
- 프로젝트       요구사항            기술 스펙        태스크
- 설정           수집                작성             분해
+/claude-sdd:init  -->  /claude-sdd:intake  -->  /claude-sdd:spec  -->  /claude-sdd:plan
+   |                      |                        |                      |
+   v                      v                        v                      v
+ 프로젝트             요구사항                  기술 스펙              태스크
+ 설정                 수집                      작성                   분해
 
-/sdd-build  -->  /sdd-review  -->  /sdd-integrate
+/claude-sdd:build  -->  /claude-sdd:review  -->  /claude-sdd:integrate
    |                |                 |
    v                v                 v
  Agent Teams     품질               PR &
@@ -32,15 +32,15 @@
 
 | 단계 | 명령어 | 산출물 |
 |------|--------|--------|
-| 1. 초기화 | `/sdd-init new\|legacy` | `sdd-config.yaml`, CLAUDE.md 규칙 |
-| 2. 요구사항 수집 | `/sdd-intake` | `01-requirements.md` |
-| 3. 스펙 작성 | `/sdd-spec` | `02-*.md` ~ `06-spec-checklist.md` |
-| 4. 계획 수립 | `/sdd-plan` | `07-task-plan.md`, 워크 패키지 |
-| 5. 구현 | `/sdd-build` | 구현 코드 + 테스트 |
-| 6. 리뷰 | `/sdd-review` | `08-review-report.md` |
-| 7. 통합 | `/sdd-integrate` | 스펙 추적 가능한 PR |
+| 1. 초기화 | `/claude-sdd:init new\|legacy` | `sdd-config.yaml`, CLAUDE.md 규칙 |
+| 2. 요구사항 수집 | `/claude-sdd:intake` | `01-requirements.md` |
+| 3. 스펙 작성 | `/claude-sdd:spec` | `02-*.md` ~ `06-spec-checklist.md` |
+| 4. 계획 수립 | `/claude-sdd:plan` | `07-task-plan.md`, 워크 패키지 |
+| 5. 구현 | `/claude-sdd:build` | 구현 코드 + 테스트 |
+| 6. 리뷰 | `/claude-sdd:review` | `08-review-report.md` |
+| 7. 통합 | `/claude-sdd:integrate` | 스펙 추적 가능한 PR |
 
-`/sdd`를 사용하면 현재 단계를 자동 감지하고 이어서 진행합니다.
+`/claude-sdd:auto`를 사용하면 현재 단계를 자동 감지하고 이어서 진행합니다.
 
 ## 설치
 
@@ -72,17 +72,17 @@ claude --plugin-dir .
 
 | 명령어 | 설명 |
 |--------|------|
-| `/sdd` | 현재 단계를 자동 감지하고 라이프사이클 진행 |
-| `/sdd-init` | SDD 프로젝트 초기화 |
-| `/sdd-intake` | 요구사항 수집 (Confluence, Jira, Figma, 파일, 인터뷰) |
-| `/sdd-spec` | 기술 스펙 생성 |
-| `/sdd-plan` | 태스크 분해 및 Agent Teams 할당 |
-| `/sdd-build` | 품질 루프를 통한 구현 |
-| `/sdd-review` | 품질 게이트 검증 |
-| `/sdd-integrate` | 통합, PR 생성, 문서화 |
-| `/sdd-status` | 진행 상황 대시보드 |
-| `/sdd-lint` | 코드 분석: 진단, 검색, 심볼, 포맷 |
-| `/sdd-lsp` | LSP 기반 의미 분석: 진단, 정의, 참조, 심볼, 호출 계층 |
+| `/claude-sdd:auto` | 현재 단계를 자동 감지하고 라이프사이클 진행 |
+| `/claude-sdd:init` | SDD 프로젝트 초기화 |
+| `/claude-sdd:intake` | 요구사항 수집 (Confluence, Jira, Figma, 파일, 인터뷰) |
+| `/claude-sdd:spec` | 기술 스펙 생성 |
+| `/claude-sdd:plan` | 태스크 분해 및 Agent Teams 할당 |
+| `/claude-sdd:build` | 품질 루프를 통한 구현 |
+| `/claude-sdd:review` | 품질 게이트 검증 |
+| `/claude-sdd:integrate` | 통합, PR 생성, 문서화 |
+| `/claude-sdd:status` | 진행 상황 대시보드 |
+| `/claude-sdd:lint` | 코드 분석: 진단, 검색, 심볼, 포맷 |
+| `/claude-sdd:lsp` | LSP 기반 의미 분석: 진단, 정의, 참조, 심볼, 호출 계층 |
 
 ### 에이전트
 
@@ -117,10 +117,10 @@ SDD의 핵심은 빌드 단계에서의 리더 주도 품질 루프입니다:
 | Node.js 18+ | **필수** | CLI 도구용 |
 | Agent Teams | **필수** | `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` |
 | `gh` CLI | 권장 | PR 생성용 |
-| ast-grep (`sg`) | 선택 | `/sdd-lint search` 및 `/sdd-lint symbols`용 |
-| Language Server | 선택 | `/sdd-lsp` 의미 분석용 (언어별 서버) |
-| Confluence MCP | 선택 | `/sdd-intake confluence:...`용 |
-| Jira MCP | 선택 | `/sdd-intake jira:...`용 |
+| ast-grep (`sg`) | 선택 | `/claude-sdd:lint search` 및 `/claude-sdd:lint symbols`용 |
+| Language Server | 선택 | `/claude-sdd:lsp` 의미 분석용 (언어별 서버) |
+| Confluence MCP | 선택 | `/claude-sdd:intake confluence:...`용 |
+| Jira MCP | 선택 | `/claude-sdd:intake jira:...`용 |
 
 ### Agent Teams 활성화
 

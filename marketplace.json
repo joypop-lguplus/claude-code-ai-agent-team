@@ -41,47 +41,47 @@
     "components": {
       "skills": [
         {
-          "name": "sdd",
+          "name": "auto",
           "description": "SDD lifecycle orchestrator (auto-detect phase)"
         },
         {
-          "name": "sdd-init",
+          "name": "init",
           "description": "Initialize project for SDD"
         },
         {
-          "name": "sdd-intake",
+          "name": "intake",
           "description": "Requirements gathering (Confluence, Jira, Figma, file, interview)"
         },
         {
-          "name": "sdd-spec",
+          "name": "spec",
           "description": "Generate technical specifications and checklist"
         },
         {
-          "name": "sdd-plan",
+          "name": "plan",
           "description": "Task decomposition and team assignment"
         },
         {
-          "name": "sdd-build",
+          "name": "build",
           "description": "Implementation with Agent Teams quality loop"
         },
         {
-          "name": "sdd-review",
+          "name": "review",
           "description": "Quality gate verification against spec checklist"
         },
         {
-          "name": "sdd-integrate",
+          "name": "integrate",
           "description": "Integration, PR creation, and documentation"
         },
         {
-          "name": "sdd-status",
+          "name": "status",
           "description": "Status dashboard with progress tracking"
         },
         {
-          "name": "sdd-lint",
+          "name": "lint",
           "description": "Code analysis: diagnostics, structural search, symbols, formatting"
         },
         {
-          "name": "sdd-lsp",
+          "name": "lsp",
           "description": "LSP-based semantic analysis: diagnostics, definitions, references, symbols, call hierarchy"
         }
       ],
@@ -122,22 +122,22 @@
       },
       "gh_cli": {
         "install": "https://cli.github.com/",
-        "purpose": "PR creation in /sdd-integrate"
+        "purpose": "PR creation in /claude-sdd:integrate"
       },
       "confluence_mcp": {
-        "purpose": "Read Confluence pages in /sdd-intake",
+        "purpose": "Read Confluence pages in /claude-sdd:intake",
         "note": "User must configure in their environment"
       },
       "jira_mcp": {
-        "purpose": "Read Jira epics/stories in /sdd-intake",
+        "purpose": "Read Jira epics/stories in /claude-sdd:intake",
         "note": "User must configure in their environment"
       },
       "ast_grep": {
         "install": "https://ast-grep.github.io/guide/quick-start.html",
-        "purpose": "Structural code search and symbol extraction in /sdd-lint"
+        "purpose": "Structural code search and symbol extraction in /claude-sdd:lint"
       },
       "lsp_servers": {
-        "purpose": "LSP-based semantic analysis in /sdd-lsp",
+        "purpose": "LSP-based semantic analysis in /claude-sdd:lsp",
         "note": "Language-specific: typescript-language-server, pyright-langserver, gopls, rust-analyzer, clangd"
       }
     },
