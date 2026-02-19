@@ -5,6 +5,12 @@ import { header, colors } from '../lib/utils.mjs';
 const VERSION = '0.3.0';
 const [,, command, ...args] = process.argv;
 
+// npx 실행인지 직접 실행인지 감지하여 안내 명령어 결정
+const isNpx = !!(process.env.npm_execpath || process.argv[1]?.includes('npx'));
+process.env.SDD_CLI_NAME = isNpx
+  ? 'npx github:joypop-lguplus/claude-sdd'
+  : 'claude-sdd';
+
 async function main() {
   switch (command) {
     case 'check':
