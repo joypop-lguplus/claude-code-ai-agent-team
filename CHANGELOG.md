@@ -2,20 +2,30 @@
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-02-20
+
+### 추가
+- **`lsp-test/` 테스트 환경**: 8개 언어(TS/Python/Go/Java/Kotlin/Lua/Terraform/YAML)별 최소 LSP 테스트 파일
+- **`scripts/sdd-lsp-patch.sh` 세션 훅**: 세션 시작 시 gopls/kotlin-lsp .lsp.json 자동 패치 + kotlin-lsp JVM 프리웜
+- **kotlin-lsp JVM 프리웜**: SessionStart 훅에서 kotlin-lsp를 미리 시작하여 JVM 클래스를 OS 페이지 캐시에 적재 → 후속 시작 시 디스크 I/O 없이 즉시 로딩
+- **`lib/doctor.mjs` LSP 검증 섹션**: [4/4] LSP 설정 검증 — gopls 풀 패스 패치 상태, kotlin-lsp 풀 패스 패치 상태 확인
+
+### 수정
+- **gopls PATH 감지 버그**: `configureGoplsPath()`에서 `commandExists('gopls')` 대신 `command -v gopls`로 실제 경로 확인 → `~/go/bin/gopls`면 .lsp.json에 풀 패스 패치 진행 (Claude Code 런타임에 `~/go/bin`이 없어 "server is error" 발생하던 문제 해결)
+- **kotlin-lsp "server is starting" 타임아웃**: JVM+Kotlin 컴파일러 초기화 ~4초로 Claude Code 내부 타임아웃 초과 → SessionStart 프리웜으로 해결
+
+### 변경
+- **`lib/installer.mjs`**: gopls `command -v` 기반 경로 확인 + kotlin-lsp 풀 패스 패치 (`configureKotlinLspTuning()`) 추가
+- **`hooks/hooks.json`**: `sdd-lsp-patch.sh` SessionStart 훅 추가 (기존 사용자 자동 패치 안전망)
+- **`lib/doctor.mjs`**: 3단계 → 4단계 진단 (`scripts/sdd-lsp-patch.sh` 무결성 + LSP .lsp.json 검증)
+- **버전**: `0.3.0` → `0.3.1` (package.json, plugin.json, marketplace.json, cli.mjs)
+
 ### Removed
 - **커스텀 LSP 구현 전면 제거**: `boostvolt/claude-code-lsps` 마켓플레이스 플러그인으로 완전 대체
   - `skills/sdd-lsp/` — `/claude-sdd:sdd-lsp` 스킬 삭제
   - `scripts/sdd-lsp.mjs` — CLI 브릿지 삭제
   - `lib/lsp/` — LSP 클라이언트, 서버 레지스트리, 브릿지 삭제
   - `templates/project-init/lsp-config.yaml.tmpl` — LSP 설정 템플릿 삭제
-
-### Changed
-- **LSP 통합 전환**: 커스텀 `sdd-lsp.mjs` 기반 → `boostvolt/claude-code-lsps` 마켓플레이스 플러그인 기반
-- **`lib/installer.mjs`**: LSP 서버 개별 설치 → boostvolt 마켓플레이스 등록 + 8개 언어(TS/Python/Go/Java/Kotlin/Lua/Terraform/YAML) 선택 설치
-- **에이전트 정의 주입 수정**: `sdd-build`에서 `agents/sdd-implementer.md`를 Read 도구로 읽어서 프롬프트에 삽입하도록 명시
-- **에이전트 LSP 섹션 간소화**: `sdd-implementer`, `sdd-reviewer`, `sdd-test-writer`, `sdd-change-analyst`, `sdd-spec-writer`, `sdd-code-analyzer` — 커스텀 LSP 명령어 제거, 내장 자동 진단 안내로 교체
-- **`lib/checker.mjs`**: LSP 서버 목록을 boostvolt 기반 8개 언어로 업데이트
-- **문서 현행화**: CLAUDE.md, usage-guide, setup-guide, architecture, workflow-guide, README — LSP 참조를 boostvolt 기반으로 통일
 
 ## [0.3.0] - 2026-02-19
 

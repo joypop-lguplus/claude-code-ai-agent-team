@@ -20,5 +20,14 @@ node_modules/
 .env
 .env.local
 
+# Gradle
+.gradle/
+build/
+
+# Eclipse/Buildship
+.classpath
+.project
+.settings/
+
 # API Keys (NEVER commit)
 *.key

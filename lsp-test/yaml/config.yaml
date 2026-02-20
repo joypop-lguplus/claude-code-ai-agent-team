@@ -1,0 +1,31 @@
+# LSP 테스트 — yaml-language-server hover / documentSymbol.
+# k8s Deployment 스타일 YAML
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lsp-test-app
+  labels:
+    app: lsp-test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: lsp-test
+  template:
+    metadata:
+      labels:
+        app: lsp-test
+    spec:
+      containers:
+        - name: app
+          image: nginx:1.25
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"

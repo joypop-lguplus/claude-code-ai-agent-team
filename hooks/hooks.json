@@ -8,6 +8,14 @@
             "command": "${CLAUDE_PLUGIN_ROOT}/scripts/sdd-session-init.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/sdd-lsp-patch.sh"
+          }
+        ]
       }
     ]
   }
