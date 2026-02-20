@@ -25,6 +25,10 @@ Language Server Protocol을 활용한 의미 수준 코드 분석을 수행합�
 서브커맨드가 지정되지 않으면 `status`를 실행합니다.
 `<line>`과 `<col>`은 1-based입니다.
 
+## 권장 사항
+
+> **참고:** `boostvolt/claude-code-lsps` 플러그인이 설치되어 있으면 Claude Code가 자동으로 LSP 진단, 정의 이동, 참조 찾기 등을 수행합니다. 이 스킬은 수동으로 LSP 연산을 실행해야 할 때 사용합니다.
+
 ## 사전 조건
 
 - 대상 언어의 Language Server가 설치되어 있어야 합니다
@@ -32,15 +36,30 @@ Language Server Protocol을 활용한 의미 수준 코드 분석을 수행합�
 
 ### 지원 언어 서버
 
-| 언어 | 서버 명령어 | 설치 방법 |
-|------|-------------|-----------|
-| TypeScript/JS | `typescript-language-server` | `npm i -g typescript-language-server typescript` |
-| Python | `pyright-langserver` | `npm i -g pyright` 또는 `pip install pyright` |
-| Go | `gopls` | `go install golang.org/x/tools/gopls@latest` |
-| Rust | `rust-analyzer` | `rustup component add rust-analyzer` |
-| C/C++ | `clangd` | OS 패키지 매니저 또는 LLVM 설치 |
-| Java | `jdtls` | [eclipse.org/jdtls](https://projects.eclipse.org/projects/eclipse.jdt.ls) 또는 OS 패키지 매니저 |
-| Kotlin | `kotlin-language-server` | [github.com/fwcd/kotlin-language-server](https://github.com/fwcd/kotlin-language-server) |
+`boostvolt/claude-code-lsps` 플러그인 설치 시 자동으로 활용되는 서버:
+
+| 언어 | 플러그인 | 서버 바이너리 | 설치 방법 |
+|------|---------|-------------|-----------|
+| TypeScript/JS | `vtsls` | `vtsls` | `npm i -g @vtsls/language-server typescript` |
+| Python | `pyright` | `pyright` | `pip install pyright` |
+| Go | `gopls` | `gopls` | `go install golang.org/x/tools/gopls@latest` |
+| Java | `jdtls` | `jdtls` | `brew install jdtls` (Java 21+) |
+| Kotlin | `kotlin-lsp` | `kotlin-lsp` | `brew install JetBrains/utils/kotlin-lsp` (Java 17+) |
+| Lua | `lua-language-server` | `lua-language-server` | `brew install lua-language-server` |
+| Terraform | `terraform-ls` | `terraform-ls` | `brew install terraform-ls` |
+| YAML | `yaml-language-server` | `yaml-language-server` | `npm i -g yaml-language-server` |
+
+이 스킬의 레거시 CLI 브릿지(`sdd-lsp.mjs`)가 지원하는 서버:
+
+| 언어 | 서버 명령어 |
+|------|-------------|
+| TypeScript/JS | `typescript-language-server` |
+| Python | `pyright-langserver` |
+| Go | `gopls` |
+| Rust | `rust-analyzer` |
+| C/C++ | `clangd` |
+| Java | `jdtls` |
+| Kotlin | `kotlin-language-server` |
 
 ## 동작
 
@@ -164,12 +183,13 @@ node <plugin-root>/scripts/sdd-lsp.mjs outgoing-calls src/user/controller.ts 28 
 
 LSP 서버가 설치되지 않은 경우, 다음 순서로 대체합니다:
 
-1. **`/claude-sdd:sdd-lint diagnostics`** — 네이티브 진단 도구 (tsc, ruff 등)
-2. **`/claude-sdd:sdd-lint symbols`** — ast-grep 기반 심볼 추출
-3. **`/claude-sdd:sdd-lint search`** — ast-grep 구조 검색
-4. **Grep/Glob** — 기본 텍스트 검색
+1. **`boostvolt/claude-code-lsps`** — 내장 LSP 플러그인 (설치 시 자동 진단)
+2. **`/claude-sdd:sdd-lint diagnostics`** — 네이티브 진단 도구 (tsc, ruff 등)
+3. **`/claude-sdd:sdd-lint symbols`** — ast-grep 기반 심볼 추출
+4. **`/claude-sdd:sdd-lint search`** — ast-grep 구조 검색
+5. **Grep/Glob** — 기본 텍스트 검색
 
-대체 시 사용자에게 LSP 서버 설치를 안내합니다.
+대체 시 사용자에게 `boostvolt/claude-code-lsps` 플러그인 설치를 안내합니다.
 
 ## SDD 라이프사이클과의 통합
 
@@ -197,6 +217,7 @@ LSP 서버가 설치되지 않은 경우, 다음 순서로 대체합니다:
 
 ## 의존성
 
-- 대상 언어의 Language Server (선택 사항 — 없으면 `/claude-sdd:sdd-lint`로 폴백)
-- `scripts/sdd-lsp.mjs` — CLI 브릿지
+- `boostvolt/claude-code-lsps` — 권장 (설치 시 자동 진단 활성화, 이 스킬 없이도 LSP 기능 사용 가능)
+- 대상 언어의 Language Server (레거시 CLI 브릿지 사용 시 필요)
+- `scripts/sdd-lsp.mjs` — 레거시 CLI 브릿지
 - `lib/lsp/` — LSP 핵심 라이브러리 (client, servers, bridge)

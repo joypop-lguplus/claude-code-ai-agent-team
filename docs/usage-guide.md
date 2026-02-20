@@ -278,20 +278,21 @@ Language Server Protocol을 활용한 정확한 의미 수준 코드 분석:
 
 | 언어 | 서버 | 설치 |
 |------|------|------|
-| TypeScript/JS | `typescript-language-server` | `npm i -g typescript-language-server typescript` |
-| Python | `pyright-langserver` | `npm i -g pyright` |
+| TypeScript/JS | `vtsls` | `npm i -g @vtsls/language-server typescript` |
+| Python | `pyright` | `pip install pyright` |
 | Go | `gopls` | `go install golang.org/x/tools/gopls@latest` |
-| Rust | `rust-analyzer` | `rustup component add rust-analyzer` |
-| C/C++ | `clangd` | OS 패키지 매니저 |
-| Java | `jdtls` | [eclipse.org/jdtls](https://projects.eclipse.org/projects/eclipse.jdt.ls) 또는 OS 패키지 매니저 |
-| Kotlin | `kotlin-language-server` | [github.com/fwcd/kotlin-language-server](https://github.com/fwcd/kotlin-language-server) |
+| Java | `jdtls` | `brew install jdtls` (Java 21+) |
+| Kotlin | `kotlin-lsp` | `brew install JetBrains/utils/kotlin-lsp` (Java 17+) |
+| Lua | `lua-language-server` | `brew install lua-language-server` |
+| Terraform | `terraform-ls` | `brew install terraform-ls` |
+| YAML | `yaml-language-server` | `npm i -g yaml-language-server` |
 
 ### `/claude-sdd:sdd-lint`와의 관계
 
 `/claude-sdd:sdd-lsp`는 `/claude-sdd:sdd-lint`를 **보완**합니다:
 - `/claude-sdd:sdd-lint` — 네이티브 도구 (tsc, ruff 등) + ast-grep 기반 분석
-- `/claude-sdd:sdd-lsp` — Language Server 기반 의미 분석 (더 정확한 타입 정보)
-- LSP 서버가 없으면 `/claude-sdd:sdd-lint`로 자동 폴백
+- `/claude-sdd:sdd-lsp` — Language Server 기반 의미 분석 (레거시, `/claude-sdd:sdd-lint` 권장)
+- `boostvolt/claude-code-lsps` 플러그인 설치 시 Claude Code에서 LSP 자동 진단 활성화
 
 ## 변경 관리 (`/claude-sdd:sdd-change`)
 

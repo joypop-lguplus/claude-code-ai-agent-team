@@ -53,21 +53,7 @@
 
 ### 4단계: 코드 영향 분석
 
-LSP 도구를 활용하여 정밀한 코드 영향 분석을 수행합니다. Language Server가 설치되어 있지 않으면 grep/find 기반으로 대체합니다.
-
-```bash
-# 변경 대상 심볼의 모든 참조 찾기 (영향 범위 식별)
-node <plugin-root>/scripts/sdd-lsp.mjs references <file> <line> <col>
-
-# 변경 대상 함수를 호출하는 코드 식별
-node <plugin-root>/scripts/sdd-lsp.mjs incoming-calls <file> <line> <col>
-
-# 변경 대상 함수가 호출하는 코드 식별
-node <plugin-root>/scripts/sdd-lsp.mjs outgoing-calls <file> <line> <col>
-
-# 인터페이스 변경 시 영향받는 구현체 식별
-node <plugin-root>/scripts/sdd-lsp.mjs implementations <file> <line> <col>
-```
+코드 수준의 영향 분석을 수행합니다. Claude Code에 LSP 플러그인이 설치되어 있으면 참조 찾기, 호출 계층, 구현체 식별 등이 자동으로 활용됩니다. LSP가 없으면 Grep/Glob 기반으로 대체합니다.
 
 분석 결과를 다음과 같이 구조화합니다:
 

@@ -80,38 +80,42 @@ claude mcp add mcp-atlassian -s user -- \
 
 참고: `mcp-atlassian` 패키지는 하나의 MCP 서버에서 Confluence와 Jira를 모두 지원합니다.
 
-## 4단계: Language Server 설치 (선택)
+## 4단계: LSP 플러그인 설치 (선택)
 
-`/claude-sdd:sdd-lsp` 의미 분석을 사용하려면 프로젝트 언어에 맞는 Language Server를 설치합니다:
+`boostvolt/claude-code-lsps` 플러그인을 설치하면 goToDefinition, findReferences, 자동 진단 등 LSP 기능이 Claude Code에 내장됩니다.
+
+### 설치 방법
+
+인스톨러를 사용하면 언어별로 선택 설치할 수 있습니다:
 
 ```bash
-# TypeScript/JavaScript
-npm i -g typescript-language-server typescript
-
-# Python
-npm i -g pyright
-# 또는: pip install pyright
-
-# Go
-go install golang.org/x/tools/gopls@latest
-
-# Rust
-rustup component add rust-analyzer
-
-# C/C++
-# macOS: brew install llvm
-# Ubuntu: apt install clangd
-
-# Java
-# macOS: brew install jdtls
-# 또는: https://projects.eclipse.org/projects/eclipse.jdt.ls
-
-# Kotlin
-# macOS: brew install kotlin-language-server
-# 또는: https://github.com/fwcd/kotlin-language-server
+npx github:joypop-lguplus/claude-sdd install
 ```
 
-Language Server 없이도 SDD를 사용할 수 있습니다. `/claude-sdd:sdd-lint`가 네이티브 도구로 대체합니다.
+### 수동 설치
+
+```bash
+# 마켓플레이스 등록
+claude plugin marketplace add boostvolt/claude-code-lsps
+
+# 언어별 플러그인 설치 (예: TypeScript)
+claude plugin install vtsls@claude-code-lsps
+```
+
+### 지원 언어
+
+| 언어 | 플러그인 | LSP 서버 설치 |
+|------|---------|-------------|
+| TypeScript/JS | `vtsls` | `npm i -g @vtsls/language-server typescript` |
+| Python | `pyright` | `pip install pyright` |
+| Go | `gopls` | `go install golang.org/x/tools/gopls@latest` |
+| Java | `jdtls` | `brew install jdtls` (Java 21+) |
+| Kotlin | `kotlin-lsp` | `brew install JetBrains/utils/kotlin-lsp` (Java 17+) |
+| Lua | `lua-language-server` | `brew install lua-language-server` |
+| Terraform | `terraform-ls` | `brew install terraform-ls` |
+| YAML | `yaml-language-server` | `npm i -g yaml-language-server` |
+
+LSP 플러그인 없이도 SDD를 사용할 수 있습니다. `/claude-sdd:sdd-lint`가 네이티브 도구로 코드 분석을 수행합니다.
 
 ## 5단계: 설치 확인
 

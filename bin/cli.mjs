@@ -91,7 +91,7 @@ function printHelp() {
   console.log('  /sdd-review     품질 게이트 검증');
   console.log('  /sdd-integrate  통합, PR 및 문서화');
   console.log('  /sdd-status     상태 대시보드');
-  console.log('  /sdd-lsp        LSP 기반 의미 분석');
+  console.log('  /sdd-lsp        LSP 기반 의미 분석 (boostvolt/claude-code-lsps)');
   console.log('  /sdd            단계 자동 감지 및 진행');
 }
 

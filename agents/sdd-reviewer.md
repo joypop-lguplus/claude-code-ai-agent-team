@@ -78,37 +78,13 @@ TDD 준수 확인:
 | FAIL | 코드 누락, 명세와 불일치, 또는 테스트 누락 |
 | PARTIAL | 코드 존재하나 불완전하거나 부분적으로 일치 |
 
-### 4.5단계: LSP 기반 심층 검증
+### 4.5단계: 코드 품질 검증
 
-Language Server가 설치되어 있으면 추가 심층 검증을 수행합니다. 서버가 없으면 이 단계를 건너뜁니다.
+Claude Code에 LSP 플러그인이 설치되어 있으면 파일 편집 시 자동 진단이 실행됩니다. 추가로 프로젝트 네이티브 진단 도구를 실행하여 다음을 확인합니다:
 
-```bash
-# 의미 수준 에러 확인 (타입 에러, 미해결 참조 등)
-node <plugin-root>/scripts/sdd-lsp.mjs diagnostics <file>
-
-# 명세 항목의 API가 실제 사용되는지 확인
-node <plugin-root>/scripts/sdd-lsp.mjs references <file> <line> <col>
-
-# 구현된 심볼이 명세와 일치하는지 확인
-node <plugin-root>/scripts/sdd-lsp.mjs symbols <file>
-
-# 인터페이스의 구현체가 모두 존재하는지 확인
-node <plugin-root>/scripts/sdd-lsp.mjs implementations <file> <line> <col>
-```
-
-검증 항목:
-1. **diagnostics**: 모든 구현 파일에 대해 LSP 진단을 실행하여 에러 0건 확인
-2. **references**: 명세에 정의된 공개 API가 실제로 사용되는지 참조 추적
-3. **symbols**: 파일의 심볼 테이블을 추출하여 명세에 정의된 인터페이스와 매칭
-4. **implementations**: 인터페이스/추상 클래스에 대한 구현체가 모두 존재하는지 확인
-
-```
-LSP 심층 검증:
-  diagnostics:      0 에러, 2 경고 → 통과
-  API 참조 확인:    12/12 공개 API가 사용됨 → 통과
-  심볼 매칭:        28/28 명세 심볼 존재 → 통과
-  구현체 확인:      4/4 인터페이스에 구현체 존재 → 통과
-```
+1. **진단**: 모든 구현 파일에 대해 네이티브 진단을 실행하여 에러 0건 확인
+2. **심볼 검증**: 명세에 정의된 공개 API/인터페이스가 코드에 존재하는지 확인
+3. **포맷팅**: 코드 포매터 검사 모드로 포맷 준수 확인
 
 ## 출력: 리뷰 리포트
 

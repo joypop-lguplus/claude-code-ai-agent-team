@@ -150,7 +150,7 @@ Phase 7: PR creation (with change traceability)
 | Agent Teams | **Yes** | `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` |
 | `gh` CLI | Recommended | For PR creation |
 | ast-grep (`sg`) | Optional | For `/claude-sdd:sdd-lint search` and `/claude-sdd:sdd-lint symbols` |
-| Language Server | Optional | For `/claude-sdd:sdd-lsp` semantic analysis (per-language) |
+| LSP Plugin | Optional | `boostvolt/claude-code-lsps` — auto-diagnostics and LSP features |
 | Confluence MCP | Optional | For `/claude-sdd:sdd-intake confluence:...` |
 | Jira MCP | Optional | For `/claude-sdd:sdd-intake jira:...` |
 

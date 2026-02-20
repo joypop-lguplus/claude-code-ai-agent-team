@@ -76,10 +76,10 @@ Sonnet 모델에서 실행되는 마크다운 기반 에이전트:
 - `checklists/` -- 스펙 준수 및 품질 게이트 체크리스트 템플릿
 
 ### 도구 감지 (`scripts/sdd-detect-tools.sh`)
-프로젝트 언어 및 사용 가능한 린터/포매터/LSP 서버를 자동 감지합니다. JSON 출력. TypeScript, Python, Go, Rust, Java, Kotlin, C++ 지원.
+프로젝트 언어 및 사용 가능한 린터/포매터를 자동 감지합니다. JSON 출력. TypeScript, Python, Go, Rust, Java, Kotlin, C++ 지원.
 
-### LSP 통합 (`lib/lsp/` + `scripts/sdd-lsp.mjs`)
-Language Server Protocol 기반 의미 분석. Per-request 수명주기 (시작→쿼리→종료). 7개 언어 서버 지원 (typescript-language-server, pyright-langserver, gopls, rust-analyzer, clangd, jdtls, kotlin-language-server). 서버 미설치 시 네이티브 도구로 자동 폴백.
+### LSP 통합
+`boostvolt/claude-code-lsps` 마켓플레이스 플러그인으로 LSP를 Claude Code 내장 기능으로 제공. goToDefinition, findReferences, 자동 진단 등 9개 연산 지원. 8개 언어 (TypeScript, Python, Go, Java, Kotlin, Lua, Terraform, YAML). `lib/lsp/` + `scripts/sdd-lsp.mjs`는 `/claude-sdd:sdd-lsp` 스킬용으로 유지.
 
 ### 세션 훅 (`hooks/hooks.json` + `scripts/sdd-session-init.sh`)
 세션 시작 시 실행되어 현재 프로젝트가 SDD를 사용하는지 자동 감지하고 단계/진행 상황을 표시합니다.

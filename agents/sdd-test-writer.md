@@ -84,26 +84,11 @@ func TestGetUsers_Pagination(t *testing.T) {
 | SEC | 보안 | 인증, 인가, 입력 검증 |
 | PERF | 성능 | 응답 시간, 리소스 사용량 (벤치마크) |
 
-## LSP 기반 코드 분석
+## 코드 분석
 
-테스트 대상을 정확히 파악하기 위해 LSP 도구를 활용합니다. Language Server가 설치되어 있지 않으면 이 단계를 건너뜁니다.
-
-```bash
-# 테스트 대상 파일의 심볼 추출 (공개 인터페이스 식별)
-node <plugin-root>/scripts/sdd-lsp.mjs symbols <file>
-
-# 인터페이스/추상 클래스의 구현체 식별
-node <plugin-root>/scripts/sdd-lsp.mjs implementations <file> <line> <col>
-
-# 함수의 호출 경로 파악 (테스트 시나리오 도출)
-node <plugin-root>/scripts/sdd-lsp.mjs incoming-calls <file> <line> <col>
-```
-
-### 활용 시점
-
-1. **테스트 대상 추출**: `symbols`로 파일의 공개 함수/클래스/메서드를 정확히 식별합니다.
-2. **구현체 식별**: `implementations`로 인터페이스에 대한 구현체를 찾아 테스트 대상을 결정합니다.
-3. **호출 경로 파악**: `incoming-calls`로 함수의 호출자를 파악하여 통합 테스트 시나리오를 도출합니다.
+테스트 대상을 정확히 파악하기 위해 Claude Code의 코드 분석 기능을 활용합니다:
+- LSP 플러그인이 설치되어 있으면 심볼 추출, 구현체 식별, 호출 계층 분석이 자동으로 활용됩니다.
+- LSP가 없으면 Read/Grep 도구로 코드 구조를 파악합니다.
 
 ## 변경 사이클 모드 (sdd-change)
 

@@ -1,5 +1,15 @@
 # 변경 이력
 
+## [Unreleased]
+
+### Changed
+- **LSP 통합 전환**: 커스텀 `sdd-lsp.mjs` 기반 → `boostvolt/claude-code-lsps` 마켓플레이스 플러그인 기반
+- **`lib/installer.mjs`**: LSP 서버 개별 설치 → boostvolt 마켓플레이스 등록 + 8개 언어(TS/Python/Go/Java/Kotlin/Lua/Terraform/YAML) 선택 설치
+- **에이전트 정의 주입 수정**: `sdd-build`에서 `agents/sdd-implementer.md`를 Read 도구로 읽어서 프롬프트에 삽입하도록 명시
+- **에이전트 LSP 섹션 간소화**: `sdd-implementer`, `sdd-reviewer`, `sdd-test-writer`, `sdd-change-analyst`, `sdd-spec-writer`, `sdd-code-analyzer` — 커스텀 LSP 명령어 제거, 내장 자동 진단 안내로 교체
+- **`lib/checker.mjs`**: LSP 서버 목록을 boostvolt 기반 8개 언어로 업데이트
+- **문서 현행화**: CLAUDE.md, usage-guide, setup-guide, architecture, workflow-guide, README — LSP 참조를 boostvolt 기반으로 통일
+
 ## [0.3.0] - 2026-02-19
 
 ### 추가

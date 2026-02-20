@@ -150,7 +150,7 @@ Phase 7: PR 생성 (변경 추적성 포함)
 | Agent Teams | **필수** | `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` |
 | `gh` CLI | 권장 | PR 생성용 |
 | ast-grep (`sg`) | 선택 | `/claude-sdd:sdd-lint search` 및 `/claude-sdd:sdd-lint symbols`용 |
-| Language Server | 선택 | `/claude-sdd:sdd-lsp` 의미 분석용 (언어별 서버) |
+| LSP 플러그인 | 선택 | `boostvolt/claude-code-lsps` — 자동 진단 및 LSP 기능 활성화 |
 | Confluence MCP | 선택 | `/claude-sdd:sdd-intake confluence:...`용 |
 | Jira MCP | 선택 | `/claude-sdd:sdd-intake jira:...`용 |
 

@@ -328,7 +328,7 @@ sdd-review → 항목 실패 발견 → sdd-build (해당 항목만 재작업) �
 
 ### LSP (의미 분석)
 
-Language Server가 설치되어 있으면 더 정확한 분석이 가능합니다:
+`boostvolt/claude-code-lsps` 플러그인이 설치되어 있으면 자동 진단과 더 정확한 분석이 가능합니다:
 
 ```bash
 # 설치 상태 확인
@@ -351,13 +351,13 @@ Language Server가 설치되어 있으면 더 정확한 분석이 가능합니�
 
 | 언어 | 린트 진단 | 포매터 | LSP 서버 |
 |------|----------|--------|----------|
-| TypeScript/JS | `tsc --noEmit` | `prettier` / `biome format` | `typescript-language-server` |
-| Python | `ruff check` | `ruff format` / `black` | `pyright-langserver` |
+| TypeScript/JS | `tsc --noEmit` | `prettier` / `biome format` | `vtsls` |
+| Python | `ruff check` | `ruff format` / `black` | `pyright` |
 | Go | `go vet` | `gofmt` | `gopls` |
-| Rust | `cargo check` | `rustfmt` | `rust-analyzer` |
-| Java | `gradle build --dry-run` / `mvn compile` | `google-java-format` | `jdtls` |
-| Kotlin | `gradle build --dry-run` | `ktfmt` | `kotlin-language-server` |
-| C/C++ | `clang-tidy` | `clang-format` | `clangd` |
+| Rust | `cargo check` | `rustfmt` | — |
+| Java | `gradle build` / `mvn compile` | `google-java-format` | `jdtls` |
+| Kotlin | `gradle build --dry-run` | `ktfmt` | `kotlin-lsp` |
+| C/C++ | `clang-tidy` | `clang-format` | — |
 
 ---
 
@@ -472,4 +472,4 @@ sdd-init → sdd-intake → sdd-spec → sdd-plan
 
 ### Q: LSP 서버가 없으면?
 
-`/claude-sdd:sdd-lint`의 네이티브 도구(tsc, ruff, go vet 등)로 자동 폴백됩니다. LSP는 더 정확한 분석을 제공하지만, 없어도 SDD를 사용하는 데 문제없습니다.
+`boostvolt/claude-code-lsps` 플러그인을 설치하면 Claude Code에서 LSP가 자동 활성화됩니다. 플러그인이 없어도 `/claude-sdd:sdd-lint`의 네이티브 도구(tsc, ruff, go vet 등)로 자동 폴백되므로 SDD를 사용하는 데 문제없습니다.

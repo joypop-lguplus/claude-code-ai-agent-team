@@ -157,7 +157,7 @@
       },
       "lsp_servers": {
         "purpose": "LSP-based semantic analysis in /claude-sdd:sdd-lsp",
-        "note": "Language-specific: typescript-language-server, pyright-langserver, gopls, rust-analyzer, clangd"
+        "note": "boostvolt/claude-code-lsps 플러그인으로 자동 진단 활성화 (vtsls, pyright, gopls, jdtls, kotlin-lsp 등)"
       }
     },
     "screenshots": [],

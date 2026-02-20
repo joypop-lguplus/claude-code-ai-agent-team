@@ -49,7 +49,7 @@ claude-sdd/
 ├── Hooks (1)          # 이벤트 훅
 │   └── SessionStart   # SDD 프로젝트 감지
 │
-├── LSP (3 modules)    # Language Server Protocol 통합
+├── LSP (3 modules)    # Language Server Protocol 통합 (레거시, sdd-lsp 스킬용)
 │   ├── client.mjs     # JSON-RPC 2.0 클라이언트
 │   ├── servers.mjs    # 언어 서버 레지스트리
 │   └── bridge.mjs     # 고수준 LSP 브릿지
@@ -130,7 +130,7 @@ claude-sdd/
     |-- format [path]       <--- 포매터 (prettier, ruff format, gofmt)
     |
     v
-/claude-sdd:sdd-lsp                   LSP 기반 의미 분석 (보완)
+/claude-sdd:sdd-lsp                   LSP 기반 의미 분석 (레거시, boostvolt/claude-code-lsps 권장)
     |                                     |
     |-- diagnostics <file>  <--- Language Server 의미 진단
     |-- definition          <--- 정의 이동
@@ -141,13 +141,13 @@ claude-sdd/
     |-- incoming/outgoing   <--- 호출 계층
     |
     v
-scripts/sdd-detect-tools.sh      언어 및 사용 가능한 도구/LSP 서버 자동 감지
+scripts/sdd-detect-tools.sh      언어 및 사용 가능한 도구 자동 감지
     |
     v
 sdd-config.yaml (lint/lsp 섹션)  프로젝트별 도구 설정
 ```
 
-대체 전략: LSP 서버 미설치 → `/claude-sdd:sdd-lint` 네이티브 도구 → ast-grep → Grep/Glob
+대체 전략: boostvolt/claude-code-lsps 내장 LSP → /claude-sdd:sdd-lint 네이티브 도구 → ast-grep → Grep/Glob
 
 통합 지점:
 - `/claude-sdd:sdd-spec` (레거시): 코드베이스 이해를 위한 심볼 추출 (LSP 또는 ast-grep)
