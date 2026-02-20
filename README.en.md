@@ -87,7 +87,6 @@ claude --plugin-dir .
 | `/claude-sdd:sdd-change` | Change management: impact analysis, checklist update, TDD delta build |
 | `/claude-sdd:sdd-status` | Status dashboard with progress tracking |
 | `/claude-sdd:sdd-lint` | Code analysis: diagnostics, search, symbols, format |
-| `/claude-sdd:sdd-lsp` | LSP-based semantic analysis: diagnostics, definitions, references, symbols, call hierarchy |
 
 ### Agents
 
@@ -97,9 +96,9 @@ claude --plugin-dir .
 | `sdd-spec-writer` | Generates technical specs and checklists |
 | `sdd-implementer` | Implements work packages (Agent Teams member, TDD mode supported) |
 | `sdd-reviewer` | Verifies implementation against spec checklist (TDD compliance check) |
-| `sdd-code-analyzer` | Automated code analysis with native tools, ast-grep, and LSP |
+| `sdd-code-analyzer` | Automated code analysis with native tools and ast-grep |
 | `sdd-test-writer` | TDD test writer: generates failing tests from specs (no implementation) |
-| `sdd-change-analyst` | Change impact analysis: LSP/code analysis, minimal impact principle |
+| `sdd-change-analyst` | Change impact analysis: code analysis, minimal impact principle |
 
 ### The Quality Loop
 
@@ -197,8 +196,7 @@ claude-sdd/
 │   ├── sdd-integrate/SKILL.md
 │   ├── sdd-change/SKILL.md
 │   ├── sdd-status/SKILL.md
-│   ├── sdd-lint/SKILL.md
-│   └── sdd-lsp/SKILL.md
+│   └── sdd-lint/SKILL.md
 ├── templates/
 │   ├── claude-md/
 │   ├── specs/
@@ -206,18 +204,13 @@ claude-sdd/
 │   └── project-init/
 ├── scripts/
 │   ├── sdd-session-init.sh
-│   ├── sdd-detect-tools.sh
-│   └── sdd-lsp.mjs
+│   └── sdd-detect-tools.sh
 ├── bin/cli.mjs
 ├── lib/
 │   ├── utils.mjs
 │   ├── checker.mjs
 │   ├── installer.mjs
-│   ├── doctor.mjs
-│   └── lsp/
-│       ├── client.mjs
-│       ├── servers.mjs
-│       └── bridge.mjs
+│   └── doctor.mjs
 ├── docs/
 │   ├── architecture.md
 │   ├── setup-guide.md

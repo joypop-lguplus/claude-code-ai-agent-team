@@ -87,7 +87,6 @@ claude --plugin-dir .
 | `/claude-sdd:sdd-change` | 변경 관리: 영향 분석, 체크리스트 갱신, TDD 델타 빌드 |
 | `/claude-sdd:sdd-status` | 진행 상황 대시보드 |
 | `/claude-sdd:sdd-lint` | 코드 분석: 진단, 검색, 심볼, 포맷 |
-| `/claude-sdd:sdd-lsp` | LSP 기반 의미 분석: 진단, 정의, 참조, 심볼, 호출 계층 |
 
 ### 에이전트
 
@@ -97,9 +96,9 @@ claude --plugin-dir .
 | `sdd-spec-writer` | 기술 스펙 및 체크리스트 생성 |
 | `sdd-implementer` | 워크 패키지 구현 (Agent Teams 멤버, TDD 모드 지원) |
 | `sdd-reviewer` | 스펙 체크리스트 대비 구현 검증 (TDD 준수 확인 포함) |
-| `sdd-code-analyzer` | 네이티브 도구, ast-grep, LSP를 활용한 자동 코드 분석 |
+| `sdd-code-analyzer` | 네이티브 도구, ast-grep을 활용한 자동 코드 분석 |
 | `sdd-test-writer` | TDD 테스트 작성 (스펙 기반 실패 테스트, 구현 금지) |
-| `sdd-change-analyst` | 변경 영향 분석 (LSP/코드 분석, 최소 영향 원칙) |
+| `sdd-change-analyst` | 변경 영향 분석 (코드 분석, 최소 영향 원칙) |
 
 ### 품질 루프
 
@@ -199,8 +198,7 @@ claude-sdd/
 │   ├── sdd-integrate/SKILL.md
 │   ├── sdd-change/SKILL.md
 │   ├── sdd-status/SKILL.md
-│   ├── sdd-lint/SKILL.md
-│   └── sdd-lsp/SKILL.md
+│   └── sdd-lint/SKILL.md
 ├── templates/
 │   ├── claude-md/
 │   ├── specs/
@@ -208,18 +206,13 @@ claude-sdd/
 │   └── project-init/
 ├── scripts/
 │   ├── sdd-session-init.sh
-│   ├── sdd-detect-tools.sh
-│   └── sdd-lsp.mjs
+│   └── sdd-detect-tools.sh
 ├── bin/cli.mjs
 ├── lib/
 │   ├── utils.mjs
 │   ├── checker.mjs
 │   ├── installer.mjs
-│   ├── doctor.mjs
-│   └── lsp/
-│       ├── client.mjs
-│       ├── servers.mjs
-│       └── bridge.mjs
+│   └── doctor.mjs
 ├── docs/
 │   ├── architecture.md
 │   ├── setup-guide.md

@@ -25,7 +25,7 @@ node bin/cli.mjs version     # 버전 표시
 ### 플러그인 매니페스트
 `.claude-plugin/plugin.json` -- 모든 스킬, 에이전트, 훅을 Claude Code에 등록합니다.
 
-### 스킬 (`skills/` 내 13개 슬래시 명령어)
+### 스킬 (`skills/` 내 12개 슬래시 명령어)
 각 스킬은 Claude가 읽고 실행하는 절차적 지시사항이 담긴 `SKILL.md` 파일입니다. 라이프사이클 흐름:
 
 ```
@@ -41,7 +41,6 @@ node bin/cli.mjs version     # 버전 표시
 /claude-sdd:sdd-change    → 변경 관리 (영향 분석 → 체크리스트 갱신 → TDD 델타 빌드)
 /claude-sdd:sdd-status    → 상태 대시보드
 /claude-sdd:sdd-lint      → 코드 분석 (진단, 검색, 심볼, 포맷)
-/claude-sdd:sdd-lsp       → LSP 기반 의미 분석 (진단, 정의, 참조, 심볼, 호출 계층)
 ```
 
 ### 멀티 도메인 지원
@@ -79,7 +78,7 @@ Sonnet 모델에서 실행되는 마크다운 기반 에이전트:
 프로젝트 언어 및 사용 가능한 린터/포매터를 자동 감지합니다. JSON 출력. TypeScript, Python, Go, Rust, Java, Kotlin, C++ 지원.
 
 ### LSP 통합
-`boostvolt/claude-code-lsps` 마켓플레이스 플러그인으로 LSP를 Claude Code 내장 기능으로 제공. goToDefinition, findReferences, 자동 진단 등 9개 연산 지원. 8개 언어 (TypeScript, Python, Go, Java, Kotlin, Lua, Terraform, YAML). `lib/lsp/` + `scripts/sdd-lsp.mjs`는 `/claude-sdd:sdd-lsp` 스킬용으로 유지.
+`boostvolt/claude-code-lsps` 마켓플레이스 플러그인을 통해 Claude Code 내장 LSP를 활용합니다. 설치 시 파일 편집 후 자동 진단, 정의 이동, 참조 찾기 등이 활성화됩니다.
 
 ### 세션 훅 (`hooks/hooks.json` + `scripts/sdd-session-init.sh`)
 세션 시작 시 실행되어 현재 프로젝트가 SDD를 사용하는지 자동 감지하고 단계/진행 상황을 표시합니다.
@@ -89,9 +88,6 @@ Sonnet 모델에서 실행되는 마크다운 기반 에이전트:
 - `checker.mjs` -- 의존성 검사 로직
 - `installer.mjs` -- 설치 마법사
 - `doctor.mjs` -- 진단 및 파일 무결성 검증
-- `lsp/client.mjs` -- JSON-RPC 2.0 LSP 클라이언트
-- `lsp/servers.mjs` -- 언어 서버 레지스트리
-- `lsp/bridge.mjs` -- 고수준 LSP 브릿지
 
 ## 주요 규칙
 

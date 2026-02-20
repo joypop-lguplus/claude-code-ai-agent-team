@@ -56,8 +56,8 @@ detect_typescript_js() {
         LINTER="eslint"
       fi
       # LSP 서버
-      if cmd_exists typescript-language-server; then
-        LSP_SERVER="typescript-language-server --stdio"
+      if cmd_exists vtsls; then
+        LSP_SERVER="vtsls --stdio"
         LSP_AVAILABLE=true
       fi
     else
@@ -79,8 +79,8 @@ detect_typescript_js() {
         LINTER="eslint"
       fi
       # LSP 서버
-      if cmd_exists typescript-language-server; then
-        LSP_SERVER="typescript-language-server --stdio"
+      if cmd_exists vtsls; then
+        LSP_SERVER="vtsls --stdio"
         LSP_AVAILABLE=true
       fi
     fi
@@ -113,8 +113,8 @@ detect_python() {
       LINTER="flake8"
     fi
     # LSP 서버
-    if cmd_exists pyright-langserver; then
-      LSP_SERVER="pyright-langserver --stdio"
+    if cmd_exists pyright; then
+      LSP_SERVER="pyright --stdio"
       LSP_AVAILABLE=true
     fi
     return 0
@@ -173,8 +173,8 @@ detect_java_kotlin() {
         FORMATTER="ktfmt"
       fi
       # LSP 서버
-      if cmd_exists kotlin-language-server; then
-        LSP_SERVER="kotlin-language-server"
+      if cmd_exists kotlin-lsp; then
+        LSP_SERVER="kotlin-lsp"
         LSP_AVAILABLE=true
       fi
     else

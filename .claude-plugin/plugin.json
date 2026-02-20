@@ -17,9 +17,7 @@
     "jira",
     "lint",
     "code-analysis",
-    "ast-grep",
-    "lsp",
-    "language-server"
+    "ast-grep"
   ],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json"

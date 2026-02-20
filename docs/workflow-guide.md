@@ -13,7 +13,7 @@
 | TDD로 품질 확보하며 개발 | TDD 모드 | [시나리오 5](#시나리오-5-tdd로-품질-확보하며-개발) |
 | 작업 중 세션 끊김 / 재개 | 자동 감지 재개 | [시나리오 6](#시나리오-6-작업이-중단되었을-때-재개) |
 | 특정 단계만 다시 실행 | 단계 재진입 | [시나리오 7](#시나리오-7-특정-단계만-다시-실행) |
-| 코드 품질 점검만 필요 | 린트 / LSP | [시나리오 8](#시나리오-8-코드-품질-점검만-필요) |
+| 코드 품질 점검만 필요 | 린트 | [시나리오 8](#시나리오-8-코드-품질-점검만-필요) |
 | 진행 상황 확인 | 상태 대시보드 | [시나리오 9](#시나리오-9-진행-상황-확인) |
 
 ---
@@ -326,38 +326,17 @@ sdd-review → 항목 실패 발견 → sdd-build (해당 항목만 재작업) �
 /claude-sdd:sdd-lint format --fix
 ```
 
-### LSP (의미 분석)
-
-`boostvolt/claude-code-lsps` 플러그인이 설치되어 있으면 자동 진단과 더 정확한 분석이 가능합니다:
-
-```bash
-# 설치 상태 확인
-/claude-sdd:sdd-lsp status
-
-# 의미 수준 진단 (타입 에러, 미해결 참조)
-/claude-sdd:sdd-lsp diagnostics src/user/controller.ts
-
-# 참조 찾기 (리팩토링 영향 범위 파악)
-/claude-sdd:sdd-lsp references src/user/model.ts 12 10
-
-# 심볼 추출 (LSP 기반, 더 정확)
-/claude-sdd:sdd-lsp symbols src/user/controller.ts
-
-# 호출 계층 분석
-/claude-sdd:sdd-lsp incoming-calls src/user/controller.ts 28 15
-```
-
 ### 지원 언어
 
-| 언어 | 린트 진단 | 포매터 | LSP 서버 |
-|------|----------|--------|----------|
-| TypeScript/JS | `tsc --noEmit` | `prettier` / `biome format` | `vtsls` |
-| Python | `ruff check` | `ruff format` / `black` | `pyright` |
-| Go | `go vet` | `gofmt` | `gopls` |
-| Rust | `cargo check` | `rustfmt` | — |
-| Java | `gradle build` / `mvn compile` | `google-java-format` | `jdtls` |
-| Kotlin | `gradle build --dry-run` | `ktfmt` | `kotlin-lsp` |
-| C/C++ | `clang-tidy` | `clang-format` | — |
+| 언어 | 린트 진단 | 포매터 |
+|------|----------|--------|
+| TypeScript/JS | `tsc --noEmit` | `prettier` / `biome format` |
+| Python | `ruff check` | `ruff format` / `black` |
+| Go | `go vet` | `gofmt` |
+| Rust | `cargo check` | `rustfmt` |
+| Java | `gradle build` / `mvn compile` | `google-java-format` |
+| Kotlin | `gradle build --dry-run` | `ktfmt` |
+| C/C++ | `clang-tidy` | `clang-format` |
 
 ---
 

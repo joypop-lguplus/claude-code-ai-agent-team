@@ -16,7 +16,7 @@ claude-sdd는 스펙 주도 개발 (SDD) 라이프사이클을 구현하는 Clau
 
 ```
 claude-sdd/
-├── Skills (13)        # 사용자용 슬래시 명령어
+├── Skills (12)        # 사용자용 슬래시 명령어
 │   ├── /claude-sdd:sdd-auto      # 오케스트레이터 (단계 자동 감지)
 │   ├── /claude-sdd:sdd-kickstart # 심층 인터뷰 + 풀 오토 실행
 │   ├── /claude-sdd:sdd-init      # 프로젝트 초기화
@@ -28,15 +28,14 @@ claude-sdd/
 │   ├── /claude-sdd:sdd-integrate # PR 및 문서화
 │   ├── /claude-sdd:sdd-change    # 변경 관리 (영향 분석 + 델타 빌드)
 │   ├── /claude-sdd:sdd-status    # 대시보드
-│   ├── /claude-sdd:sdd-lint      # 코드 분석 및 진단
-│   └── /claude-sdd:sdd-lsp       # LSP 기반 의미 분석
+│   └── /claude-sdd:sdd-lint      # 코드 분석 및 진단
 │
 ├── Agents (7)         # 전문 작업용 서브에이전트
 │   ├── requirements-analyst  # 소스 파싱
 │   ├── spec-writer           # 스펙 생성
 │   ├── implementer           # 코드 구현 (TDD 모드 지원)
 │   ├── reviewer              # 품질 검증 (TDD 준수 확인)
-│   ├── code-analyzer         # 코드 분석 (진단, ast-grep, LSP)
+│   ├── code-analyzer         # 코드 분석 (진단, ast-grep)
 │   ├── test-writer           # TDD 테스트 작성 (스펙→실패 테스트)
 │   └── change-analyst        # 변경 영향 분석 (최소 영향 원칙)
 │
@@ -48,11 +47,6 @@ claude-sdd/
 │
 ├── Hooks (1)          # 이벤트 훅
 │   └── SessionStart   # SDD 프로젝트 감지
-│
-├── LSP (3 modules)    # Language Server Protocol 통합 (레거시, sdd-lsp 스킬용)
-│   ├── client.mjs     # JSON-RPC 2.0 클라이언트
-│   ├── servers.mjs    # 언어 서버 레지스트리
-│   └── bridge.mjs     # 고수준 LSP 브릿지
 │
 └── CLI (4 modules)    # npx CLI (설치용)
     ├── cli.mjs        # 진입점
@@ -130,29 +124,17 @@ claude-sdd/
     |-- format [path]       <--- 포매터 (prettier, ruff format, gofmt)
     |
     v
-/claude-sdd:sdd-lsp                   LSP 기반 의미 분석 (레거시, boostvolt/claude-code-lsps 권장)
-    |                                     |
-    |-- diagnostics <file>  <--- Language Server 의미 진단
-    |-- definition          <--- 정의 이동
-    |-- references          <--- 참조 찾기
-    |-- hover               <--- 타입/문서 정보
-    |-- symbols             <--- 문서/워크스페이스 심볼
-    |-- implementations     <--- 구현 찾기
-    |-- incoming/outgoing   <--- 호출 계층
-    |
-    v
 scripts/sdd-detect-tools.sh      언어 및 사용 가능한 도구 자동 감지
     |
     v
-sdd-config.yaml (lint/lsp 섹션)  프로젝트별 도구 설정
+sdd-config.yaml (lint 섹션)      프로젝트별 도구 설정
 ```
 
-대체 전략: boostvolt/claude-code-lsps 내장 LSP → /claude-sdd:sdd-lint 네이티브 도구 → ast-grep → Grep/Glob
+`boostvolt/claude-code-lsps` 플러그인 설치 시 Claude Code 내장 LSP가 자동으로 활성화되어 파일 편집 후 진단, 정의 이동, 참조 찾기 등이 제공됩니다.
 
 통합 지점:
-- `/claude-sdd:sdd-spec` (레거시): 코드베이스 이해를 위한 심볼 추출 (LSP 또는 ast-grep)
-- `/claude-sdd:sdd-build`: 워크 패키지 완료 전 LSP 진단 + 린트/포맷 실행
-- `/claude-sdd:sdd-review`: 품질 게이트 (2.5단계)에 LSP + 네이티브 진단 포함
+- `/claude-sdd:sdd-build`: 워크 패키지 완료 전 린트/포맷 실행
+- `/claude-sdd:sdd-review`: 품질 게이트 (2.5단계)에 네이티브 진단 포함
 
 ## TDD 모드
 

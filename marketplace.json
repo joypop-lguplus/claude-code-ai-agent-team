@@ -35,9 +35,7 @@
       "checklist",
       "lint",
       "code-analysis",
-      "ast-grep",
-      "lsp",
-      "language-server"
+      "ast-grep"
     ],
     "min_claude_code_version": "1.0.33",
     "platforms": ["darwin", "linux"],
@@ -90,10 +88,6 @@
         {
           "name": "sdd-lint",
           "description": "Code analysis: diagnostics, structural search, symbols, formatting"
-        },
-        {
-          "name": "sdd-lsp",
-          "description": "LSP-based semantic analysis: diagnostics, definitions, references, symbols, call hierarchy"
         }
       ],
       "agents": [
@@ -115,7 +109,7 @@
         },
         {
           "name": "sdd-code-analyzer",
-          "description": "Automated code analysis with native tools, ast-grep, and LSP"
+          "description": "Automated code analysis with native tools and ast-grep"
         },
         {
           "name": "sdd-test-writer",
@@ -123,7 +117,7 @@
         },
         {
           "name": "sdd-change-analyst",
-          "description": "Change impact analysis: LSP/code analysis, spec delta generation, minimal impact principle"
+          "description": "Change impact analysis: code analysis, spec delta generation, minimal impact principle"
         }
       ],
       "mcp_servers": [],
@@ -154,10 +148,6 @@
       "ast_grep": {
         "install": "https://ast-grep.github.io/guide/quick-start.html",
         "purpose": "Structural code search and symbol extraction in /claude-sdd:sdd-lint"
-      },
-      "lsp_servers": {
-        "purpose": "LSP-based semantic analysis in /claude-sdd:sdd-lsp",
-        "note": "boostvolt/claude-code-lsps 플러그인으로 자동 진단 활성화 (vtsls, pyright, gopls, jdtls, kotlin-lsp 등)"
       }
     },
     "screenshots": [],

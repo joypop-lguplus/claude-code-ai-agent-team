@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Removed
+- **커스텀 LSP 구현 전면 제거**: `boostvolt/claude-code-lsps` 마켓플레이스 플러그인으로 완전 대체
+  - `skills/sdd-lsp/` — `/claude-sdd:sdd-lsp` 스킬 삭제
+  - `scripts/sdd-lsp.mjs` — CLI 브릿지 삭제
+  - `lib/lsp/` — LSP 클라이언트, 서버 레지스트리, 브릿지 삭제
+  - `templates/project-init/lsp-config.yaml.tmpl` — LSP 설정 템플릿 삭제
+
 ### Changed
 - **LSP 통합 전환**: 커스텀 `sdd-lsp.mjs` 기반 → `boostvolt/claude-code-lsps` 마켓플레이스 플러그인 기반
 - **`lib/installer.mjs`**: LSP 서버 개별 설치 → boostvolt 마켓플레이스 등록 + 8개 언어(TS/Python/Go/Java/Kotlin/Lua/Terraform/YAML) 선택 설치
