@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### 추가
+- **에이전트 LSP 도구 활용 개선**: sdd-change-analyst, sdd-implementer, sdd-reviewer에 명시적 LSP 호출 지시 삽입 (findReferences, incomingCalls, documentSymbol 등). "자동으로 활용" → 워크플로우 단계 내 구체적 호출 + fallback 패턴
+- **CLAUDE.md LSP 통합 섹션**: 자동 진단 vs 명시적 LSP 도구 구분 테이블 추가
+- **레거시 모드 빌드 루프** (`sdd-build`): Phase 1/2/3 감사-보완-검증 빌드 루프
+- **레거시 모드 태스크 분해** (`sdd-plan`): 감사 대상 코드 경로, 하위 호환성 검증 태스크
+- **레거시 모드 테스트 전략** (`sdd-test-writer`): 회귀/호환성 테스트 패턴
+- **레거시 모드 멤버 템플릿** (`sdd-member.md.tmpl`): `{{LEGACY_MODE}}` 조건부 규칙 블록
+
+### 변경
+- **CLAUDE.md**: LSP 통합 섹션 보강, 레거시 모드 섹션 추가, 세션 훅 + 템플릿 + 스크립트 현행화
+
 ## [0.3.1] - 2026-02-20
 
 ### 추가

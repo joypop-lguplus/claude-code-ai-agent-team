@@ -203,10 +203,12 @@ claude-sdd/
 │   ├── claude-md/
 │   ├── specs/
 │   ├── checklists/
+│   ├── cross-domain/
 │   └── project-init/
 ├── scripts/
 │   ├── sdd-session-init.sh
-│   └── sdd-detect-tools.sh
+│   ├── sdd-detect-tools.sh
+│   └── sdd-lsp-patch.sh
 ├── bin/cli.mjs
 ├── lib/
 │   ├── utils.mjs
@@ -218,7 +220,9 @@ claude-sdd/
 │   ├── setup-guide.md
 │   ├── usage-guide.md
 │   ├── workflow-guide.md
-│   └── sdd-methodology.md
+│   ├── sdd-methodology.md
+│   ├── glossary-ko.md
+│   └── plan-lint-integration.md
 ├── hooks/hooks.json
 ├── .mcp.json
 ├── package.json

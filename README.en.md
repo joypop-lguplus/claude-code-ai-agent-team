@@ -169,7 +169,9 @@ Phase 7: PR creation (with change traceability)
 - [Architecture](docs/architecture.md) -- Plugin structure and design
 - [Setup Guide](docs/setup-guide.md) -- Step-by-step installation
 - [Usage Guide](docs/usage-guide.md) -- Detailed usage examples
+- [Workflow Guide](docs/workflow-guide.md) -- Scenario-based optimal workflows
 - [SDD Methodology](docs/sdd-methodology.md) -- The SDD approach explained
+- [Glossary (Korean)](docs/glossary-ko.md) -- SDD terminology
 
 ## Plugin Structure
 
@@ -201,10 +203,12 @@ claude-sdd/
 │   ├── claude-md/
 │   ├── specs/
 │   ├── checklists/
+│   ├── cross-domain/
 │   └── project-init/
 ├── scripts/
 │   ├── sdd-session-init.sh
-│   └── sdd-detect-tools.sh
+│   ├── sdd-detect-tools.sh
+│   └── sdd-lsp-patch.sh
 ├── bin/cli.mjs
 ├── lib/
 │   ├── utils.mjs
@@ -215,7 +219,10 @@ claude-sdd/
 │   ├── architecture.md
 │   ├── setup-guide.md
 │   ├── usage-guide.md
-│   └── sdd-methodology.md
+│   ├── workflow-guide.md
+│   ├── sdd-methodology.md
+│   ├── glossary-ko.md
+│   └── plan-lint-integration.md
 ├── hooks/hooks.json
 ├── .mcp.json
 ├── package.json

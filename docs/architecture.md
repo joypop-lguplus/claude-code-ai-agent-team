@@ -8,7 +8,7 @@ claude-sdd는 스펙 주도 개발 (SDD) 라이프사이클을 구현하는 Clau
 
 1. **체크리스트 = 마크다운**: 모든 추적은 git으로 버전 관리되는 마크다운 파일에서 이루어지며, 사람과 Claude 모두 읽을 수 있습니다.
 2. **MCP 미번들**: Confluence/Jira MCP 서버를 번들하지 않습니다. 플러그인은 사용자의 기존 MCP 설정을 활용하도록 안내합니다.
-3. **13개의 독립 스킬**: 각 라이프사이클 단계가 별도의 스킬이므로, 어느 지점에서든 재진입이 가능합니다.
+3. **12개의 독립 스킬**: 각 라이프사이클 단계가 별도의 스킬이므로, 어느 지점에서든 재진입이 가능합니다.
 4. **에이전트 모델 = Sonnet**: 모든 에이전트는 실제 분석 및 구현 작업에 Sonnet을 사용합니다.
 5. **Figma = 비전**: 별도의 MCP 없이 스크린샷/URL을 통해 디자인을 분석합니다.
 
@@ -39,14 +39,16 @@ claude-sdd/
 │   ├── test-writer           # TDD 테스트 작성 (스펙→실패 테스트)
 │   └── change-analyst        # 변경 영향 분석 (최소 영향 원칙)
 │
-├── Templates (10)     # 문서 템플릿
-│   ├── claude-md/     # 리더/멤버용 CLAUDE.md 템플릿
-│   ├── specs/         # 스펙 문서 템플릿
-│   ├── checklists/    # 품질 체크리스트 템플릿
-│   └── project-init/  # 프로젝트 설정 템플릿
+├── Templates (23)     # 문서 템플릿
+│   ├── claude-md/     # 리더/멤버용 CLAUDE.md 템플릿 (2)
+│   ├── specs/         # 스펙 문서 템플릿 (12)
+│   ├── checklists/    # 품질 체크리스트 템플릿 (4)
+│   ├── cross-domain/  # 도메인 의존성/통합 템플릿 (3)
+│   └── project-init/  # 프로젝트 설정 템플릿 (2)
 │
-├── Hooks (1)          # 이벤트 훅
-│   └── SessionStart   # SDD 프로젝트 감지
+├── Hooks (2)          # 이벤트 훅 (SessionStart)
+│   ├── sdd-session-init.sh   # SDD 프로젝트 감지 + 진행 상황 표시
+│   └── sdd-lsp-patch.sh      # gopls PATH 패치 + kotlin-lsp JVM 프리웜
 │
 └── CLI (4 modules)    # npx CLI (설치용)
     ├── cli.mjs        # 진입점
@@ -130,7 +132,19 @@ scripts/sdd-detect-tools.sh      언어 및 사용 가능한 도구 자동 감�
 sdd-config.yaml (lint 섹션)      프로젝트별 도구 설정
 ```
 
-`boostvolt/claude-code-lsps` 플러그인 설치 시 Claude Code 내장 LSP가 자동으로 활성화되어 파일 편집 후 진단, 정의 이동, 참조 찾기 등이 제공됩니다.
+`boostvolt/claude-code-lsps` 플러그인 설치 시 Claude Code 내장 LSP가 활성화됩니다. 두 가지 활용 방식이 있습니다:
+
+**자동 진단**: 파일 편집 후 에러/경고가 자동으로 표시됩니다. 에이전트의 별도 호출이 불필요합니다.
+
+**명시적 LSP 도구**: 다음 오퍼레이션은 에이전트가 직접 호출해야 합니다 (LSP 불가 시 Grep/Glob 대체):
+
+| 오퍼레이션 | 활용 장면 | 주요 사용 에이전트 |
+|-----------|----------|------------------|
+| `LSP findReferences` | 함수/클래스의 모든 호출자 파악 | sdd-change-analyst, sdd-implementer |
+| `LSP incomingCalls` | 호출 계층 추적 (영향 분석) | sdd-change-analyst |
+| `LSP documentSymbol` | 파일 내 공개 API/심볼 목록 추출 | sdd-reviewer, sdd-implementer |
+| `LSP goToDefinition` | 심볼의 원본 정의 위치 확인 | sdd-implementer, sdd-change-analyst |
+| `LSP hover` | 타입 정보 확인 | sdd-implementer, sdd-test-writer |
 
 통합 지점:
 - `/claude-sdd:sdd-build`: 워크 패키지 완료 전 린트/포맷 실행
@@ -190,4 +204,17 @@ Phase 7: PR 생성 (변경 추적성 포함)
 | 4단계 문서 | 04-data-model.md | 04-data-migration.md |
 | 5단계 문서 | 05-component-breakdown.md | 05-component-changes.md |
 | 리스크 수준 | 낮음 | 높음 (하위 호환성 필요) |
+| 빌드 루프 | 일반 품질 루프 | 감사-보완 루프 (아래 참조) |
 | 체크리스트 | 동일 형식 | 동일 형식 |
+
+### 레거시 빌드 루프
+
+레거시 프로젝트(`project.type: legacy`)의 빌드 단계는 일반 모드와 다르게 동작합니다:
+
+```
+Phase 1 (Audit):    기존 코드 ↔ 스펙 대조, 이미 충족하는 항목은 [x] 표시
+Phase 2 (Gap-fill): 미충족 항목만 최소 수정 (기존 코드 스타일 유지)
+Phase 3 (Verify):   기존 테스트 통과 확인 + 새 테스트 추가
+```
+
+하위 호환성 유지가 필수이며, 기존 테스트 수정/삭제가 금지됩니다.

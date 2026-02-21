@@ -132,6 +132,18 @@ Phase C (Verify): 전체 테스트 실행, 통과 확인
 
 `sdd-config.yaml`에서 `teams.tdd: true`로 설정하면 매번 `--tdd`를 지정하지 않아도 됩니다.
 
+#### 레거시 빌드 모드
+
+`sdd-config.yaml`의 `project.type: legacy`인 경우, 빌드 단계가 감사-보완 모드로 실행됩니다:
+
+```
+Phase 1 (Audit):    기존 코드가 스펙을 이미 충족하는지 감사
+Phase 2 (Gap-fill): 미충족 항목만 최소 수정
+Phase 3 (Verify):   기존 테스트 + 새 테스트 모두 통과 확인
+```
+
+하위 호환성 유지가 필수이며, 기존 테스트 수정/삭제가 금지됩니다.
+
 ### 6. 리뷰 (`/claude-sdd:sdd-review`)
 
 품질 게이트 검증:

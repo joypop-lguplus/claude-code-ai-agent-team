@@ -65,6 +65,9 @@ Sonnet 모델에서 실행되는 마크다운 기반 에이전트:
 ### TDD 모드 (`/claude-sdd:sdd-build --tdd`)
 `--tdd` 플래그 또는 `sdd-config.yaml teams.tdd: true`로 활성화. Phase A(Red): `sdd-test-writer`가 스펙 기반 실패 테스트 작성 → Phase B(Green): `sdd-implementer`가 테스트 통과 코드 작성 (테스트 수정 금지) → Phase C(Verify): 전체 테스트 실행. 실패 시 Phase B+C 반복 (최대 3회).
 
+### 레거시 모드 (`/claude-sdd:sdd-init legacy`)
+`sdd-config.yaml`의 `project.type: legacy`로 활성화. 빌드 단계에서 "처음부터 구현"이 아닌 **감사(audit) + 보완(gap-fill)** 접근을 사용합니다. Phase 1(Audit): 기존 코드와 스펙 대조, 이미 충족하는 항목은 `[x]` 표시 → Phase 2(Gap-fill): 미충족 항목만 최소 수정 → Phase 3(Verify): 기존 테스트 + 새 테스트 검증. 하위 호환성 유지가 필수이며, 기존 테스트 수정/삭제가 금지됩니다.
+
 ### 변경 관리 (`/claude-sdd:sdd-change`)
 통합 완료 후 변경 요청을 7 Phase로 처리: 변경 수집 → 영향 분석(`sdd-change-analyst`) → 체크리스트 부분 갱신(최소 영향 원칙) → 델타 태스크 계획(CWP) → TDD 델타 빌드 → 리뷰+회귀 검증 → PR 생성. 체크리스트는 영향받는 항목만 `[x]`→`[ ]` 재설정, CHG-/CHG-REG- 항목 추가.
 
@@ -73,6 +76,7 @@ Sonnet 모델에서 실행되는 마크다운 기반 에이전트:
 - `project-init/` -- 프로젝트 초기화용 `sdd-config.yaml.tmpl`
 - `specs/` -- 아키텍처, API, 데이터 모델 스펙 템플릿
 - `checklists/` -- 스펙 준수 및 품질 게이트 체크리스트 템플릿
+- `cross-domain/` -- 도메인 의존성 맵, 통합 포인트, 통합 체크리스트 템플릿
 
 ### 도구 감지 (`scripts/sdd-detect-tools.sh`)
 프로젝트 언어 및 사용 가능한 린터/포매터를 자동 감지합니다. JSON 출력. TypeScript, Python, Go, Rust, Java, Kotlin, C++ 지원.
@@ -92,8 +96,10 @@ Sonnet 모델에서 실행되는 마크다운 기반 에이전트:
 | `LSP goToDefinition` | 심볼의 원본 정의 위치 확인 | sdd-implementer, sdd-change-analyst |
 | `LSP hover` | 타입 정보 확인 | sdd-implementer, sdd-test-writer |
 
-### 세션 훅 (`hooks/hooks.json` + `scripts/sdd-session-init.sh`)
-세션 시작 시 실행되어 현재 프로젝트가 SDD를 사용하는지 자동 감지하고 단계/진행 상황을 표시합니다.
+### 세션 훅 (`hooks/hooks.json` + `scripts/sdd-session-init.sh` + `scripts/sdd-lsp-patch.sh`)
+세션 시작 시 두 개의 훅이 실행됩니다:
+- `sdd-session-init.sh` -- 현재 프로젝트가 SDD를 사용하는지 자동 감지하고 단계/진행 상황을 표시
+- `sdd-lsp-patch.sh` -- gopls PATH 자동 패치 및 kotlin-lsp JVM 프리웜
 
 ### CLI 유틸리티 (`lib/`)
 - `utils.mjs` -- 색상, 셸 실행, 프롬프트
