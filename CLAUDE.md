@@ -66,10 +66,23 @@ Sonnet 모델에서 실행되는 마크다운 기반 에이전트:
 `--tdd` 플래그 또는 `sdd-config.yaml teams.tdd: true`로 활성화. Phase A(Red): `sdd-test-writer`가 스펙 기반 실패 테스트 작성 → Phase B(Green): `sdd-implementer`가 테스트 통과 코드 작성 (테스트 수정 금지) → Phase C(Verify): 전체 테스트 실행. 실패 시 Phase B+C 반복 (최대 3회).
 
 ### 레거시 모드 (`/claude-sdd:sdd-init legacy`)
-`sdd-config.yaml`의 `project.type: legacy`로 활성화. 빌드 단계에서 "처음부터 구현"이 아닌 **감사(audit) + 보완(gap-fill)** 접근을 사용합니다. Phase 1(Audit): 기존 코드와 스펙 대조, 이미 충족하는 항목은 `[x]` 표시 → Phase 2(Gap-fill): 미충족 항목만 최소 수정 → Phase 3(Verify): 기존 테스트 + 새 테스트 검증. 하위 호환성 유지가 필수이며, 기존 테스트 수정/삭제가 금지됩니다.
+`sdd-config.yaml`의 `project.type: legacy`로 활성화. 빌드 단계에서 코드 변경 없이 **분석(analysis) 전용 구조 분석**만 수행합니다. 모든 코드 변경은 `/claude-sdd:sdd-change` 워크플로우를 통해 처리합니다.
+
+**레거시 라이프사이클**: `init → intake → spec → plan → build(분석 전용) → change(갭 해소 CRs) → review → integrate`
+
+- **Build(분석 전용)**: 기존 코드와 스펙 대조, 충족 항목은 `[x]` 표시, 미충족 항목은 갭으로 식별. 코드 수정 없음. `10-analysis-report.md` 생성.
+- **Change(갭 해소)**: 분석 보고서의 갭 항목을 CR로 변환하여 `sdd-change` 워크플로우로 처리. `--from-analysis` 플래그로 분석 기반 CR 자동 생성, `--lightweight` 플래그로 소규모 갭 빠른 처리 (Phase 1-4 자동, Phase 5-7 실행).
+- **하위 호환성 유지 필수**, 기존 테스트 수정/삭제 금지.
+- `sdd-config.yaml`의 `legacy.analysis_cr_mode` 설정: `suggest` (기본, 추천 CR 제시) / `auto` (자동 CR 생성) / `manual` (수동 CR 관리).
 
 ### 변경 관리 (`/claude-sdd:sdd-change`)
-통합 완료 후 변경 요청을 7 Phase로 처리: 변경 수집 → 영향 분석(`sdd-change-analyst`) → 체크리스트 부분 갱신(최소 영향 원칙) → 델타 태스크 계획(CWP) → TDD 델타 빌드 → 리뷰+회귀 검증 → PR 생성. 체크리스트는 영향받는 항목만 `[x]`→`[ ]` 재설정, CHG-/CHG-REG- 항목 추가.
+변경 요청을 7 Phase로 처리: 변경 수집 → 영향 분석(`sdd-change-analyst`) → 체크리스트 부분 갱신(최소 영향 원칙) → 델타 태스크 계획(CWP) → TDD 델타 빌드 → 리뷰+회귀 검증 → PR 생성. 체크리스트는 영향받는 항목만 `[x]`→`[ ]` 재설정, CHG-/CHG-REG- 항목 추가.
+
+**전제조건**: 신규 프로젝트는 통합 완료 후, 레거시 프로젝트는 분석 완료(`10-analysis-report.md` 존재) 후 실행 가능.
+
+**레거시 전용 옵션**:
+- `--from-analysis`: 분석 보고서 갭에서 CR 자동 생성
+- `--lightweight --from-analysis`: 소규모 갭(5개 이하) 빠른 처리 — Phase 1-4 자동 설정, Phase 5(빌드)+6(검증)+7(PR)만 실행
 
 ### 템플릿 (`templates/`)
 - `claude-md/` -- `/claude-sdd:sdd-build` 시 대상 프로젝트에 주입되는 CLAUDE.md 템플릿 (리더 vs 멤버 규칙)

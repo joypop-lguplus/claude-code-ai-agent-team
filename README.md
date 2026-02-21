@@ -140,6 +140,27 @@ Phase 6: 리뷰 + 회귀 검증
 Phase 7: PR 생성 (변경 추적성 포함)
 ```
 
+**추가 플래그:**
+
+| 플래그 | 설명 |
+|--------|------|
+| `--from-analysis` | 분석 보고서(`10-analysis-report.md`)의 갭에서 CR을 자동 생성 (레거시 프로젝트용) |
+| `--lightweight` | `--from-analysis`와 함께 사용. 5개 이하 소규모 갭을 빠르게 처리 (Phase 1-4 자동 설정, Phase 5-7만 실행) |
+
+### 레거시 모드
+
+`/claude-sdd:sdd-init legacy`로 초기화하면 `sdd-config.yaml`에 `project.type: legacy`가 설정됩니다. 레거시 모드에서는 빌드 단계에서 코드 변경 없이 **분석 전용 구조 분석**만 수행하며, 모든 코드 변경은 `/claude-sdd:sdd-change` 워크플로우를 통해 처리합니다.
+
+**레거시 라이프사이클:**
+
+```
+init → intake → spec → plan → build(분석 전용) → change(갭 해소 CRs) → review → integrate
+```
+
+- **Build (분석 전용):** 기존 코드와 스펙을 대조하여 충족 항목은 `[x]`, 미충족 항목은 갭으로 식별. 코드 수정 없음. `10-analysis-report.md` 생성.
+- **Change (갭 해소):** 분석 보고서의 갭 항목을 CR로 변환하여 `sdd-change` 워크플로우로 처리.
+- `sdd-config.yaml`의 `legacy.analysis_cr_mode` 설정: `suggest` (기본, 추천 CR 제시) / `auto` (자동 CR 생성) / `manual` (수동 CR 관리).
+
 ## 요구사항
 
 | 구성 요소 | 필수 여부 | 비고 |

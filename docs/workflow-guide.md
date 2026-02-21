@@ -80,17 +80,28 @@
 
 레거시 모드는 **하위 호환성**을 항상 고려합니다. 기존 API 변경 시 마이그레이션 전략이 포함되고, 데이터 모델 변경 시 마이그레이션 스크립트 개요가 생성됩니다.
 
-### 레거시 빌드 루프
+### 레거시 빌드 (분석 전용)
 
-레거시 모드의 빌드 단계는 일반 모드와 다르게 동작합니다:
+레거시 모드의 빌드 단계는 **분석 전용**입니다. 코드 변경 없이 기존 코드와 스펙을 대조 분석만 수행합니다:
 
 ```
-Phase 1 (Audit):    기존 코드 ↔ 스펙 대조, 이미 충족하면 [x]
-Phase 2 (Gap-fill): 미충족 항목만 최소 수정 (기존 코드 스타일 유지)
-Phase 3 (Verify):   기존 테스트 통과 확인 + 새 테스트 추가
+기존 코드 ↔ 스펙 대조 분석
+  - 이미 충족하는 항목 → [x] 표시
+  - 미충족 항목 → 갭으로 식별
+  → 10-analysis-report.md 생성
 ```
 
-하위 호환성 유지가 필수이며, 기존 테스트 수정/삭제가 금지됩니다.
+분석 보고서에서 식별된 갭은 `/claude-sdd:sdd-change`를 통해 변경 요청으로 처리합니다:
+
+```bash
+# 분석 보고서 갭에서 CR 자동 생성
+/claude-sdd:sdd-change --from-analysis
+
+# 소규모 갭(5개 이하) 빠른 처리
+/claude-sdd:sdd-change --lightweight --from-analysis
+```
+
+레거시 라이프사이클: `init → intake → spec → plan → build(분석 전용) → change(갭 해소) → review → integrate`
 
 ### 요구사항 소스 결합
 
@@ -202,6 +213,18 @@ Phase 7: 변경 추적성이 포함된 PR
 - 이미 검증된 체크리스트 항목은 변경하지 않음
 - 영향받는 항목만 정확히 재설정
 - 회귀 테스트(CHG-REG)로 기존 기능 보존 검증
+
+### 레거시 분석 보고서에서 변경 요청 생성
+
+레거시 프로젝트에서 빌드(분석 전용) 완료 후, 분석 보고서의 갭을 변경 요청으로 자동 변환할 수 있습니다:
+
+```bash
+# 분석 보고서 갭에서 CR 자동 생성
+/claude-sdd:sdd-change --from-analysis
+
+# 소규모 갭(5개 이하) 빠른 처리: Phase 1-4 자동, Phase 5-7만 실행
+/claude-sdd:sdd-change --lightweight --from-analysis
+```
 
 ### 변경 사이클 관리
 
@@ -412,10 +435,10 @@ sdd-init → sdd-intake → (스펙 검토) → sdd-spec → (스펙 수정) →
 ### 패턴 C: 레거시 + TDD
 
 ```
-sdd-init legacy → sdd-intake → sdd-spec → sdd-plan → sdd-build --tdd → sdd-review → sdd-integrate
+sdd-init legacy → sdd-intake → sdd-spec → sdd-plan → sdd-build(분석 전용) → sdd-change --from-analysis(TDD 델타 빌드) → sdd-review → sdd-integrate
 ```
 
-기존 코드베이스에 TDD로 안전하게 기능 추가. 회귀 버그 방지가 중요한 경우.
+기존 코드베이스를 분석하고, 갭을 TDD 기반 변경 관리로 안전하게 해소. 회귀 버그 방지가 중요한 경우.
 
 ### 패턴 D: 멀티 도메인 + 변경 관리
 

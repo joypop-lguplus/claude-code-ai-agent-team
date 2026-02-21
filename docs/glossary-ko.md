@@ -124,6 +124,17 @@
 | CHG- (Change Item) | CHG- (변경 항목) | 체크리스트 접두사 |
 | CHG-REG- (Regression Item) | CHG-REG- (회귀 항목) | 체크리스트 접두사 |
 
+## 레거시 모드 및 분석
+
+| 영어 | 한국어 | 비고 |
+|------|--------|------|
+| `analysis_cr_mode` | `analysis_cr_mode` | `sdd-config.yaml` 설정. 분석 보고서 갭의 CR 처리 방식: `suggest` (추천), `auto` (자동 생성), `manual` (수동) |
+| Analysis Report | 분석 보고서 | `10-analysis-report.md`. 레거시 모드에서 빌드 단계가 생성하는 보고서. 기존 코드와 스펙을 대조하여 충족/미충족(갭) 항목을 식별 |
+| Analysis-Only Build | 분석 전용 빌드 | 레거시 프로젝트의 빌드 모드. 코드를 수정하지 않고 기존 코드를 스펙 대비 분석만 수행 |
+| Analysis-based CR | 분석 기반 CR | `--from-analysis` 플래그로 분석 보고서의 갭에서 자동 생성되는 변경 요청 |
+| Gap | 갭 | 분석 보고서에서 식별된 스펙 미충족 항목. 유형: missing (기능 부재), partial (부분 구현), divergent (스펙과 다른 구현) |
+| Lightweight Mode | 경량 모드 | `--lightweight --from-analysis` 플래그 조합. 5개 이하 소규모 갭을 빠르게 처리. Phase 1-4 자동 설정, Phase 5-7만 실행 |
+
 ## 기타
 
 | 영어 | 한국어 | 비고 |

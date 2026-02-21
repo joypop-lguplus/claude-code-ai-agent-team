@@ -35,7 +35,11 @@ description: SDD 라이프사이클을 계속 진행합니다. 현재 단계를 
 2. **`01-requirements.md`가 없음** → `/claude-sdd:sdd-intake` 실행
 3. **`02-*.md`부터 `06-*.md`가 없음** → `/claude-sdd:sdd-spec` 실행
 4. **`07-task-plan.md`가 없음** → `/claude-sdd:sdd-plan` 실행
-5. **`07-task-plan.md` 존재, 체크리스트 미완료** → `/claude-sdd:sdd-build` 실행
+5. **`07-task-plan.md` 존재, 체크리스트 미완료**:
+   - **레거시 프로젝트 + `10-analysis-report.md` 없음** → `/claude-sdd:sdd-build` 실행 (분석 전용)
+   - **레거시 프로젝트 + `10-analysis-report.md` 존재, 갭 항목 있음** → `/claude-sdd:sdd-change --from-analysis` 실행 (갭 해소)
+   - **레거시 프로젝트 + `09-change-request.md` 존재 (진행 중)** → `/claude-sdd:sdd-change resume` 실행
+   - **신규 프로젝트** → `/claude-sdd:sdd-build` 실행 (기존 동작)
 6. **체크리스트 완료, `08-review-report.md` 없음** → `/claude-sdd:sdd-review` 실행
 7. **리뷰 통과** → `/claude-sdd:sdd-integrate` 실행
 8. **통합 완료, `09-change-request.md` 존재 (진행 중)** → `/claude-sdd:sdd-change resume` 실행
@@ -112,7 +116,11 @@ SDD 라이프사이클 — 멀티 도메인 상태
 1. **`domains/<id>/01-requirements.md`가 없음** → `/claude-sdd:sdd-intake --domain=<id>` 실행
 2. **`domains/<id>/02-*.md`부터 `06-*.md`가 없음** → `/claude-sdd:sdd-spec --domain=<id>` 실행
 3. **`domains/<id>/07-task-plan.md`가 없음** → `/claude-sdd:sdd-plan --domain=<id>` 실행
-4. **`domains/<id>/07-task-plan.md` 존재, 체크리스트 미완료** → `/claude-sdd:sdd-build --domain=<id>` 실행
+4. **`domains/<id>/07-task-plan.md` 존재, 체크리스트 미완료**:
+   - **레거시 + `domains/<id>/10-analysis-report.md` 없음** → `/claude-sdd:sdd-build --domain=<id>` 실행 (분석 전용)
+   - **레거시 + `domains/<id>/10-analysis-report.md` 존재, 갭 있음** → `/claude-sdd:sdd-change --domain=<id> --from-analysis` 실행
+   - **레거시 + `domains/<id>/09-change-request.md` 존재 (진행 중)** → `/claude-sdd:sdd-change --domain=<id> resume` 실행
+   - **신규** → `/claude-sdd:sdd-build --domain=<id>` 실행
 5. **체크리스트 완료, `domains/<id>/08-review-report.md` 없음** → `/claude-sdd:sdd-review --domain=<id>` 실행
 6. **리뷰 통과** → 도메인 완료 표시, 다음 도메인 권장
 7. **통합 완료, `domains/<id>/09-change-request.md` 존재 (진행 중)** → `/claude-sdd:sdd-change --domain=<id> resume` 실행
@@ -168,12 +176,15 @@ SDD — 스펙 주도 개발 (SDD) 라이프사이클
 
 변경 관리:
   /claude-sdd:sdd-change            변경 요청 수집 + 영향 분석 + 델타 빌드
+  /claude-sdd:sdd-change --from-analysis   분석 보고서 갭에서 CR 자동 생성 (레거시)
+  /claude-sdd:sdd-change --lightweight --from-analysis  소규모 갭 빠른 처리 (레거시)
   /claude-sdd:sdd-change status     변경 사이클 상태 확인
   /claude-sdd:sdd-change resume     진행 중인 변경 사이클 재개
   /claude-sdd:sdd-change --domain=<id>  특정 도메인 변경 관리
 
 라이프사이클:
-  init → intake → spec → plan → build → review → integrate [→ change]
+  신규: init → intake → spec → plan → build → review → integrate [→ change]
+  레거시: init → intake → spec → plan → build(분석) → change(갭 해소) → review → integrate
 
 멀티 도메인 라이프사이클:
   init --domains

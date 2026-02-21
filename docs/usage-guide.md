@@ -132,17 +132,18 @@ Phase C (Verify): 전체 테스트 실행, 통과 확인
 
 `sdd-config.yaml`에서 `teams.tdd: true`로 설정하면 매번 `--tdd`를 지정하지 않아도 됩니다.
 
-#### 레거시 빌드 모드
+#### 레거시 빌드 모드 (분석 전용)
 
-`sdd-config.yaml`의 `project.type: legacy`인 경우, 빌드 단계가 감사-보완 모드로 실행됩니다:
+`sdd-config.yaml`의 `project.type: legacy`인 경우, 빌드 단계는 **분석 전용**으로 실행됩니다. 코드 변경 없이 기존 코드와 스펙을 대조 분석만 수행합니다:
 
 ```
-Phase 1 (Audit):    기존 코드가 스펙을 이미 충족하는지 감사
-Phase 2 (Gap-fill): 미충족 항목만 최소 수정
-Phase 3 (Verify):   기존 테스트 + 새 테스트 모두 통과 확인
+기존 코드 ↔ 스펙 대조 분석
+  - 이미 충족하는 항목 → [x] 표시
+  - 미충족 항목 → 갭으로 식별
+  → 10-analysis-report.md 생성
 ```
 
-하위 호환성 유지가 필수이며, 기존 테스트 수정/삭제가 금지됩니다.
+분석 보고서에서 식별된 갭은 `/claude-sdd:sdd-change`를 통해 변경 요청으로 처리합니다. 레거시 라이프사이클: `init → intake → spec → plan → build(분석 전용) → change(갭 해소) → review → integrate`
 
 ### 6. 리뷰 (`/claude-sdd:sdd-review`)
 
@@ -254,7 +255,7 @@ SDD 상태 대시보드
 
 ## 변경 관리 (`/claude-sdd:sdd-change`)
 
-통합이 완료된 프로젝트에서 변경 요청이 발생하면 사용합니다:
+통합이 완료된 프로젝트에서 변경 요청이 발생하면 사용합니다. 레거시 프로젝트의 경우, 분석 완료(`10-analysis-report.md` 존재) 후 실행할 수 있습니다:
 
 ```bash
 /claude-sdd:sdd-change            # 새 변경 요청 시작
@@ -262,7 +263,21 @@ SDD 상태 대시보드
 /claude-sdd:sdd-change resume     # 진행 중인 변경 사이클 재개
 ```
 
-7 Phase 워크플로우:
+#### 레거시 전용 옵션
+
+```bash
+# 분석 보고서 갭에서 CR 자동 생성
+/claude-sdd:sdd-change --from-analysis
+
+# 소규모 갭(5개 이하) 빠른 처리: Phase 1-4 자동 설정, Phase 5-7만 실행
+/claude-sdd:sdd-change --lightweight --from-analysis
+```
+
+- `--from-analysis`: `10-analysis-report.md`의 갭 항목을 변경 요청(CR)으로 자동 변환
+- `--lightweight`: 소규모 갭(5개 이하)을 빠르게 처리. Phase 1(수집)-4(계획)를 자동 설정하고 Phase 5(빌드)+6(검증)+7(PR)만 실행
+
+#### 7 Phase 워크플로우
+
 1. **변경 요청 수집**: 인터뷰를 통해 변경 내용 파악
 2. **영향 분석**: `sdd-change-analyst`가 기존 스펙 대비 파급 효과 분석
 3. **체크리스트 부분 갱신**: 영향받는 항목만 재설정, 나머지 보존

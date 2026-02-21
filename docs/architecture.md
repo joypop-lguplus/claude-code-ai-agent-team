@@ -39,9 +39,9 @@ claude-sdd/
 │   ├── test-writer           # TDD 테스트 작성 (스펙→실패 테스트)
 │   └── change-analyst        # 변경 영향 분석 (최소 영향 원칙)
 │
-├── Templates (23)     # 문서 템플릿
+├── Templates (24)     # 문서 템플릿
 │   ├── claude-md/     # 리더/멤버용 CLAUDE.md 템플릿 (2)
-│   ├── specs/         # 스펙 문서 템플릿 (12)
+│   ├── specs/         # 스펙 문서 템플릿 (13)
 │   ├── checklists/    # 품질 체크리스트 템플릿 (4)
 │   ├── cross-domain/  # 도메인 의존성/통합 템플릿 (3)
 │   └── project-init/  # 프로젝트 설정 템플릿 (2)
@@ -78,6 +78,7 @@ claude-sdd/
     v
 [/claude-sdd:sdd-build]  --> 소스 코드 + 테스트
                      --> 업데이트된 06-spec-checklist.md
+                     --> 10-analysis-report.md (레거시 모드)
     |
     v
 [/claude-sdd:sdd-review] --> 08-review-report.md
@@ -184,6 +185,10 @@ Phase 6: 리뷰 + 회귀 검증
 Phase 7: PR 생성 (변경 추적성 포함)
 ```
 
+**레거시 갭 해소 옵션**:
+- `--from-analysis`: 분석 보고서(`10-analysis-report.md`)의 갭 항목에서 CR 자동 생성
+- `--lightweight --from-analysis`: 소규모 갭(5개 이하) 빠른 처리 — Phase 1-4 자동 설정, Phase 5(빌드)+6(검증)+7(PR)만 실행
+
 ## 품질 루프
 
 품질 루프는 핵심 품질 관리 메커니즘입니다:
@@ -204,17 +209,17 @@ Phase 7: PR 생성 (변경 추적성 포함)
 | 4단계 문서 | 04-data-model.md | 04-data-migration.md |
 | 5단계 문서 | 05-component-breakdown.md | 05-component-changes.md |
 | 리스크 수준 | 낮음 | 높음 (하위 호환성 필요) |
-| 빌드 루프 | 일반 품질 루프 | 감사-보완 루프 (아래 참조) |
+| 빌드 루프 | 일반 품질 루프 | 분석 전용 루프 (아래 참조) |
 | 체크리스트 | 동일 형식 | 동일 형식 |
 
-### 레거시 빌드 루프
+### 레거시 빌드 루프 (분석 전용)
 
-레거시 프로젝트(`project.type: legacy`)의 빌드 단계는 일반 모드와 다르게 동작합니다:
+레거시 프로젝트(`project.type: legacy`)의 빌드 단계는 **코드 변경 없이 분석만** 수행합니다:
 
 ```
-Phase 1 (Audit):    기존 코드 ↔ 스펙 대조, 이미 충족하는 항목은 [x] 표시
-Phase 2 (Gap-fill): 미충족 항목만 최소 수정 (기존 코드 스타일 유지)
-Phase 3 (Verify):   기존 테스트 통과 확인 + 새 테스트 추가
+Phase 1 (Analyze):  기존 코드 ↔ 스펙 대조, 이미 충족하는 항목은 [x] 표시
+Phase 2 (Identify): 미충족 항목을 갭으로 식별 (코드 수정 없음)
+Phase 3 (Report):   10-analysis-report.md 생성 (충족/미충족 항목 + 갭 목록)
 ```
 
-하위 호환성 유지가 필수이며, 기존 테스트 수정/삭제가 금지됩니다.
+코드 변경은 빌드 단계에서 수행하지 않으며, 식별된 갭은 `/claude-sdd:sdd-change` 워크플로우를 통해 해소합니다. `--from-analysis` 플래그로 분석 보고서의 갭을 CR로 변환하여 처리합니다.

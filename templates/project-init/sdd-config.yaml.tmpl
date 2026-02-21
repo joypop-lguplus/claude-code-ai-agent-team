@@ -51,6 +51,13 @@ integration:
   branch_prefix: "sdd/"
   pr_strategy: "single"  # single | per-domain
 
+# 레거시 모드 설정 (project.type: legacy일 때 사용)
+# legacy:
+#   analysis_cr_mode: "suggest"  # suggest | auto | manual
+#   # suggest: 분석 갭을 자동 그룹핑하여 사용자에게 CR 추천 제시
+#   # auto: 모든 갭에서 자동으로 CR 생성 후 sdd-change 진행
+#   # manual: 분석 보고서만 생성, 사용자가 /claude-sdd:sdd-change로 직접 CR 관리
+
 # 변경 사이클 이력 (sdd-change가 자동 관리)
 # change_cycles:
 #   - id: "CR-001"

@@ -140,6 +140,27 @@ Phase 6: Review + regression verification
 Phase 7: PR creation (with change traceability)
 ```
 
+**Additional Flags:**
+
+| Flag | Description |
+|------|-------------|
+| `--from-analysis` | Auto-generate CRs from analysis report (`10-analysis-report.md`) gaps (for legacy projects) |
+| `--lightweight` | Used with `--from-analysis`. Fast processing for small gaps (5 or fewer). Auto-sets Phase 1-4, runs only Phase 5-7 |
+
+### Legacy Mode
+
+Initialize with `/claude-sdd:sdd-init legacy` to set `project.type: legacy` in `sdd-config.yaml`. In legacy mode, the build phase performs **analysis-only structural review** without code changes. All code modifications go through the `/claude-sdd:sdd-change` workflow.
+
+**Legacy Lifecycle:**
+
+```
+init → intake → spec → plan → build(analysis-only) → change(gap resolution CRs) → review → integrate
+```
+
+- **Build (analysis-only):** Compares existing code against specs. Matched items marked `[x]`, unmatched items identified as gaps. No code modifications. Generates `10-analysis-report.md`.
+- **Change (gap resolution):** Converts analysis report gaps into CRs and processes them through the `sdd-change` workflow.
+- `legacy.analysis_cr_mode` in `sdd-config.yaml`: `suggest` (default, recommend CRs) / `auto` (auto-generate CRs) / `manual` (manual CR management).
+
 ## Requirements
 
 | Component | Required | Notes |

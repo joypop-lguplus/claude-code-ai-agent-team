@@ -1,0 +1,82 @@
+# 10 — 분석 보고서 (Analysis Report)
+
+> `/claude-sdd:sdd-build` 레거시 모드에서 자동 생성
+
+## 프로젝트 정보
+
+- **프로젝트**: {{PROJECT_NAME}}
+- **유형**: legacy
+- **분석일**: {{ANALYSIS_DATE}}
+- **분석 기준**: docs/specs/06-spec-checklist.md
+
+## 요약
+
+- **전체 체크리스트 항목**: {{TOTAL_ITEMS}}개
+- **기존 코드 충족 (satisfied)**: {{SATISFIED_ITEMS}}개
+- **미충족 (갭)**: {{GAP_ITEMS}}개
+- **기존 테스트 상태**: {{TEST_PASSED}}/{{TEST_TOTAL}} 통과
+
+## 워크 패키지별 분석 결과
+
+{{#each WORK_PACKAGES}}
+### {{this.id}}: {{this.name}}
+
+#### 충족 항목 (satisfied)
+
+| 항목 ID | 설명 | 근거 (기존 코드 위치) |
+|---------|------|----------------------|
+| {{ITEM_ID}} | {{DESCRIPTION}} | `{{FILE_PATH}}:{{LINE}}` |
+
+#### 갭 항목 (미충족)
+
+| 항목 ID | 설명 | 갭 유형 | 상세 |
+|---------|------|---------|------|
+| {{ITEM_ID}} | {{DESCRIPTION}} | {{GAP_TYPE}} | {{DETAIL}} |
+
+> 갭 유형: MISSING (구현 없음), PARTIAL (부분 구현), MISMATCH (스펙 불일치)
+
+{{/each}}
+
+## 기존 테스트 검증
+
+- **테스트 명령**: `{{TEST_COMMAND}}`
+- **전체 테스트**: {{TEST_TOTAL}}개
+- **통과**: {{TEST_PASSED}}개
+- **실패**: {{TEST_FAILED}}개
+- **테스트 베이스라인 확립**: {{TEST_BASELINE}}
+
+{{#if TEST_FAILED_LIST}}
+### 실패 테스트 목록
+
+| 테스트 | 파일 | 실패 사유 |
+|--------|------|-----------|
+| {{TEST_NAME}} | {{TEST_FILE}} | {{FAILURE_REASON}} |
+{{/if}}
+
+## 갭 요약 (Change Management 입력용)
+
+| 갭 ID | 체크리스트 항목 | 갭 유형 | 우선순위 | 추천 CR 그룹 |
+|-------|---------------|---------|---------|-------------|
+| GAP-{{NNN}} | {{ITEM_ID}} | {{GAP_TYPE}} | {{PRIORITY}} | {{CR_GROUP}} |
+
+## 추천 변경 요청
+
+분석 결과를 기반으로 다음 변경 요청(CR)을 추천합니다:
+
+{{#each RECOMMENDED_CRS}}
+### {{this.id}}: {{this.title}} ({{this.item_count}}개 항목)
+
+- **갭 항목**: {{this.gap_items}}
+- **추천 사유**: {{this.reason}}
+- **예상 영향도**: {{this.impact}}
+{{/each}}
+
+## 하위 호환성 베이스라인
+
+- **기존 공개 API**: {{PUBLIC_API_COUNT}}개 문서화
+- **기존 데이터 구조**: {{DATA_STRUCTURE_COUNT}}개 문서화
+- **기존 테스트 파일**: {{TEST_FILE_COUNT}}개, {{TEST_TOTAL}}개 테스트
+
+---
+
+*분석 보고서 | 생성: {{ANALYSIS_DATE}} | 프로젝트: {{PROJECT_NAME}}*
