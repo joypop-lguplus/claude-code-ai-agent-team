@@ -15,7 +15,7 @@
 ### 변경
 - **인스톨러 단계 확장**: `[1/5]`~`[5/5]` → `[1/7]`~`[7/7]` (MCP 서버 + 다이어그램 도구 단계 추가)
 - **checker.mjs 구조화**: MCP 서버를 `~/.claude.json`에서 구조화하여 검사 (Atlassian 서버별 표시, Figma MCP 확인, 다이어그램 도구 확인)
-- **sdd-config.yaml 확장**: `project.branch` 필드 + `publishing.confluence` 섹션 추가
+- **sdd-config.yaml 확장**: `publishing.confluence` 섹션 추가
 - **언인스톨러 분리**: `lib/installer.mjs`에서 `lib/uninstaller.mjs`로 분리
 
 ## [0.3.3] - 2026-02-21

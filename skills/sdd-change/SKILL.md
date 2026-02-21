@@ -146,7 +146,6 @@ Phase 5로 진행합니다 — TDD 델타 빌드...
    a. Jira 소스가 설정된 경우: `feature/CR-<N>-<jira-key>` (예: `feature/CR-001-DEV-200`)
    b. Jira 소스가 없는 경우: `feature/change-CR-<N>` 또는 사용자 입력
 4. `git checkout -b feature/<name>` 실행
-5. `sdd-config.yaml`의 `project.branch`를 업데이트합니다.
 
 ---
 

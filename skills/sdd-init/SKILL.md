@@ -41,7 +41,6 @@ description: 새 프로젝트 또는 기존 프로젝트를 스펙 주도 개발
       - 사용자에게 브랜치명 입력 요청: "브랜치명을 입력하세요 (feature/ 접두사 자동 추가):"
       - 입력값으로 `feature/<입력값>` 생성
 4. `git checkout -b feature/<name>` 실행
-5. 생성된 브랜치 정보를 이후 `sdd-config.yaml`의 `project.branch` 필드에 기록합니다.
 
 ```
 현재 브랜치: main
@@ -63,7 +62,7 @@ description: 새 프로젝트 또는 기존 프로젝트를 스펙 주도 개발
 2. **설명**: 프로젝트에 대한 간략한 설명
 3. **프로젝트 유형**: 인자에 따라 `new` 또는 `legacy`를 확인
 
-템플릿을 채우고 `docs/specs/sdd-config.yaml`에 저장합니다. 0단계에서 생성된 브랜치가 있으면 `project.branch` 필드에 기록합니다.
+템플릿을 채우고 `docs/specs/sdd-config.yaml`에 저장합니다.
 
 ### 2.5단계: 도메인 정의 (`--domains` 인자가 있는 경우)
 
@@ -117,16 +116,17 @@ SDD 산출물을 Confluence에 자동 퍼블리싱할지 질문합니다.
    Confluence 퍼블리싱: Atlassian MCP 미설정 (건너뜀)
    설정하려면: claude-sdd install → MCP 서버 설정
    ```
-3. Atlassian MCP가 있으면 질문합니다:
+3. Atlassian MCP가 있으면 루트 페이지 URL을 질문합니다:
    ```
-   SDD 산출물을 Confluence에 자동 퍼블리싱하시겠습니까? (y/n)
-   → y
-     사용할 MCP 서버: (감지된 atlassian MCP 서버 목록에서 선택)
-     Confluence 스페이스 키 또는 루트 페이지 URL:
-     → https://company.atlassian.net/wiki/spaces/TECH/pages/12345
-     → 파싱: space_key=TECH, root_page_id=12345
+   Confluence 루트 페이지 URL (건너뛰려면 Enter):
+   → https://company.atlassian.net/wiki/spaces/TECH/pages/12345
    ```
-4. 입력을 `sdd-config.yaml`의 `publishing` 섹션에 기록합니다:
+4. URL이 입력되면:
+   a. URL에서 호스트(`company.atlassian.net`)를 추출합니다.
+   b. 감지된 Atlassian MCP 서버 목록에서 해당 호스트와 매칭되는 서버를 찾습니다.
+   c. 매칭되는 서버가 없으면 경고하고 사용자에게 재입력 또는 건너뛰기를 안내합니다.
+   d. URL에서 `space_key`, `root_page_id`를 파싱합니다.
+5. 입력을 `sdd-config.yaml`의 `publishing` 섹션에 기록합니다:
    ```yaml
    publishing:
      confluence:
