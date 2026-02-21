@@ -25,7 +25,7 @@
 /claude-sdd:sdd-integrate
 ```
 
-또는 `/claude-sdd:sdd-auto`를 사용하여 현재 단계를 자동 감지하고 계속 진행할 수 있습니다.
+또는 `/claude-sdd:sdd-next`를 사용하여 현재 단계를 자동 감지하고 계속 진행할 수 있습니다.
 
 ## 단계별 상세 설명
 

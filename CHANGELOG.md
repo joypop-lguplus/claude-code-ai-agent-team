@@ -1,5 +1,12 @@
 # 변경 이력
 
+## [0.3.2] - 2026-02-21
+
+### 변경
+- **스킬 리네이밍**: `sdd-kickstart` → `sdd-godmode` (심층 인터뷰 + 전체 파이프라인 자동 실행), `sdd-auto` → `sdd-next` (단계 자동 감지 + 라우팅). 이름과 동작의 괴리 해소 — "킥스타트"(시작만 도와주는 느낌) → "갓모드"(풀 오토), "오토"(풀 오토 느낌) → "넥스트"(다음 단계 진행)
+- **`lib/doctor.mjs`**: `skills/sdd-godmode/SKILL.md` 무결성 검사 추가 (기존 `sdd-kickstart` 누락 수정)
+- **버전**: `0.3.1` → `0.3.2` (package.json, plugin.json, marketplace.json, cli.mjs)
+
 ## [Unreleased]
 
 ### 추가

@@ -17,8 +17,8 @@ claude-sdd는 스펙 주도 개발 (SDD) 라이프사이클을 구현하는 Clau
 ```
 claude-sdd/
 ├── Skills (12)        # 사용자용 슬래시 명령어
-│   ├── /claude-sdd:sdd-auto      # 오케스트레이터 (단계 자동 감지)
-│   ├── /claude-sdd:sdd-kickstart # 심층 인터뷰 + 풀 오토 실행
+│   ├── /claude-sdd:sdd-next      # 오케스트레이터 (단계 자동 감지)
+│   ├── /claude-sdd:sdd-godmode  # 심층 인터뷰 + 풀 오토 실행
 │   ├── /claude-sdd:sdd-init      # 프로젝트 초기화
 │   ├── /claude-sdd:sdd-intake    # 요구사항 수집
 │   ├── /claude-sdd:sdd-spec      # 스펙 생성

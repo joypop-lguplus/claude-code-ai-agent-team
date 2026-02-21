@@ -2,7 +2,7 @@
 
 import { header, colors } from '../lib/utils.mjs';
 
-const VERSION = '0.3.1';
+const VERSION = '0.3.2';
 const [,, command, ...args] = process.argv;
 
 // npx 실행인지 직접 실행인지 감지하여 안내 명령어 결정

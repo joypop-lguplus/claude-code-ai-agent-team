@@ -141,7 +141,7 @@ claude
 /claude-sdd:sdd-status
 
 # 라이프사이클 시작
-/claude-sdd:sdd-auto
+/claude-sdd:sdd-next
 ```
 
 ## 문제 해결

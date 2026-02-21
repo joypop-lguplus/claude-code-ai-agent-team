@@ -43,7 +43,7 @@ A Claude Code plugin that manages the full development lifecycle through **Spec-
 | 7. Integrate | `/claude-sdd:sdd-integrate` | PR with spec traceability |
 | 8. Change | `/claude-sdd:sdd-change` | Impact analysis + delta build + regression verification |
 
-Use `/claude-sdd:sdd-auto` to auto-detect the current phase and continue.
+Use `/claude-sdd:sdd-next` to auto-detect the current phase and continue.
 
 ## Installation
 
@@ -75,8 +75,8 @@ claude --plugin-dir .
 
 | Command | Description |
 |---------|-------------|
-| `/claude-sdd:sdd-auto` | Auto-detect phase and continue lifecycle |
-| `/claude-sdd:sdd-kickstart` | Deep interview + full pipeline auto-execution |
+| `/claude-sdd:sdd-next` | Auto-detect phase and continue lifecycle |
+| `/claude-sdd:sdd-godmode` | Deep interview + full pipeline auto-execution |
 | `/claude-sdd:sdd-init` | Initialize project for SDD |
 | `/claude-sdd:sdd-intake` | Gather requirements (Confluence, Jira, Figma, file, interview) |
 | `/claude-sdd:sdd-spec` | Generate technical specifications |
@@ -208,8 +208,8 @@ claude-sdd/
 │   ├── sdd-test-writer.md
 │   └── sdd-change-analyst.md
 ├── skills/
-│   ├── sdd-auto/SKILL.md
-│   ├── sdd-kickstart/SKILL.md
+│   ├── sdd-next/SKILL.md
+│   ├── sdd-godmode/SKILL.md
 │   ├── sdd-init/SKILL.md
 │   ├── sdd-intake/SKILL.md
 │   ├── sdd-spec/SKILL.md

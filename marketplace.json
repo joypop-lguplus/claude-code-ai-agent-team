@@ -3,7 +3,7 @@
   "plugin": {
     "name": "claude-sdd",
     "display_name": "claude-sdd",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "description": "Spec-Driven Development lifecycle with Claude Code Agent Teams. Manages the full development lifecycle from requirements gathering through implementation, quality verification, and integration.",
     "short_description": "SDD lifecycle management with Agent Teams",
     "repository": "https://github.com/joypop-lguplus/claude-sdd",
@@ -42,11 +42,11 @@
     "components": {
       "skills": [
         {
-          "name": "sdd-auto",
-          "description": "SDD lifecycle orchestrator (auto-detect phase)"
+          "name": "sdd-next",
+          "description": "SDD lifecycle orchestrator (auto-detect next phase)"
         },
         {
-          "name": "sdd-kickstart",
+          "name": "sdd-godmode",
           "description": "Deep interview + full pipeline auto-execution"
         },
         {

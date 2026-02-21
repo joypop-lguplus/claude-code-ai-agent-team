@@ -43,7 +43,7 @@
 | 7. 통합 | `/claude-sdd:sdd-integrate` | 스펙 추적 가능한 PR |
 | 8. 변경 | `/claude-sdd:sdd-change` | 변경 영향 분석 + 델타 빌드 + 회귀 검증 |
 
-`/claude-sdd:sdd-auto`를 사용하면 현재 단계를 자동 감지하고 이어서 진행합니다.
+`/claude-sdd:sdd-next`를 사용하면 현재 단계를 자동 감지하고 이어서 진행합니다.
 
 ## 설치
 
@@ -75,8 +75,8 @@ claude --plugin-dir .
 
 | 명령어 | 설명 |
 |--------|------|
-| `/claude-sdd:sdd-auto` | 현재 단계를 자동 감지하고 라이프사이클 진행 |
-| `/claude-sdd:sdd-kickstart` | 심층 인터뷰 + 전체 파이프라인 자동 실행 |
+| `/claude-sdd:sdd-next` | 현재 단계를 자동 감지하고 라이프사이클 진행 |
+| `/claude-sdd:sdd-godmode` | 심층 인터뷰 + 전체 파이프라인 자동 실행 |
 | `/claude-sdd:sdd-init` | SDD 프로젝트 초기화 |
 | `/claude-sdd:sdd-intake` | 요구사항 수집 (Confluence, Jira, Figma, 파일, 인터뷰) |
 | `/claude-sdd:sdd-spec` | 기술 스펙 생성 |
@@ -208,8 +208,8 @@ claude-sdd/
 │   ├── sdd-test-writer.md
 │   └── sdd-change-analyst.md
 ├── skills/
-│   ├── sdd-auto/SKILL.md
-│   ├── sdd-kickstart/SKILL.md
+│   ├── sdd-next/SKILL.md
+│   ├── sdd-godmode/SKILL.md
 │   ├── sdd-init/SKILL.md
 │   ├── sdd-intake/SKILL.md
 │   ├── sdd-spec/SKILL.md

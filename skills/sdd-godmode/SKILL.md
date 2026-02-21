@@ -1,17 +1,17 @@
 ---
-name: sdd-kickstart
+name: sdd-godmode
 description: 심층 인터뷰를 통해 프로젝트 정보를 수집한 후 전체 SDD 라이프사이클을 자동 실행합니다.
 ---
 
-# /claude-sdd:sdd-kickstart — 심층 인터뷰 + 전체 파이프라인 자동 실행
+# /claude-sdd:sdd-godmode — 심층 인터뷰 + 전체 파이프라인 자동 실행
 
 심층 인터뷰를 통해 프로젝트의 모든 정보를 수집한 뒤, SDD 라이프사이클 전체(init -> intake -> spec -> plan -> build -> review -> integrate)를 자동으로 실행합니다.
 
 ## 사용법
 
 ```
-/claude-sdd:sdd-kickstart              # 심층 인터뷰 -> 전체 파이프라인 자동 실행
-/claude-sdd:sdd-kickstart resume       # 중단된 지점부터 재개
+/claude-sdd:sdd-godmode              # 심층 인터뷰 -> 전체 파이프라인 자동 실행
+/claude-sdd:sdd-godmode resume       # 중단된 지점부터 재개
 ```
 
 ## 동작
@@ -168,7 +168,7 @@ Phase 3으로 진행합니다...
 
 ### Phase 4: 집요한 상세 설계 지침
 
-킥스타트 모드에서는 `sdd-spec`이 평소보다 훨씬 상세한 스펙을 생성합니다. `00-project-context.md`에 `spec_depth: thorough`가 설정되어 있으면 아래 수준의 상세도를 적용합니다.
+갓모드 모드에서는 `sdd-spec`이 평소보다 훨씬 상세한 스펙을 생성합니다. `00-project-context.md`에 `spec_depth: thorough`가 설정되어 있으면 아래 수준의 상세도를 적용합니다.
 
 **API 스펙:**
 - 모든 엔드포인트에 대한 완전한 JSON 스키마
@@ -205,13 +205,13 @@ Phase 3으로 진행합니다...
 `resume` 인자와 함께 호출된 경우:
 
 1. `docs/specs/00-project-context.md`를 읽어 컨텍스트가 존재하는지 확인합니다.
-   - 존재하지 않으면: `먼저 /claude-sdd:sdd-kickstart를 실행하여 인터뷰를 진행하세요.`
+   - 존재하지 않으면: `먼저 /claude-sdd:sdd-godmode를 실행하여 인터뷰를 진행하세요.`
 2. `docs/specs/sdd-config.yaml`을 읽어 초기화 여부를 확인합니다.
-3. `/claude-sdd:sdd-auto`의 자동 감지 로직을 사용하여 현재 단계를 판별합니다.
+3. `/claude-sdd:sdd-next`의 자동 감지 로직을 사용하여 현재 단계를 판별합니다.
 4. 해당 단계부터 자동으로 재개합니다.
 
 ```
-킥스타트 재개 모드
+갓모드 재개 모드
   프로젝트 컨텍스트: docs/specs/00-project-context.md ✓
   현재 감지된 단계: [단계명]
   [단계명]부터 자동 재개합니다...

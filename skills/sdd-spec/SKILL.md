@@ -31,7 +31,7 @@ description: 요구사항으로부터 기술 스펙과 준수 체크리스트를
 
 ## 집요한 상세 설계 모드 (spec_depth: thorough)
 
-`docs/specs/00-project-context.md`가 존재하고 `spec_depth: thorough`가 설정되어 있으면 (`/claude-sdd:sdd-kickstart`에서 생성), 모든 스펙을 **집요하게 상세한 수준**으로 생성합니다:
+`docs/specs/00-project-context.md`가 존재하고 `spec_depth: thorough`가 설정되어 있으면 (`/claude-sdd:sdd-godmode`에서 생성), 모든 스펙을 **집요하게 상세한 수준**으로 생성합니다:
 
 - **API 스펙**: 모든 엔드포인트의 완전한 JSON 스키마, 필드별 유효성 검사 규칙(정규식, 길이, 범위), 모든 HTTP 상태 코드별 에러 코드, 페이지네이션/필터링/정렬 상세, Rate limiting, 캐시 전략, 요청/응답 예시
 - **데이터 모델**: DDL 수준 스키마(CREATE TABLE 문), 인덱스 전략과 근거, 마이그레이션 윤곽, 시드 데이터, 소프트 삭제/감사 컬럼
@@ -260,4 +260,4 @@ description: 요구사항으로부터 기술 스펙과 준수 체크리스트를
 
 - `docs/specs/01-requirements.md` 또는 `docs/specs/domains/<id>/01-requirements.md` (`/claude-sdd:sdd-intake`에서 생성)
 - `docs/specs/sdd-config.yaml` (`/claude-sdd:sdd-init`에서 생성)
-- `docs/specs/00-project-context.md` (선택 — `/claude-sdd:sdd-kickstart`에서 생성, 집요한 설계 모드용)
+- `docs/specs/00-project-context.md` (선택 — `/claude-sdd:sdd-godmode`에서 생성, 집요한 설계 모드용)

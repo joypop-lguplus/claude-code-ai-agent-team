@@ -1,21 +1,21 @@
 ---
-name: sdd-auto
+name: sdd-next
 description: SDD 라이프사이클을 계속 진행합니다. 현재 단계를 자동 감지하여 적절한 다음 단계로 라우팅합니다. 멀티 도메인에서는 도메인별 자동 진행을 지원합니다.
 ---
 
-# /claude-sdd:sdd-auto — SDD 라이프사이클 오케스트레이터
+# /claude-sdd:sdd-next — SDD 라이프사이클 오케스트레이터
 
 스펙 주도 개발 (SDD) 라이프사이클의 메인 진입점입니다. 현재 프로젝트 상태에 따라 적절한 단계로 라우팅합니다.
 
 ## 사용법
 
 ```
-/claude-sdd:sdd-auto                   # 단일: 단계 자동 감지 후 진행 / 멀티: 최적 도메인/작업 자동 선택
-/claude-sdd:sdd-auto help              # 모든 SDD 명령어 표시
-/claude-sdd:sdd-auto reset             # SDD 상태 초기화 (확인 필요)
+/claude-sdd:sdd-next                   # 단일: 단계 자동 감지 후 진행 / 멀티: 최적 도메인/작업 자동 선택
+/claude-sdd:sdd-next help              # 모든 SDD 명령어 표시
+/claude-sdd:sdd-next reset             # SDD 상태 초기화 (확인 필요)
 
 # 멀티 도메인 옵션
-/claude-sdd:sdd-auto --domain=<id>     # 특정 도메인의 다음 단계 자동 실행
+/claude-sdd:sdd-next --domain=<id>     # 특정 도메인의 다음 단계 자동 실행
 ```
 
 ## 사전 조건
@@ -27,7 +27,7 @@ description: SDD 라이프사이클을 계속 진행합니다. 현재 단계를 
 
 ## 동작 (단일 도메인 모드)
 
-### 자동 감지 모드 (`/claude-sdd:sdd-auto`)
+### 자동 감지 모드 (`/claude-sdd:sdd-next`)
 
 프로젝트 상태를 읽고 다음 작업으로 라우팅합니다:
 
@@ -137,7 +137,7 @@ SDD 라이프사이클 — device-mgmt 상태
 
 ---
 
-## 도움말 모드 (`/claude-sdd:sdd-auto help`)
+## 도움말 모드 (`/claude-sdd:sdd-next help`)
 
 사용 가능한 모든 SDD 명령어를 표시합니다:
 
@@ -145,7 +145,7 @@ SDD 라이프사이클 — device-mgmt 상태
 SDD — 스펙 주도 개발 (SDD) 라이프사이클
 
 기본 명령어:
-  /claude-sdd:sdd-auto              단계 자동 감지 후 진행
+  /claude-sdd:sdd-next              단계 자동 감지 후 진행
   /claude-sdd:sdd-init              SDD 프로젝트 초기화
   /claude-sdd:sdd-intake            요구사항 수집
   /claude-sdd:sdd-spec              기술 명세서 생성
@@ -158,7 +158,7 @@ SDD — 스펙 주도 개발 (SDD) 라이프사이클
   /claude-sdd:sdd-status            상태 대시보드
 
 도메인 명령어 (멀티 도메인 프로젝트):
-  /claude-sdd:sdd-auto --domain=<id>        특정 도메인 자동 진행
+  /claude-sdd:sdd-next --domain=<id>        특정 도메인 자동 진행
   /claude-sdd:sdd-intake --domain=<id>      특정 도메인 요구사항 수집
   /claude-sdd:sdd-intake --all              모든 도메인 일괄 수집
   /claude-sdd:sdd-spec --shared             프로젝트 수준 아키텍처 생성
@@ -202,7 +202,7 @@ SDD — 스펙 주도 개발 (SDD) 라이프사이클
 
 ---
 
-## 초기화 모드 (`/claude-sdd:sdd-auto reset`)
+## 초기화 모드 (`/claude-sdd:sdd-next reset`)
 
 ### 단일 도메인 모드
 
