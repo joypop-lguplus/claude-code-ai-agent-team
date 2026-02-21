@@ -35,15 +35,16 @@ description: SDD 라이프사이클을 계속 진행합니다. 현재 단계를 
 2. **`01-requirements.md`가 없음** → `/claude-sdd:sdd-intake` 실행
 3. **`02-*.md`부터 `06-*.md`가 없음** → `/claude-sdd:sdd-spec` 실행
 4. **`07-task-plan.md`가 없음** → `/claude-sdd:sdd-plan` 실행
-5. **`07-task-plan.md` 존재, 체크리스트 미완료**:
+5. **`07-task-plan.md` 존재, `wp-*-member.md`가 없음** → `/claude-sdd:sdd-assign` 실행
+6. **`07-task-plan.md` 존재, 체크리스트 미완료**:
    - **레거시 프로젝트 + `10-analysis-report.md` 없음** → `/claude-sdd:sdd-build` 실행 (분석 전용)
    - **레거시 프로젝트 + `10-analysis-report.md` 존재, 갭 항목 있음** → `/claude-sdd:sdd-change --from-analysis` 실행 (갭 해소)
    - **레거시 프로젝트 + `09-change-request.md` 존재 (진행 중)** → `/claude-sdd:sdd-change resume` 실행
    - **신규 프로젝트** → `/claude-sdd:sdd-build` 실행 (기존 동작)
-6. **체크리스트 완료, `08-review-report.md` 없음** → `/claude-sdd:sdd-review` 실행
-7. **리뷰 통과** → `/claude-sdd:sdd-integrate` 실행
-8. **통합 완료, `09-change-request.md` 존재 (진행 중)** → `/claude-sdd:sdd-change resume` 실행
-9. **모두 완료** → 완료 요약 표시
+7. **체크리스트 완료, `08-review-report.md` 없음** → `/claude-sdd:sdd-review` 실행
+8. **리뷰 통과** → `/claude-sdd:sdd-integrate` 실행
+9. **통합 완료, `09-change-request.md` 존재 (진행 중)** → `/claude-sdd:sdd-change resume` 실행
+10. **모두 완료** → 완료 요약 표시
 
 라우팅 전 표시 내용:
 ```
@@ -116,14 +117,15 @@ SDD 라이프사이클 — 멀티 도메인 상태
 1. **`domains/<id>/01-requirements.md`가 없음** → `/claude-sdd:sdd-intake --domain=<id>` 실행
 2. **`domains/<id>/02-*.md`부터 `06-*.md`가 없음** → `/claude-sdd:sdd-spec --domain=<id>` 실행
 3. **`domains/<id>/07-task-plan.md`가 없음** → `/claude-sdd:sdd-plan --domain=<id>` 실행
-4. **`domains/<id>/07-task-plan.md` 존재, 체크리스트 미완료**:
+4. **`domains/<id>/07-task-plan.md` 존재, `domains/<id>/wp-*-member.md`가 없음** → `/claude-sdd:sdd-assign --domain=<id>` 실행
+5. **`domains/<id>/07-task-plan.md` 존재, 체크리스트 미완료**:
    - **레거시 + `domains/<id>/10-analysis-report.md` 없음** → `/claude-sdd:sdd-build --domain=<id>` 실행 (분석 전용)
    - **레거시 + `domains/<id>/10-analysis-report.md` 존재, 갭 있음** → `/claude-sdd:sdd-change --domain=<id> --from-analysis` 실행
    - **레거시 + `domains/<id>/09-change-request.md` 존재 (진행 중)** → `/claude-sdd:sdd-change --domain=<id> resume` 실행
    - **신규** → `/claude-sdd:sdd-build --domain=<id>` 실행
-5. **체크리스트 완료, `domains/<id>/08-review-report.md` 없음** → `/claude-sdd:sdd-review --domain=<id>` 실행
-6. **리뷰 통과** → 도메인 완료 표시, 다음 도메인 권장
-7. **통합 완료, `domains/<id>/09-change-request.md` 존재 (진행 중)** → `/claude-sdd:sdd-change --domain=<id> resume` 실행
+6. **체크리스트 완료, `domains/<id>/08-review-report.md` 없음** → `/claude-sdd:sdd-review --domain=<id>` 실행
+7. **리뷰 통과** → 도메인 완료 표시, 다음 도메인 권장
+8. **통합 완료, `domains/<id>/09-change-request.md` 존재 (진행 중)** → `/claude-sdd:sdd-change --domain=<id> resume` 실행
 
 ```
 SDD 라이프사이클 — device-mgmt 상태
@@ -149,7 +151,8 @@ SDD — 스펙 주도 개발 (SDD) 라이프사이클
   /claude-sdd:sdd-init              SDD 프로젝트 초기화
   /claude-sdd:sdd-intake            요구사항 수집
   /claude-sdd:sdd-spec              기술 명세서 생성
-  /claude-sdd:sdd-plan              태스크 분해 및 팀 배정
+  /claude-sdd:sdd-plan              태스크 분해
+  /claude-sdd:sdd-assign            워크 패키지에 팀 멤버 배정
   /claude-sdd:sdd-build             Agent Teams를 통한 구현
   /claude-sdd:sdd-build --tdd       TDD 모드 빌드 (테스트 먼저 → 구현 → 검증)
   /claude-sdd:sdd-review            품질 게이트 검증
@@ -166,6 +169,8 @@ SDD — 스펙 주도 개발 (SDD) 라이프사이클
   /claude-sdd:sdd-spec --all                모든 도메인 스펙 일괄 생성
   /claude-sdd:sdd-plan --domain=<id>        특정 도메인 태스크 분해
   /claude-sdd:sdd-plan --all                모든 도메인 일괄 분해
+  /claude-sdd:sdd-assign --domain=<id>     특정 도메인 팀 멤버 배정
+  /claude-sdd:sdd-assign --all             모든 도메인 일괄 배정
   /claude-sdd:sdd-build --domain=<id>       특정 도메인 빌드
   /claude-sdd:sdd-build --integration       크로스 도메인 통합 빌드
   /claude-sdd:sdd-review --domain=<id>      특정 도메인 리뷰
@@ -183,14 +188,15 @@ SDD — 스펙 주도 개발 (SDD) 라이프사이클
   /claude-sdd:sdd-change --domain=<id>  특정 도메인 변경 관리
 
 라이프사이클:
-  신규: init → intake → spec → plan → build → review → integrate [→ change]
-  레거시: init → intake → spec → plan → build(분석) → change(갭 해소) → review → integrate
+  신규: init → intake → spec → plan → assign → build → review → integrate [→ change]
+  레거시: init → intake → spec → plan → assign → build(분석) → change(갭 해소) → review → integrate
 
 멀티 도메인 라이프사이클:
   init --domains
     → intake --domain=<id> (각 도메인)
     → spec --shared + spec --domain=<id> (각 도메인)
     → plan --domain=<id> (각 도메인)
+    → assign --domain=<id> (각 도메인)
     → build --domain=<id> (의존성 순서)
     → build --integration (크로스 도메인)
     → review --all

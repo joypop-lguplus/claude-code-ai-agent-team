@@ -38,6 +38,7 @@
 | 2. 요구사항 수집 | `/claude-sdd:sdd-intake` | `01-requirements.md` |
 | 3. 스펙 작성 | `/claude-sdd:sdd-spec` | `02-*.md` ~ `06-spec-checklist.md` |
 | 4. 계획 수립 | `/claude-sdd:sdd-plan` | `07-task-plan.md`, 워크 패키지 |
+| 4.5. 팀 배정 | `/claude-sdd:sdd-assign` | `wp-*-member.md` |
 | 5. 구현 | `/claude-sdd:sdd-build` | 구현 코드 + 테스트 |
 | 6. 리뷰 | `/claude-sdd:sdd-review` | `08-review-report.md` |
 | 7. 통합 | `/claude-sdd:sdd-integrate` | 스펙 추적 가능한 PR |
@@ -80,7 +81,8 @@ claude --plugin-dir .
 | `/claude-sdd:sdd-init` | SDD 프로젝트 초기화 |
 | `/claude-sdd:sdd-intake` | 요구사항 수집 (Confluence, Jira, Figma, 파일, 인터뷰) |
 | `/claude-sdd:sdd-spec` | 기술 스펙 생성 |
-| `/claude-sdd:sdd-plan` | 태스크 분해 및 Agent Teams 할당 |
+| `/claude-sdd:sdd-plan` | 태스크 분해 (워크 패키지) |
+| `/claude-sdd:sdd-assign` | 워크 패키지에 팀 멤버 배정 |
 | `/claude-sdd:sdd-build` | 품질 루프를 통한 구현 (`--tdd`로 TDD 모드 지원) |
 | `/claude-sdd:sdd-review` | 품질 게이트 검증 |
 | `/claude-sdd:sdd-integrate` | 통합, PR 생성, 문서화 |
@@ -154,7 +156,7 @@ Phase 7: PR 생성 (변경 추적성 포함)
 **레거시 라이프사이클:**
 
 ```
-init → intake → spec → plan → build(분석 전용) → change(갭 해소 CRs) → review → integrate
+init → intake → spec → plan → assign → build(분석 전용) → change(갭 해소 CRs) → review → integrate
 ```
 
 - **Build (분석 전용):** 기존 코드와 스펙을 대조하여 충족 항목은 `[x]`, 미충족 항목은 갭으로 식별. 코드 수정 없음. `10-analysis-report.md` 생성.
@@ -214,6 +216,7 @@ claude-sdd/
 │   ├── sdd-intake/SKILL.md
 │   ├── sdd-spec/SKILL.md
 │   ├── sdd-plan/SKILL.md
+│   ├── sdd-assign/SKILL.md
 │   ├── sdd-build/SKILL.md
 │   ├── sdd-review/SKILL.md
 │   ├── sdd-integrate/SKILL.md

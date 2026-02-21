@@ -329,7 +329,7 @@ Task(team_name="sdd-build", name="wp-2", model="sonnet",
    1. `agents/sdd-implementer.md` 파일을 Read 도구로 **먼저 읽고** 전체 내용을 프롬프트 시작 부분에 포함합니다.
       (TDD Phase A: `agents/sdd-test-writer.md` 사용)
    2. 워크 패키지 컨텍스트 추가: 태스크 목록, 스펙 참조 경로, 체크리스트 항목.
-   3. 대상 프로젝트에 `docs/specs/wp-N-member.md`가 있으면 추가.
+   3. 대상 프로젝트에 `docs/specs/wp-N-member.md`(`/claude-sdd:sdd-assign`에서 생성)가 있으면 추가.
 
    ```
    # 반드시 하나의 메시지에서 여러 Task를 동시에 호출합니다!
@@ -486,7 +486,7 @@ Task(team_name="sdd-build", name="wp-2", model="sonnet",
      Task(team_name="sdd-build-device-mgmt", name="dev-wp-3", ...)
      ```
    - 컨텍스트: 도메인 워크 패키지 태스크, 도메인 스펙 파일, 도메인 체크리스트 항목
-   - CLAUDE.md: `docs/specs/domains/<id>/wp-<PREFIX>-WP-N-member.md`의 내용
+   - CLAUDE.md: `docs/specs/domains/<id>/wp-<PREFIX>-WP-N-member.md`의 내용 (`/claude-sdd:sdd-assign`에서 생성, 있으면 추가)
 
 4. **품질 검증 루프**: 단일 도메인과 동일한 병렬 패턴 (최대 3회 재작업)
    - 도메인 체크리스트 (`domains/<id>/06-spec-checklist.md`) 기준으로 검증

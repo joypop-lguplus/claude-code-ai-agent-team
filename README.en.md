@@ -38,6 +38,7 @@ A Claude Code plugin that manages the full development lifecycle through **Spec-
 | 2. Intake | `/claude-sdd:sdd-intake` | `01-requirements.md` |
 | 3. Spec | `/claude-sdd:sdd-spec` | `02-*.md` through `06-spec-checklist.md` |
 | 4. Plan | `/claude-sdd:sdd-plan` | `07-task-plan.md`, work packages |
+| 4.5. Assign | `/claude-sdd:sdd-assign` | `wp-*-member.md` |
 | 5. Build | `/claude-sdd:sdd-build` | Implementation + tests |
 | 6. Review | `/claude-sdd:sdd-review` | `08-review-report.md` |
 | 7. Integrate | `/claude-sdd:sdd-integrate` | PR with spec traceability |
@@ -80,7 +81,8 @@ claude --plugin-dir .
 | `/claude-sdd:sdd-init` | Initialize project for SDD |
 | `/claude-sdd:sdd-intake` | Gather requirements (Confluence, Jira, Figma, file, interview) |
 | `/claude-sdd:sdd-spec` | Generate technical specifications |
-| `/claude-sdd:sdd-plan` | Decompose tasks and assign to Agent Teams |
+| `/claude-sdd:sdd-plan` | Decompose tasks into work packages |
+| `/claude-sdd:sdd-assign` | Assign team members to work packages |
 | `/claude-sdd:sdd-build` | Implementation with quality loop (`--tdd` for TDD mode) |
 | `/claude-sdd:sdd-review` | Quality gate verification |
 | `/claude-sdd:sdd-integrate` | Integration, PR creation, documentation |
@@ -154,7 +156,7 @@ Initialize with `/claude-sdd:sdd-init legacy` to set `project.type: legacy` in `
 **Legacy Lifecycle:**
 
 ```
-init → intake → spec → plan → build(analysis-only) → change(gap resolution CRs) → review → integrate
+init → intake → spec → plan → assign → build(analysis-only) → change(gap resolution CRs) → review → integrate
 ```
 
 - **Build (analysis-only):** Compares existing code against specs. Matched items marked `[x]`, unmatched items identified as gaps. No code modifications. Generates `10-analysis-report.md`.
@@ -214,6 +216,7 @@ claude-sdd/
 │   ├── sdd-intake/SKILL.md
 │   ├── sdd-spec/SKILL.md
 │   ├── sdd-plan/SKILL.md
+│   ├── sdd-assign/SKILL.md
 │   ├── sdd-build/SKILL.md
 │   ├── sdd-review/SKILL.md
 │   ├── sdd-integrate/SKILL.md

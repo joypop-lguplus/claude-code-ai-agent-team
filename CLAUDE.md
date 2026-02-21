@@ -25,7 +25,7 @@ node bin/cli.mjs version     # 버전 표시
 ### 플러그인 매니페스트
 `.claude-plugin/plugin.json` -- 모든 스킬, 에이전트, 훅을 Claude Code에 등록합니다.
 
-### 스킬 (`skills/` 내 12개 슬래시 명령어)
+### 스킬 (`skills/` 내 13개 슬래시 명령어)
 각 스킬은 Claude가 읽고 실행하는 절차적 지시사항이 담긴 `SKILL.md` 파일입니다. 라이프사이클 흐름:
 
 ```
@@ -34,7 +34,8 @@ node bin/cli.mjs version     # 버전 표시
 /claude-sdd:sdd-init      → 프로젝트 설정 + SDD 디렉토리 초기화 (--domains로 멀티 도메인)
 /claude-sdd:sdd-intake    → 요구사항 수집 (Confluence/Jira/Figma/파일/인터뷰)
 /claude-sdd:sdd-spec      → 기술 스펙 + 스펙 준수 체크리스트 생성
-/claude-sdd:sdd-plan      → 태스크 분해 → 워크 패키지 + 팀 할당
+/claude-sdd:sdd-plan      → 태스크 분해 → 워크 패키지
+/claude-sdd:sdd-assign    → 워크 패키지에 팀 멤버 배정 + 멤버별 CLAUDE.md 생성
 /claude-sdd:sdd-build     → Agent Teams로 구현 + 품질 루프 (최대 3회 재작업 사이클)
 /claude-sdd:sdd-review    → 품질 게이트 검증 + 자동 진단
 /claude-sdd:sdd-integrate → PR 생성 + 문서화
@@ -68,7 +69,7 @@ Sonnet 모델에서 실행되는 마크다운 기반 에이전트:
 ### 레거시 모드 (`/claude-sdd:sdd-init legacy`)
 `sdd-config.yaml`의 `project.type: legacy`로 활성화. 빌드 단계에서 코드 변경 없이 **분석(analysis) 전용 구조 분석**만 수행합니다. 모든 코드 변경은 `/claude-sdd:sdd-change` 워크플로우를 통해 처리합니다.
 
-**레거시 라이프사이클**: `init → intake → spec → plan → build(분석 전용) → change(갭 해소 CRs) → review → integrate`
+**레거시 라이프사이클**: `init → intake → spec → plan → assign → build(분석 전용) → change(갭 해소 CRs) → review → integrate`
 
 - **Build(분석 전용)**: 기존 코드와 스펙 대조, 충족 항목은 `[x]` 표시, 미충족 항목은 갭으로 식별. 코드 수정 없음. `10-analysis-report.md` 생성.
 - **Change(갭 해소)**: 분석 보고서의 갭 항목을 CR로 변환하여 `sdd-change` 워크플로우로 처리. `--from-analysis` 플래그로 분석 기반 CR 자동 생성, `--lightweight` 플래그로 소규모 갭 빠른 처리 (Phase 1-4 자동, Phase 5-7 실행).

@@ -32,7 +32,7 @@
 
 ```
 인터뷰 (6개 섹션)
-  → sdd-init → sdd-intake → sdd-spec → sdd-plan → sdd-build → sdd-review → sdd-integrate
+  → sdd-init → sdd-intake → sdd-spec → sdd-plan → sdd-assign → sdd-build → sdd-review → sdd-integrate
 ```
 
 갓모드는 `spec_depth: thorough`로 DDL 수준의 상세 스펙을 생성합니다.
@@ -44,9 +44,10 @@
 /claude-sdd:sdd-intake interview   # 2. 요구사항 수집
 /claude-sdd:sdd-spec               # 3. 기술 스펙 생성
 /claude-sdd:sdd-plan               # 4. 태스크 분해
-/claude-sdd:sdd-build              # 5. 구현
-/claude-sdd:sdd-review             # 6. 리뷰
-/claude-sdd:sdd-integrate          # 7. PR 생성
+/claude-sdd:sdd-assign             # 5. 팀 멤버 배정
+/claude-sdd:sdd-build              # 6. 구현
+/claude-sdd:sdd-review             # 7. 리뷰
+/claude-sdd:sdd-integrate          # 8. PR 생성
 ```
 
 각 단계 사이에 스펙을 직접 검토하고 수정할 수 있어서, 세밀한 제어가 필요할 때 적합합니다.
@@ -101,7 +102,7 @@
 /claude-sdd:sdd-change --lightweight --from-analysis
 ```
 
-레거시 라이프사이클: `init → intake → spec → plan → build(분석 전용) → change(갭 해소) → review → integrate`
+레거시 라이프사이클: `init → intake → spec → plan → assign → build(분석 전용) → change(갭 해소) → review → integrate`
 
 ### 요구사항 소스 결합
 
@@ -427,7 +428,7 @@ SDD 상태 대시보드
 ### 패턴 B: 신중한 단계별 진행
 
 ```
-sdd-init → sdd-intake → (스펙 검토) → sdd-spec → (스펙 수정) → sdd-plan → sdd-build → sdd-review → sdd-integrate
+sdd-init → sdd-intake → (스펙 검토) → sdd-spec → (스펙 수정) → sdd-plan → sdd-assign → sdd-build → sdd-review → sdd-integrate
 ```
 
 각 단계마다 직접 검토하고 수정. 스펙의 정확성이 중요한 프로젝트에 적합.
@@ -435,7 +436,7 @@ sdd-init → sdd-intake → (스펙 검토) → sdd-spec → (스펙 수정) →
 ### 패턴 C: 레거시 + TDD
 
 ```
-sdd-init legacy → sdd-intake → sdd-spec → sdd-plan → sdd-build(분석 전용) → sdd-change --from-analysis(TDD 델타 빌드) → sdd-review → sdd-integrate
+sdd-init legacy → sdd-intake → sdd-spec → sdd-plan → sdd-assign → sdd-build(분석 전용) → sdd-change --from-analysis(TDD 델타 빌드) → sdd-review → sdd-integrate
 ```
 
 기존 코드베이스를 분석하고, 갭을 TDD 기반 변경 관리로 안전하게 해소. 회귀 버그 방지가 중요한 경우.
@@ -451,7 +452,7 @@ sdd-init --domains → (도메인별 라이프사이클) → sdd-integrate → s
 ### 패턴 E: 분석 → 스펙만 (코드 생성 없이)
 
 ```
-sdd-init → sdd-intake → sdd-spec → sdd-plan
+sdd-init → sdd-intake → sdd-spec → sdd-plan [→ sdd-assign]
 ```
 
 스펙과 태스크 계획만 생성하고, 구현은 수동으로 진행. 설계 문서가 주 목적인 경우.

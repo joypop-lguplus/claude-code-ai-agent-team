@@ -5,7 +5,7 @@ description: 심층 인터뷰를 통해 프로젝트 정보를 수집한 후 전
 
 # /claude-sdd:sdd-godmode — 심층 인터뷰 + 전체 파이프라인 자동 실행
 
-심층 인터뷰를 통해 프로젝트의 모든 정보를 수집한 뒤, SDD 라이프사이클 전체(init -> intake -> spec -> plan -> build -> review -> integrate)를 자동으로 실행합니다.
+심층 인터뷰를 통해 프로젝트의 모든 정보를 수집한 뒤, SDD 라이프사이클 전체(init -> intake -> spec -> plan -> assign -> build -> review -> integrate)를 자동으로 실행합니다.
 
 ## 사용법
 
@@ -131,26 +131,28 @@ Phase 3으로 진행합니다...
 **단일 도메인 프로젝트 (신규):**
 
 ```
-[1/7] sdd-init 실행 중... ✓
-[2/7] sdd-intake 실행 중... ✓
-[3/7] sdd-spec 실행 중... ✓ (집요한 상세 스펙)
-[4/7] sdd-plan 실행 중... ✓
-[5/7] sdd-build 실행 중... ✓
-[6/7] sdd-review 실행 중... ✓
-[7/7] sdd-integrate 실행 중... ✓
+[1/8] sdd-init 실행 중... ✓
+[2/8] sdd-intake 실행 중... ✓
+[3/8] sdd-spec 실행 중... ✓ (집요한 상세 스펙)
+[4/8] sdd-plan 실행 중... ✓
+[5/8] sdd-assign 실행 중... ✓
+[6/8] sdd-build 실행 중... ✓
+[7/8] sdd-review 실행 중... ✓
+[8/8] sdd-integrate 실행 중... ✓
 ```
 
 **단일 도메인 프로젝트 (레거시):**
 
 ```
-[1/8] sdd-init legacy 실행 중... ✓
-[2/8] sdd-intake 실행 중... ✓
-[3/8] sdd-spec 실행 중... ✓ (집요한 상세 스펙)
-[4/8] sdd-plan 실행 중... ✓
-[5/8] sdd-build 실행 중... ✓ (분석 전용 — 코드 변경 없음)
-[6/8] sdd-change --from-analysis 실행 중... ✓ (갭 해소)
-[7/8] sdd-review 실행 중... ✓
-[8/8] sdd-integrate 실행 중... ✓
+[1/9] sdd-init legacy 실행 중... ✓
+[2/9] sdd-intake 실행 중... ✓
+[3/9] sdd-spec 실행 중... ✓ (집요한 상세 스펙)
+[4/9] sdd-plan 실행 중... ✓
+[5/9] sdd-assign 실행 중... ✓
+[6/9] sdd-build 실행 중... ✓ (분석 전용 — 코드 변경 없음)
+[7/9] sdd-change --from-analysis 실행 중... ✓ (갭 해소)
+[8/9] sdd-review 실행 중... ✓
+[9/9] sdd-integrate 실행 중... ✓
 ```
 
 **멀티 도메인 프로젝트:**
@@ -160,6 +162,8 @@ Phase 3으로 진행합니다...
 [2/N] sdd-intake --all 실행 중... ✓
 [3/N] sdd-spec --shared 실행 중... ✓
 [4/N] sdd-spec --all 실행 중... ✓
+[5/N] sdd-plan --all 실행 중... ✓
+[6/N] sdd-assign --all 실행 중... ✓
 ... (도메인 빌드는 의존성 순서대로)
 [N/N] sdd-integrate 실행 중... ✓
 ```

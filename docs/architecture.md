@@ -16,13 +16,14 @@ claude-sdd는 스펙 주도 개발 (SDD) 라이프사이클을 구현하는 Clau
 
 ```
 claude-sdd/
-├── Skills (12)        # 사용자용 슬래시 명령어
+├── Skills (13)        # 사용자용 슬래시 명령어
 │   ├── /claude-sdd:sdd-next      # 오케스트레이터 (단계 자동 감지)
 │   ├── /claude-sdd:sdd-godmode  # 심층 인터뷰 + 풀 오토 실행
 │   ├── /claude-sdd:sdd-init      # 프로젝트 초기화
 │   ├── /claude-sdd:sdd-intake    # 요구사항 수집
 │   ├── /claude-sdd:sdd-spec      # 스펙 생성
 │   ├── /claude-sdd:sdd-plan      # 태스크 분해
+│   ├── /claude-sdd:sdd-assign    # 팀 멤버 배정
 │   ├── /claude-sdd:sdd-build     # Agent Teams 구현 (TDD 모드 지원)
 │   ├── /claude-sdd:sdd-review    # 품질 게이트
 │   ├── /claude-sdd:sdd-integrate # PR 및 문서화
@@ -73,7 +74,10 @@ claude-sdd/
                      --> 06-spec-checklist.md
     |
     v
-[/claude-sdd:sdd-plan]   --> 07-task-plan.md + wp-*-member.md
+[/claude-sdd:sdd-plan]   --> 07-task-plan.md
+    |
+    v
+[/claude-sdd:sdd-assign] --> wp-*-member.md
     |
     v
 [/claude-sdd:sdd-build]  --> 소스 코드 + 테스트

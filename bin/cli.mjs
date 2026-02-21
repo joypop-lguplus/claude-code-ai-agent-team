@@ -2,7 +2,7 @@
 
 import { header, colors } from '../lib/utils.mjs';
 
-const VERSION = '0.3.2';
+const VERSION = '0.3.3';
 const [,, command, ...args] = process.argv;
 
 // npx 실행인지 직접 실행인지 감지하여 안내 명령어 결정
@@ -86,7 +86,8 @@ function printHelp() {
   console.log('  /sdd-init       SDD 프로젝트 초기화');
   console.log('  /sdd-intake     요구사항 수집');
   console.log('  /sdd-spec       기술 스펙 생성');
-  console.log('  /sdd-plan       작업 분해 및 팀 배정');
+  console.log('  /sdd-plan       작업 분해');
+  console.log('  /sdd-assign     팀 멤버 배정');
   console.log('  /sdd-build      에이전트 팀으로 구현');
   console.log('  /sdd-review     품질 게이트 검증');
   console.log('  /sdd-integrate  통합, PR 및 문서화');

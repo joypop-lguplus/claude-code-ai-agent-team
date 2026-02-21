@@ -1,5 +1,17 @@
 # 변경 이력
 
+## [0.3.3] - 2026-02-21
+
+### 변경
+- **스킬 분리**: `sdd-plan`에서 팀 배정 기능을 분리하여 `sdd-assign` 신규 스킬 생성
+  - `sdd-plan`: 순수 태스크 분해만 수행 (워크 패키지 생성, 의존성 식별, 실행 계획)
+  - `sdd-assign`: 워크 패키지에 팀 멤버 배정 + `wp-*-member.md` 생성, `rebalance` 서브커맨드 포함
+- **라이프사이클 갱신**: `plan → assign → build` 순서로 변경 (신규 8단계, 레거시 9단계)
+- **`sdd-next` 라우팅**: `07-task-plan.md` 존재 + `wp-*-member.md` 부재 시 `sdd-assign`으로 라우팅
+- **`sdd-godmode` 파이프라인**: `sdd-assign` 단계 삽입 (신규 [5/8], 레거시 [5/9])
+- **`sdd-build` 의존성**: `wp-N-member.md` 출처를 `sdd-assign`으로 명시
+- **버전**: `0.3.2` → `0.3.3` (package.json, plugin.json, marketplace.json, cli.mjs)
+
 ## [0.3.2] - 2026-02-21
 
 ### 변경

@@ -15,13 +15,16 @@
 # 4. 태스크 분해
 /claude-sdd:sdd-plan
 
-# 5. Agent Teams로 구현
+# 5. 팀 멤버 배정
+/claude-sdd:sdd-assign
+
+# 6. Agent Teams로 구현
 /claude-sdd:sdd-build
 
-# 6. 품질 검증
+# 7. 품질 검증
 /claude-sdd:sdd-review
 
-# 7. PR 생성
+# 8. PR 생성
 /claude-sdd:sdd-integrate
 ```
 
@@ -94,9 +97,20 @@ WP-3: Integration   (순차, WP-1 & WP-2 이후)
 각 워크 패키지에 포함되는 내용:
 - 스펙 참조가 있는 태스크 목록
 - 할당된 체크리스트 항목
-- 팀 멤버 CLAUDE.md 설정
+- 의존성 및 실행 순서
 
-### 5. 구현 (`/claude-sdd:sdd-build`)
+### 5. 팀 멤버 배정 (`/claude-sdd:sdd-assign`)
+
+태스크 계획의 워크 패키지에 Agent Teams 멤버를 배정하고, 멤버별 CLAUDE.md(`wp-N-member.md`)를 생성합니다:
+
+```bash
+/claude-sdd:sdd-assign              # 멤버 배정
+/claude-sdd:sdd-assign rebalance    # 진행 상황에 따라 재배정
+```
+
+태스크 분해와 팀 배정이 분리되어 있어, 태스크 분해 후 팀 구성만 변경하거나 재배정만 수행할 수 있습니다.
+
+### 6. 구현 (`/claude-sdd:sdd-build`)
 
 SDD의 핵심 단계입니다. 품질 루프가 적용된 Agent Teams를 사용합니다:
 
@@ -143,9 +157,9 @@ Phase C (Verify): 전체 테스트 실행, 통과 확인
   → 10-analysis-report.md 생성
 ```
 
-분석 보고서에서 식별된 갭은 `/claude-sdd:sdd-change`를 통해 변경 요청으로 처리합니다. 레거시 라이프사이클: `init → intake → spec → plan → build(분석 전용) → change(갭 해소) → review → integrate`
+분석 보고서에서 식별된 갭은 `/claude-sdd:sdd-change`를 통해 변경 요청으로 처리합니다. 레거시 라이프사이클: `init → intake → spec → plan → assign → build(분석 전용) → change(갭 해소) → review → integrate`
 
-### 6. 리뷰 (`/claude-sdd:sdd-review`)
+### 7. 리뷰 (`/claude-sdd:sdd-review`)
 
 품질 게이트 검증:
 
@@ -160,7 +174,7 @@ Phase C (Verify): 전체 테스트 실행, 통과 확인
 - 공개 인터페이스에 대한 테스트 존재 여부
 - 상세 리뷰 리포트 생성
 
-### 7. 통합 (`/claude-sdd:sdd-integrate`)
+### 8. 통합 (`/claude-sdd:sdd-integrate`)
 
 개발 사이클을 마무리합니다:
 

@@ -1,21 +1,19 @@
 ---
 name: sdd-plan
-description: 스펙을 워크 패키지로 분해하고 Agent Teams에 할당합니다. 멀티 도메인 프로젝트에서는 도메인별 태스크 분해를 지원합니다.
+description: 스펙을 워크 패키지로 분해합니다. 멀티 도메인 프로젝트에서는 도메인별 태스크 분해를 지원합니다.
 ---
 
-# /claude-sdd:sdd-plan — 태스크 분해 및 팀 배정
+# /claude-sdd:sdd-plan — 태스크 분해
 
-스펙을 병렬 처리 가능한 워크 패키지로 분해하고 Agent Teams 멤버에게 배정합니다.
+스펙을 병렬 처리 가능한 워크 패키지로 분해합니다.
 
 ## 사용법
 
 ```
 /claude-sdd:sdd-plan              # 단일: 기존 동작 / 멀티: 도메인 선택 요청
-/claude-sdd:sdd-plan rebalance    # 현재 진행 상황에 따라 태스크 재분배
 
 # 멀티 도메인 옵션
 /claude-sdd:sdd-plan --domain=<id>            # 특정 도메인 태스크 분해
-/claude-sdd:sdd-plan --domain=<id> rebalance  # 특정 도메인 태스크 재분배
 /claude-sdd:sdd-plan --all                    # 모든 도메인 일괄 분해
 ```
 
@@ -103,15 +101,6 @@ description: 스펙을 워크 패키지로 분해하고 Agent Teams에 할당합
 - WP-3: Integration 모듈 (팀 멤버 1)
 ```
 
-### 팀 멤버 CLAUDE.md 생성
-
-각 워크 패키지에 대해 `templates/claude-md/sdd-member.md.tmpl`에서 팀 멤버 CLAUDE.md를 준비합니다:
-- `{{WORK_PACKAGE_ID}}`를 WP ID로 교체
-- `{{SPEC_SECTIONS}}`를 관련 스펙 파일 참조로 교체
-- `{{CHECKLIST_ITEMS}}`를 배정된 체크리스트 항목 ID로 교체
-
-`/claude-sdd:sdd-build`에서 사용할 수 있도록 `docs/specs/wp-N-member.md`로 저장합니다.
-
 ### 출력 요약
 
 ```
@@ -127,9 +116,7 @@ description: 스펙을 워크 패키지로 분해하고 Agent Teams에 할당합
   1단계: WP-1, WP-2, WP-3 (병렬)
   2단계: WP-4 (순차)
 
-팀 멤버 설정: docs/specs/wp-*-member.md
-
-다음 단계: /claude-sdd:sdd-build — Agent Teams를 통한 구현 시작
+다음 단계: /claude-sdd:sdd-assign — 워크 패키지에 팀 멤버 배정
 ```
 
 ---
@@ -179,7 +166,6 @@ description: 스펙을 워크 패키지로 분해하고 Agent Teams에 할당합
 
 4. 출력 파일:
    - `docs/specs/domains/<id>/07-task-plan.md`
-   - `docs/specs/domains/<id>/wp-<PREFIX>-WP-N-member.md` (워크 패키지당 하나)
 
 ### --all (모든 도메인 일괄 분해)
 
@@ -232,22 +218,15 @@ description: 스펙을 워크 패키지로 분해하고 Agent Teams에 할당합
    - 체크리스트 항목: 84개 (도메인) + 8개 (크로스 도메인) = 92개
    ```
 
-### --domain=<id> rebalance (특정 도메인 재분배)
-
-기존 `rebalance`와 동일한 로직을 도메인 범위에 적용합니다:
-1. `docs/specs/domains/<id>/07-task-plan.md`와 `docs/specs/domains/<id>/06-spec-checklist.md`를 읽습니다.
-2. 완료된 태스크와 미완료 태스크를 분석합니다.
-3. 미완료 태스크를 재분배하여 `07-task-plan.md`를 업데이트합니다.
-
 ---
 
 ## 출력
 
 | 모드 | 출력 파일 |
 |------|-----------|
-| 단일 도메인 | `docs/specs/07-task-plan.md`, `docs/specs/wp-*-member.md` |
-| 멀티 도메인 (특정 도메인) | `docs/specs/domains/<id>/07-task-plan.md`, `docs/specs/domains/<id>/wp-*-member.md` |
-| 멀티 도메인 (전체) | 각 도메인의 `07-task-plan.md` + `wp-*-member.md` + 프로젝트 수준 `docs/specs/07-task-plan.md` |
+| 단일 도메인 | `docs/specs/07-task-plan.md` |
+| 멀티 도메인 (특정 도메인) | `docs/specs/domains/<id>/07-task-plan.md` |
+| 멀티 도메인 (전체) | 각 도메인의 `07-task-plan.md` + 프로젝트 수준 `docs/specs/07-task-plan.md` |
 
 생성 후 출력:
 
@@ -265,9 +244,7 @@ description: 스펙을 워크 패키지로 분해하고 Agent Teams에 할당합
   1단계: WP-1, WP-2, WP-3 (병렬)
   2단계: WP-4 (순차)
 
-팀 멤버 설정: docs/specs/wp-*-member.md
-
-다음 단계: /claude-sdd:sdd-build — Agent Teams를 통한 구현 시작
+다음 단계: /claude-sdd:sdd-assign — 워크 패키지에 팀 멤버 배정
 ```
 
 **멀티 도메인 (특정 도메인)**:
@@ -283,9 +260,7 @@ description: 스펙을 워크 패키지로 분해하고 Agent Teams에 할당합
   1단계: DEV-WP-1, DEV-WP-2 (병렬)
   2단계: DEV-WP-3 (순차)
 
-팀 멤버 설정: docs/specs/domains/device-mgmt/wp-*-member.md
-
-다음 단계: /claude-sdd:sdd-build --domain=device-mgmt — 도메인 빌드 시작
+다음 단계: /claude-sdd:sdd-assign --domain=device-mgmt — 팀 멤버 배정
 ```
 
 **멀티 도메인 (전체)**:
@@ -309,7 +284,7 @@ description: 스펙을 워크 패키지로 분해하고 Agent Teams에 할당합
 
 전체 통계: 10개 WP, 34개 태스크, 92개 체크리스트 항목
 
-다음 단계: /claude-sdd:sdd-build [--domain=<id>] — 도메인별 빌드 시작
+다음 단계: /claude-sdd:sdd-assign [--domain=<id> | --all] — 팀 멤버 배정
 ```
 
 ## 의존성
