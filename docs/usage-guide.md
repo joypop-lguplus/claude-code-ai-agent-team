@@ -66,6 +66,8 @@
 
 `/claude-sdd:sdd-intake`를 여러 번 실행하여 다양한 소스의 요구사항을 결합할 수 있습니다.
 
+> **레거시 프로젝트 참고**: `project.type: legacy`인 경우, 인터뷰 대신 기존 코드베이스를 자동 분석하여 요구사항을 생성합니다. 프로젝트 구조, 기술 스택, API/공개 인터페이스, 테스트 현황을 자동으로 탐색하며, godmode 실행 시 `00-project-context.md`의 정보도 반영됩니다. Confluence/Jira/File 소스와 병행 사용이 가능합니다.
+
 ### 3. 스펙 생성 (`/claude-sdd:sdd-spec`)
 
 프로젝트 유형에 따라 기술 스펙을 자동 생성합니다:

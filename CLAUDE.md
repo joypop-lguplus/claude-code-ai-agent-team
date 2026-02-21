@@ -33,7 +33,7 @@ node bin/cli.mjs version     # 버전 표시
 /claude-sdd:sdd-godmode   → 심층 인터뷰 → 전체 파이프라인 자동 실행 (풀 오토 모드)
 /claude-sdd:sdd-next      → 단계 자동 감지 후 계속 진행
 /claude-sdd:sdd-init      → 프로젝트 설정 + SDD 디렉토리 초기화 (--domains로 멀티 도메인)
-/claude-sdd:sdd-intake    → 요구사항 수집 (Confluence/Jira/Figma/파일/인터뷰)
+/claude-sdd:sdd-intake    → 요구사항 수집 (Confluence/Jira/Figma/파일/인터뷰). 레거시: 인터뷰 없이 기존 코드 자동 분석으로 요구사항 생성
 /claude-sdd:sdd-spec      → 기술 스펙 + 스펙 준수 체크리스트 생성
 /claude-sdd:sdd-plan      → 태스크 분해 → 워크 패키지
 /claude-sdd:sdd-assign    → 워크 패키지에 팀 멤버 배정 + 멤버별 CLAUDE.md 생성
