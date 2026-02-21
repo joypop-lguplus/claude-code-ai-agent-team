@@ -78,7 +78,19 @@ Sonnet 모델에서 실행되는 마크다운 기반 에이전트:
 프로젝트 언어 및 사용 가능한 린터/포매터를 자동 감지합니다. JSON 출력. TypeScript, Python, Go, Rust, Java, Kotlin, C++ 지원.
 
 ### LSP 통합
-`boostvolt/claude-code-lsps` 마켓플레이스 플러그인을 통해 Claude Code 내장 LSP를 활용합니다. 설치 시 파일 편집 후 자동 진단, 정의 이동, 참조 찾기 등이 활성화됩니다.
+`boostvolt/claude-code-lsps` 마켓플레이스 플러그인을 통해 Claude Code 내장 LSP를 활용합니다.
+
+**자동 진단**: 파일 편집 후 에러/경고가 자동으로 표시됩니다. 에이전트의 별도 호출이 불필요합니다.
+
+**명시적 LSP 도구**: 다음 LSP 오퍼레이션은 에이전트가 직접 호출해야 합니다. LSP가 사용 불가하면 Grep/Glob으로 대체합니다.
+
+| 오퍼레이션 | 활용 장면 | 주요 사용 에이전트 |
+|-----------|----------|------------------|
+| `LSP findReferences` | 함수/클래스의 모든 호출자 파악 | sdd-change-analyst, sdd-implementer |
+| `LSP incomingCalls` | 호출 계층 추적 (영향 분석) | sdd-change-analyst |
+| `LSP documentSymbol` | 파일 내 공개 API/심볼 목록 추출 | sdd-reviewer, sdd-implementer |
+| `LSP goToDefinition` | 심볼의 원본 정의 위치 확인 | sdd-implementer, sdd-change-analyst |
+| `LSP hover` | 타입 정보 확인 | sdd-implementer, sdd-test-writer |
 
 ### 세션 훅 (`hooks/hooks.json` + `scripts/sdd-session-init.sh`)
 세션 시작 시 실행되어 현재 프로젝트가 SDD를 사용하는지 자동 감지하고 단계/진행 상황을 표시합니다.
