@@ -58,7 +58,7 @@ npx github:joypop-lguplus/claude-sdd install
 
 ```bash
 npx github:joypop-lguplus/claude-sdd check    # 상태 확인
-npx github:joypop-lguplus/claude-sdd install   # 대화형 설치 마법사
+npx github:joypop-lguplus/claude-sdd install   # 자동 설치
 npx github:joypop-lguplus/claude-sdd doctor    # 정밀 진단
 ```
 

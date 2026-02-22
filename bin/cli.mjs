@@ -72,8 +72,8 @@ function printHelp() {
   console.log('  claude-sdd <명령어>');
   console.log();
   console.log(colors.bold('명령어:'));
-  console.log('  install     설치 마법사 실행');
-  console.log('  uninstall   플러그인 제거');
+  console.log('  install     자동 설치');
+  console.log('  uninstall   플러그인/설정 제거 (패키지 보존)');
   console.log('  check       의존성 상태 확인');
   console.log('  doctor      정밀 진단');
   console.log('  version     버전 표시');
