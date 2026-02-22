@@ -1,6 +1,8 @@
 ---
 name: sdd-integrate
-description: 테스트, 문서화, PR 생성으로 구현을 마무리합니다. 멀티 도메인 프로젝트에서는 단일 PR 또는 도메인별 PR 전략을 지원합니다.
+description: >-
+  테스트, 문서화, PR 생성으로 구현을 마무리합니다. 멀티 도메인 프로젝트에서는 단일 PR 또는 도메인별 PR 전략을 지원합니다.
+  Use when: "PR 만들어", "통합해줘", "마무리해줘", "integrate", "create PR"
 ---
 
 # /claude-sdd:sdd-integrate — 통합, PR 및 문서화

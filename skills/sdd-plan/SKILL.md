@@ -1,6 +1,8 @@
 ---
 name: sdd-plan
-description: 스펙을 워크 패키지로 분해합니다. 멀티 도메인 프로젝트에서는 도메인별 태스크 분해를 지원합니다.
+description: >-
+  스펙을 워크 패키지로 분해합니다. 멀티 도메인 프로젝트에서는 도메인별 태스크 분해를 지원합니다.
+  Use when: "태스크 분해", "계획 수립", "작업 나눠줘", "break down tasks", "create plan"
 ---
 
 # /claude-sdd:sdd-plan — 태스크 분해

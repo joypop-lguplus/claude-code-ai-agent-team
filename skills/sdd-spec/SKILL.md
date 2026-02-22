@@ -1,6 +1,8 @@
 ---
 name: sdd-spec
-description: 요구사항으로부터 기술 스펙과 준수 체크리스트를 생성합니다. 멀티 도메인 프로젝트에서는 도메인별 스펙을 생성합니다.
+description: >-
+  요구사항으로부터 기술 스펙과 준수 체크리스트를 생성합니다. 멀티 도메인 프로젝트에서는 도메인별 스펙을 생성합니다.
+  Use when: "스펙 생성", "명세서 만들어", "기술 스펙 작성", "generate spec", "write spec"
 ---
 
 # /claude-sdd:sdd-spec — 기술 명세서 생성

@@ -27,7 +27,7 @@ node bin/cli.mjs version     # 버전 표시
 `.claude-plugin/plugin.json` -- 모든 스킬, 에이전트, 훅을 Claude Code에 등록합니다.
 
 ### 스킬 (`skills/` 내 14개 슬래시 명령어)
-각 스킬은 Claude가 읽고 실행하는 절차적 지시사항이 담긴 `SKILL.md` 파일입니다. 라이프사이클 흐름:
+각 스킬은 Claude가 읽고 실행하는 절차적 지시사항이 담긴 `SKILL.md` 파일입니다. 모든 스킬은 슬래시 커맨드뿐 아니라 자연어로도 발동 가능합니다 (description의 "Use when:" 힌트 기반). 라이프사이클 흐름:
 
 ```
 /claude-sdd:sdd-godmode   → 심층 인터뷰 → 전체 파이프라인 자동 실행 (풀 오토 모드)
@@ -50,7 +50,7 @@ node bin/cli.mjs version     # 버전 표시
 대규모 프로젝트에서 도메인별 독립 라이프사이클을 지원합니다. `sdd-config.yaml`에 `domains` 섹션이 정의되면 멀티 도메인 모드가 활성화됩니다. 각 스킬에 `--domain=<id>`, `--all` 옵션이 추가되어 도메인별 독립 스펙/빌드/리뷰가 가능합니다. 도메인별 스펙은 `docs/specs/domains/<domain-id>/`에, 크로스 도메인 통합은 `docs/specs/cross-domain/`에 위치합니다.
 
 ### 갓모드 (`/claude-sdd:sdd-godmode`)
-심층 인터뷰를 통해 프로젝트 정보(기술 스택, 도메인 구조, 요구사항 소스, 비기능 요구사항 등)를 한번에 수집한 후 전체 SDD 파이프라인을 자동 실행합니다. `spec_depth: thorough` 모드로 DDL 수준의 상세 스펙을 생성합니다.
+심층 인터뷰를 통해 프로젝트 정보(기술 스택, 도메인 구조, 요구사항 소스, 비기능 요구사항 등)를 한번에 수집한 후 전체 SDD 파이프라인을 자동 실행합니다. `spec_depth: thorough` 모드로 DDL 수준의 상세 스펙을 생성합니다. 레거시 프로젝트에서는 코드 자동 분석으로 기술 스택/도메인/코드 규칙을 감지하여 확인만 받고, MVP/토이 프로젝트에서는 불필요한 엔터프라이즈급 질문을 자동 건너뜁니다.
 
 ### 에이전트 (`agents/` 내 7개)
 Sonnet 모델에서 실행되는 마크다운 기반 에이전트:

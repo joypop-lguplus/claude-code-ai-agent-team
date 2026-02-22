@@ -1,6 +1,8 @@
 ---
 name: sdd-change
-description: 통합 완료 후 변경 요청을 체계적으로 처리합니다. 영향 분석, 체크리스트 부분 갱신, TDD 델타 빌드, 회귀 검증을 포함하는 7 Phase 변경 관리 워크플로우입니다.
+description: >-
+  통합 완료 후 변경 요청을 체계적으로 처리합니다. 영향 분석, 체크리스트 부분 갱신, TDD 델타 빌드, 회귀 검증을 포함하는 7 Phase 변경 관리 워크플로우입니다.
+  Use when: "변경 요청", "기능 변경해줘", "수정 사항 반영", "change request", "modify feature"
 ---
 
 # /claude-sdd:sdd-change — 변경 관리

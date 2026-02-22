@@ -1,6 +1,8 @@
 ---
 name: sdd-publish
-description: SDD 산출물을 Confluence에 퍼블리싱하고 다이어그램을 PNG로 첨부합니다.
+description: >-
+  SDD 산출물을 Confluence에 퍼블리싱하고 다이어그램을 PNG로 첨부합니다.
+  Use when: "컨플루언스에 올려줘", "퍼블리싱", "문서 공유", "publish to confluence", "publish docs"
 ---
 
 # /claude-sdd:sdd-publish — Confluence 퍼블리싱

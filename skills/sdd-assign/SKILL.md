@@ -1,6 +1,8 @@
 ---
 name: sdd-assign
-description: 워크 패키지에 Agent Teams 멤버를 배정하고 멤버별 CLAUDE.md를 생성합니다. 멀티 도메인 프로젝트에서는 도메인별 배정을 지원합니다.
+description: >-
+  워크 패키지에 Agent Teams 멤버를 배정하고 멤버별 CLAUDE.md를 생성합니다. 멀티 도메인 프로젝트에서는 도메인별 배정을 지원합니다.
+  Use when: "팀 배정", "멤버 할당", "팀 구성", "assign team", "allocate members"
 ---
 
 # /claude-sdd:sdd-assign — 팀 멤버 배정

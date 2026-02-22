@@ -1,6 +1,8 @@
 ---
 name: sdd-lint
-description: 코드 분석을 실행합니다 — 진단, 구조 검색, 심볼 추출, 포매팅.
+description: >-
+  코드 분석을 실행합니다 — 진단, 구조 검색, 심볼 추출, 포매팅.
+  Use when: "코드 분석해줘", "린트 돌려줘", "진단해줘", "lint", "analyze code", "코드 검사"
 ---
 
 # /claude-sdd:sdd-lint — 코드 분석 및 진단

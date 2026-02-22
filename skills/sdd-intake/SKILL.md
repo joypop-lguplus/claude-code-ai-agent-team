@@ -1,6 +1,8 @@
 ---
 name: sdd-intake
-description: Confluence, Jira, Figma, 파일, 인터뷰 등에서 요구사항을 수집합니다. 멀티 도메인 프로젝트에서는 도메인별 수집을 지원합니다.
+description: >-
+  Confluence, Jira, Figma, 파일, 인터뷰 등에서 요구사항을 수집합니다. 멀티 도메인 프로젝트에서는 도메인별 수집을 지원합니다.
+  Use when: "요구사항 수집", "인터뷰 해줘", "요구사항 정리", "gather requirements", "collect requirements"
 ---
 
 # /claude-sdd:sdd-intake — 요구사항 수집

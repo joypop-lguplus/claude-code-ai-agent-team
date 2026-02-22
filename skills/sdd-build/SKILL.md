@@ -1,6 +1,8 @@
 ---
 name: sdd-build
-description: Agent Teams로 워크 패키지를 구현합니다. 품질 루프(최대 3회 재작업)를 통해 스펙 준수를 보장합니다. 멀티 도메인 프로젝트에서는 도메인별/통합 빌드를 지원합니다.
+description: >-
+  Agent Teams로 워크 패키지를 구현합니다. 품질 루프(최대 3회 재작업)를 통해 스펙 준수를 보장합니다. 멀티 도메인 프로젝트에서는 도메인별/통합 빌드를 지원합니다.
+  Use when: "구현해줘", "빌드 시작", "코드 작성", "build", "implement", "개발 시작"
 ---
 
 # /claude-sdd:sdd-build — Agent Teams를 통한 구현

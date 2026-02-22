@@ -1,6 +1,8 @@
 ---
 name: sdd-init
-description: 새 프로젝트 또는 기존 프로젝트를 스펙 주도 개발(SDD)로 초기화합니다. 멀티 도메인 프로젝트를 지원합니다.
+description: >-
+  새 프로젝트 또는 기존 프로젝트를 스펙 주도 개발(SDD)로 초기화합니다. 멀티 도메인 프로젝트를 지원합니다.
+  Use when: "프로젝트 초기화", "SDD 설정", "SDD 시작", "initialize", "setup project"
 ---
 
 # /claude-sdd:sdd-init — SDD 프로젝트 초기화

@@ -1,6 +1,8 @@
 ---
 name: sdd-review
-description: 스펙 준수 체크리스트 대비 품질 게이트를 검증합니다. 멀티 도메인 프로젝트에서는 도메인별/통합/전체 리뷰를 지원합니다.
+description: >-
+  스펙 준수 체크리스트 대비 품질 게이트를 검증합니다. 멀티 도메인 프로젝트에서는 도메인별/통합/전체 리뷰를 지원합니다.
+  Use when: "리뷰해줘", "품질 검증", "코드 리뷰", "review", "quality check"
 ---
 
 # /claude-sdd:sdd-review — 품질 게이트 검증
