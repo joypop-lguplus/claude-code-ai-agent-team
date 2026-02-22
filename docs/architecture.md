@@ -9,7 +9,7 @@ claude-sdd는 스펙 주도 개발 (SDD) 라이프사이클을 구현하는 Clau
 1. **체크리스트 = 마크다운**: 모든 추적은 git으로 버전 관리되는 마크다운 파일에서 이루어지며, 사람과 Claude 모두 읽을 수 있습니다.
 2. **MCP 미번들**: Confluence/Jira MCP 서버를 번들하지 않습니다. 플러그인은 사용자의 기존 MCP 설정을 활용하도록 안내합니다.
 3. **14개의 독립 스킬**: 각 라이프사이클 단계가 별도의 스킬이므로, 어느 지점에서든 재진입이 가능합니다.
-4. **에이전트 모델 = Sonnet**: 모든 에이전트는 실제 분석 및 구현 작업에 Sonnet을 사용합니다.
+4. **에이전트 모델 = 역할별 분리**: 사고가 필요한 작업(구현, 테스트, 리뷰)에는 Sonnet, 도구 실행 위주 작업(코드 분석, 린트)에는 Haiku를 사용합니다. `sdd-config.yaml`의 `teams.model`과 `teams.lightweight_model`로 설정합니다.
 5. **Figma = 비전**: 별도의 MCP 없이 스크린샷/URL을 통해 디자인을 분석합니다.
 
 ## 플러그인 구성 요소
@@ -108,9 +108,9 @@ claude-sdd/
 ```
 리더 세션 (Opus)
   |
-  |-- 팀 멤버 1 실행 (Sonnet) --> WP-1: User 모듈
-  |-- 팀 멤버 2 실행 (Sonnet) --> WP-2: Auth 모듈
-  |-- 팀 멤버 3 실행 (Sonnet) --> WP-3: Payment 모듈
+  |-- 팀 멤버 1 실행 (teams.model) --> WP-1: User 모듈
+  |-- 팀 멤버 2 실행 (teams.model) --> WP-2: Auth 모듈
+  |-- 팀 멤버 3 실행 (teams.model) --> WP-3: Payment 모듈
   |
   |-- [전원 완료]
   |
@@ -280,7 +280,7 @@ sdd-config.yaml (publishing 설정)
 - `checklist-summary.xml.tmpl` — 진행률 요약 패널
 - `code-block.xml.tmpl` — 구문 강조 코드 블록
 
-**조건부 퍼블리싱**: `sdd-intake`, `sdd-spec`, `sdd-plan`, `sdd-review` 스킬은 단계 완료 시 `publishing.confluence.enabled: true`이면 해당 산출물을 즉시 퍼블리싱합니다.
+**수동 퍼블리싱**: 모든 워크플로우 완료 후 사용자가 `/claude-sdd:sdd-publish`를 직접 실행합니다. 인자 없이 실행 시 대화형으로 문서를 선택할 수 있습니다.
 
 ## 품질 루프
 

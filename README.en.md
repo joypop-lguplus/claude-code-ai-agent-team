@@ -114,7 +114,7 @@ The core of SDD is the leader-driven quality loop during the build phase:
 ```
 Leader (Opus): Assigns work package with spec references
   |
-Team Member (Sonnet): Reads spec --> Implements --> Tests --> Reports
+Team Member (teams.model): Reads spec --> Implements --> Tests --> Reports
   |
 Leader: Verifies checklist
   |-- [ ] items remain --> Specific feedback + rework (max 3 cycles)

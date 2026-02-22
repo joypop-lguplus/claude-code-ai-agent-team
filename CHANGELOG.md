@@ -14,6 +14,16 @@
   - 적용 모드: strict(위반=FAIL) | advisory(위반=경고)
   - `sdd-config.yaml`에 `rules:` 설정 블록 추가
   - 멀티 도메인: 도메인별 규칙 오버라이드 지원
+- **역할 기반 모델 분리** — 에이전트 모델을 역할에 따라 차등 적용
+  - `teams.model` (기본: sonnet): 사고가 필요한 작업 (구현, 테스트, 리뷰)
+  - `teams.lightweight_model` (기본: haiku): 경량 작업 (코드 분석, 린트, 포맷팅)
+  - `sdd-code-analyzer` 에이전트 모델을 Sonnet → Haiku로 변경
+  - `sdd-build` 3.5단계(린트/포맷) + `sdd-lint`에 경량 모델 적용
+- **Agent Teams 설치 토글** — 인스톨러에서 Agent Teams 활성화/비활성화 선택 가능
+
+### Fixed
+- **claude-mermaid MCP 미설정 버그** — `configureDiagramTools()`에서 mmdc + atlassian-python-api가 이미 설치된 경우 조기 리턴하여 claude-mermaid MCP 설정 코드에 도달하지 못하던 문제 수정
+- **checker 단계 라벨 오류** — 4/7(코드 분석/다이어그램 도구), 5/7(MCP 서버) 단계에서 불필요한 "(선택 사항)" 라벨 제거
 
 ## [0.5.0] - 2026-02-22
 
