@@ -61,10 +61,11 @@ if echo "$STAGED" | grep -qE '^(lib|bin)/.*\.mjs$'; then
 fi
 
 if [ ${#errors[@]} -gt 0 ]; then
-  reason="문서 현행화 누락 (CLAUDE.md 변경-문서 매핑):"
+  detail=""
   for e in "${errors[@]}"; do
-    reason="$reason\n  $e"
+    detail="$detail  $e\n"
   done
+  reason="커밋 차단: 문서 현행화 누락.\n${detail}누락된 문서를 변경 내용에 맞게 갱신하고, git add로 staged에 추가한 뒤, 커밋을 재시도하세요."
   cat <<EOF
 {
   "hookSpecificOutput": {
