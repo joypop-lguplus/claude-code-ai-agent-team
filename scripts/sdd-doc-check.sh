@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 #
-# PreToolUse hook: git commit 시 변경-문서 매핑 검증
-# CLAUDE.md의 매핑 규칙 중 파일 패턴으로 감지 가능한 4개를 체크합니다.
+# PreToolUse hook: git commit 시 변경-문서 매핑 검증 (하이브리드)
+# - 파일 패턴 규칙 4개: hard deny (결정적 검증)
+# - 의미론적 규칙 3개: additionalContext로 리마인더 주입 (Claude 자체 판단)
 #
 
 input=$(cat)
@@ -78,4 +79,14 @@ EOF
   exit 0
 fi
 
+# 의미론적 규칙 리마인더 (패턴 deny 통과 후)
+staged_list=$(echo "$STAGED" | tr '\n' ', ' | sed 's/,$//')
+cat <<EOF
+{
+  "hookSpecificOutput": {
+    "hookEventName": "PreToolUse",
+    "additionalContext": "커밋 전 문서 현행화 자체 점검: staged 파일=[${staged_list}]. 다음 3가지 의미론적 규칙을 확인하세요: (1) 워크플로우/라이프사이클 변경이 있다면 docs/workflow-guide.md, docs/sdd-methodology.md 갱신 필요 (2) 아키텍처/구조 변경이 있다면 docs/architecture.md 갱신 필요 (3) 신규 기능/모드/용어 추가가 있다면 README.md, README.en.md, CHANGELOG.md, docs/glossary-ko.md 갱신 필요. 해당 없으면 커밋을 진행하세요."
+  }
+}
+EOF
 exit 0
