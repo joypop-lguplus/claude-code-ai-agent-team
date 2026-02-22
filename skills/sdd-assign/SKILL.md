@@ -45,14 +45,29 @@ description: >-
    - `{{SPEC_SECTIONS}}`를 관련 스펙 파일 참조로 교체
    - `{{CHECKLIST_ITEMS}}`를 배정된 체크리스트 항목 ID로 교체
 
-2. `/claude-sdd:sdd-build`에서 사용할 수 있도록 `docs/specs/wp-N-member.md`로 저장합니다.
+2. **조건부 블록 처리**: `sdd-config.yaml` 설정에 따라 `{{#if}}` 블록을 처리합니다:
+   - `{{#if TDD_MODE}}`: `teams.tdd`가 `true`이면 포함, 아니면 블록 전체(`{{#if}}`~`{{/if}}`) 제거
+   - `{{#if LEGACY_ANALYSIS_MODE}}`: `project.type`이 `legacy`이고 빌드 분석 단계이면 포함, 아니면 제거
+   - `{{#if LEGACY_MODE}}`: `project.type`이 `legacy`이고 변경 단계이면 포함, 아니면 제거
+   - `{{#if RULES_ENABLED}}`: `rules.enabled`가 `true`이면 포함, 아니면 제거
+   - `{{#if DOMAIN_ID}}`: `domains` 섹션이 있으면 포함, 아니면 제거
 
-3. 프로젝트 규칙 포함 (규칙 활성화 시):
+3. `/claude-sdd:sdd-build`에서 사용할 수 있도록 `docs/specs/wp-N-member.md`로 저장합니다.
+
+4. 프로젝트 규칙 포함 (규칙 활성화 시):
    - `sdd-config.yaml`의 `rules.enabled`가 `true`이면:
    - `{{RULES_ENABLED}}` → `true`
    - `{{RULES_ENFORCEMENT}}` → `sdd-config.yaml`의 `rules.enforcement` 값
    - `{{RULES_SUMMARY}}` → `00-project-rules.md`의 요약 테이블
    - `{{RULES_DETAIL}}` → WP 카테고리에 해당하는 규칙 상세 파일 내용
+
+### 리더 CLAUDE.md 조건부 블록 처리
+
+`templates/claude-md/sdd-leader.md.tmpl`에서 리더 CLAUDE.md를 생성할 때도 동일한 조건부 블록 처리를 적용합니다:
+- `{{#if DOMAINS}}`: `domains` 섹션이 있으면 포함, 아니면 블록 전체 제거
+- `{{#if TDD_MODE}}`: `teams.tdd`가 `true`이면 포함, 아니면 제거
+- `{{#if LEGACY_ANALYSIS_MODE}}`: `project.type`이 `legacy`이고 빌드 분석 단계이면 포함, 아니면 제거
+- `{{#if RULES_ENABLED}}`: `rules.enabled`가 `true`이면 포함, 아니면 제거
 
 ### 출력 요약
 

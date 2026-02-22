@@ -359,11 +359,15 @@ Phase 5로 진행합니다 — TDD 델타 빌드...
 - **팀 모드**: 각 CWP에 대해 `sdd-test-writer`, `sdd-implementer` 팀 멤버를 생성하여 병렬 빌드
 - **솔로 모드**: 각 CWP에 대해 순차적으로 Phase A→B→C를 실행. `agents/sdd-test-writer.md`와 `agents/sdd-implementer.md`를 읽고 해당 규칙을 따라 직접 테스트 작성 및 구현
 
+**에이전트 모달 선별 주입**: `sdd-build`와 동일하게 `agents/sdd-implementer.md`의 모드별 필요 섹션만 프롬프트에 포함합니다. 변경 빌드에서는 TDD + 레거시 갭 해소(해당 시) 섹션을 포함합니다.
+
+**체크리스트 선별 로딩**: CWP에 배정된 체크리스트 항목만 추출하여 프롬프트에 인라인 포함합니다. 전체 체크리스트 파일 경로는 참조로만 제공합니다.
+
 ### 레거시 갭 해소 빌드 규칙
 
 레거시 프로젝트의 갭 해소 CR인 경우 (`gap_source: 10-analysis-report.md`), Phase 5에서 다음 추가 규칙을 적용합니다:
 
-1. **`sdd-implementer`에게 갭 해소 모드를 지시**: `agents/sdd-implementer.md`의 "레거시 갭 해소 모드" 섹션 규칙을 적용합니다.
+1. **`sdd-implementer`에게 갭 해소 모드를 지시**: `agents/sdd-implementer.md`의 "레거시 갭 해소 모드" 섹션(줄 119~167)만 포함합니다.
 2. **기존 코드 구조 보존**: 기존 코드 스타일, 네이밍, 디렉토리 구조를 따릅니다.
 3. **기존 테스트 무결성**: Phase 5C 검증 시 기존 테스트(분석 보고서의 테스트 베이스라인)가 모두 통과해야 합니다.
 4. **하위 호환성**: 기존 공개 API를 변경/삭제하지 않습니다.

@@ -153,13 +153,7 @@
 
 ## 코드 분석 도구
 
-팀 멤버에게 워크 패키지 할당 시, **LSP 도구를 적극 활용하여** 기존 코드를 파악하도록 지시합니다:
-- 기존 코드 수정 시 `LSP findReferences`로 영향 범위를 먼저 확인
-- 파일 구조 파악 시 `LSP documentSymbol`로 공개 API/심볼 추출
-- 타입 확인 시 `LSP hover`로 정확한 타입 정보 확인
-- LSP 사용 불가 시 Grep/Glob으로 대체
-
-파일 편집 후 LSP 자동 진단이 실행됩니다.
+팀 멤버에게 LSP 도구(findReferences, documentSymbol, hover) 활용을 지시하세요. LSP 불가 시 Grep/Glob 대체.
 
 ## 사용 가능한 명령어
 

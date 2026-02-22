@@ -50,11 +50,11 @@ node bin/cli.mjs version     # 버전 표시
 대규모 프로젝트에서 도메인별 독립 라이프사이클을 지원합니다. `sdd-config.yaml`에 `domains` 섹션이 정의되면 멀티 도메인 모드가 활성화됩니다. 각 스킬에 `--domain=<id>`, `--all` 옵션이 추가되어 도메인별 독립 스펙/빌드/리뷰가 가능합니다. 도메인별 스펙은 `docs/specs/domains/<domain-id>/`에, 크로스 도메인 통합은 `docs/specs/cross-domain/`에 위치합니다.
 
 ### 갓모드 (`/claude-sdd:sdd-godmode`)
-심층 인터뷰를 통해 프로젝트 정보(기술 스택, 도메인 구조, 요구사항 소스, 비기능 요구사항 등)를 한번에 수집한 후 전체 SDD 파이프라인을 자동 실행합니다. `spec_depth: thorough` 모드로 DDL 수준의 상세 스펙을 생성합니다. 레거시 프로젝트에서는 코드 자동 분석으로 기술 스택/도메인/코드 규칙을 감지하여 확인만 받고, MVP/토이 프로젝트에서는 불필요한 엔터프라이즈급 질문을 자동 건너뜁니다. 섹션 7에서 프로젝트 규칙을 인터뷰하고, Phase 2.5에서 프리셋 매칭 후 규칙 파일을 자동 생성합니다.
+심층 인터뷰를 통해 프로젝트 정보(기술 스택, 도메인 구조, 요구사항 소스, 비기능 요구사항 등)를 한번에 수집한 후 전체 SDD 파이프라인을 자동 실행합니다. `spec_depth: thorough` 모드로 DDL 수준의 상세 스펙을 생성합니다. 레거시 프로젝트에서는 코드 자동 분석으로 기술 스택/도메인/코드 규칙을 감지하여 확인만 받고, MVP/토이 프로젝트에서는 불필요한 엔터프라이즈급 질문을 자동 건너뜁니다. 섹션 7에서 프로젝트 규칙을 인터뷰하고, Phase 2.5에서 프리셋 매칭 후 규칙 파일을 자동 생성합니다. Phase 3 파이프라인에 체크포인트(sdd-spec 완료 후 산출물 검증, sdd-build 첫 WP 완료 후 통과율 검증)를 포함하여 문제를 조기 발견합니다.
 
 ### 에이전트 (`agents/` 내 7개)
 마크다운 기반 에이전트. 사고가 필요한 작업은 Sonnet, 도구 실행 위주의 경량 작업은 Haiku를 사용합니다:
-- **sdd-requirements-analyst** -- 외부 소스 파싱 (Confluence/Jira/Figma) [Sonnet]
+- **sdd-requirements-analyst** -- 외부 소스 파싱 (Confluence/Jira/Figma) [Haiku]
 - **sdd-spec-writer** -- 기술 스펙 문서 생성 (Mermaid 다이어그램 포함) [Sonnet]
 - **sdd-implementer** -- 워크 패키지를 구현하는 팀 멤버 (TDD 모드 지원) [Sonnet]
 - **sdd-reviewer** -- 체크리스트 대비 스펙 준수 검증 (TDD 준수 확인 포함) [Sonnet]
@@ -66,6 +66,11 @@ node bin/cli.mjs version     # 버전 표시
 
 ### 품질 루프 (`/claude-sdd:sdd-build`의 핵심 메커니즘)
 **팀 모드**(Agent Teams 활성화): 리더(Opus)가 팀 멤버(`teams.model`로 설정된 모델, `sdd-implementer`)에게 워크 패키지를 할당합니다. **솔로 모드**(Agent Teams 비활성화): 현재 세션이 `agents/sdd-implementer.md`를 읽고 각 워크 패키지를 순차적으로 직접 구현합니다. 두 모드 모두 동일한 품질 루프를 적용합니다: 전부 `[x]` = 진행, `[ ]` 잔여 = 재작업(팀: SendMessage, 솔로: 직접 수정), 3회 실패 = 사용자에게 에스컬레이션.
+
+**토큰 최적화**: 빌드 시 다음 최적화를 적용합니다:
+- **체크리스트 선별 로딩**: WP에 배정된 항목만 추출하여 프롬프트에 인라인 포함 (전체 체크리스트 전달 방지)
+- **에이전트 모달 선별 주입**: `agents/sdd-implementer.md`의 현재 모드에 필요한 섹션만 프롬프트에 포함 (기본/TDD/레거시/규칙/멀티도메인)
+- **점진적 검증**: WP 완료 즉시 해당 항목만 Grep으로 검증, 전체 WP 완료 후 최종 교차 검증 1회
 
 ### TDD 모드 (`/claude-sdd:sdd-build --tdd`)
 `--tdd` 플래그 또는 `sdd-config.yaml teams.tdd: true`로 활성화. Phase A(Red): `sdd-test-writer`가 스펙 기반 실패 테스트 작성 → Phase B(Green): `sdd-implementer`가 테스트 통과 코드 작성 (테스트 수정 금지) → Phase C(Verify): 전체 테스트 실행. 실패 시 Phase B+C 반복 (최대 3회).
@@ -90,7 +95,7 @@ node bin/cli.mjs version     # 버전 표시
 - `--lightweight --from-analysis`: 소규모 갭(5개 이하) 빠른 처리 — Phase 1-4 자동 설정, Phase 5(빌드)+6(검증)+7(PR)만 실행
 
 ### 템플릿 (`templates/`)
-- `claude-md/` -- `/claude-sdd:sdd-build` 시 대상 프로젝트에 주입되는 CLAUDE.md 템플릿 (리더 vs 멤버 규칙)
+- `claude-md/` -- `/claude-sdd:sdd-build` 시 대상 프로젝트에 주입되는 CLAUDE.md 템플릿 (리더 vs 멤버 규칙). `sdd-assign`에서 조건부 블록(`{{#if}}`)을 설정에 따라 처리하여 불필요한 모드 지시를 제거합니다.
 - `project-init/` -- 프로젝트 초기화용 `sdd-config.yaml.tmpl`
 - `specs/` -- 아키텍처, API, 데이터 모델 스펙 템플릿 (Mermaid 블록 포함)
 - `checklists/` -- 스펙 준수 및 품질 게이트 체크리스트 템플릿
@@ -144,7 +149,7 @@ docs/specs/
 | `LSP goToDefinition` | 심볼의 원본 정의 위치 확인 | sdd-implementer, sdd-change-analyst |
 | `LSP hover` | 타입 정보 확인 | sdd-implementer, sdd-test-writer |
 
-**CLAUDE.md 템플릿 적용**: `sdd-leader.md.tmpl`과 `sdd-member.md.tmpl`에 LSP 우선 활용 지침이 포함되어, 빌드 시 대상 프로젝트의 에이전트가 코드 분석에 LSP를 적극 사용합니다.
+**CLAUDE.md 템플릿 적용**: `sdd-leader.md.tmpl`과 `sdd-member.md.tmpl`에 에이전트 규칙 참조 지침이 포함되어, 중복 없이 에이전트 정의의 LSP/린트 섹션을 따르도록 합니다.
 
 ### 세션 훅 (`hooks/hooks.json` + `scripts/sdd-session-init.sh` + `scripts/sdd-lsp-patch.sh`)
 세션 시작 시 두 개의 훅이 실행됩니다:

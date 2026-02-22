@@ -96,8 +96,8 @@ description: >-
 
 | 작업 유형 | 모델 (설정 키) | 기본값 | 사용 에이전트 |
 |-----------|---------------|--------|-------------|
-| 구현, 테스트 작성, 분석 | `teams.model` | `sonnet` | sdd-implementer, sdd-test-writer |
-| 코드 분석, 린트, 포맷 | `teams.lightweight_model` | `haiku` | sdd-code-analyzer |
+| 구현, 테스트 작성, 리뷰, 변경 분석 | `teams.model` | `sonnet` | sdd-implementer, sdd-test-writer, sdd-reviewer, sdd-change-analyst |
+| 요구사항 수집, 코드 분석, 린트, 포맷 | `teams.lightweight_model` | `haiku` | sdd-requirements-analyst, sdd-code-analyzer |
 
 ```
 Stage 1 (병렬):
@@ -123,72 +123,16 @@ Stage 2 (순차, Stage 1 완료 후):
 
 **원칙: 팀 모드와 동일한 결과물(코드, 테스트, 체크리스트), 다른 실행 모델.**
 
-```
-현재 세션 (솔로):
-  1. 태스크 계획 읽기 (07-task-plan.md)
-     - 워크 패키지를 실행 단계(stage)별로 그룹화
-     - 예: Stage 1 = [WP-1, WP-2, WP-3], Stage 2 = [WP-4]
+팀 모드와 동일한 워크플로우를 순차적으로 실행합니다:
 
-  2. 각 워크 패키지를 순차적으로 처리:
+1. 태스크 계획 읽기 → stage별 WP 그룹화
+2. 각 WP 순차 처리: `agents/sdd-implementer.md` (모드별 필요 섹션만) 읽고 규칙을 따름 → 구현 → 체크리스트 `[x]` 표시
+3. 각 WP 완료 후 즉시 체크리스트 검증 (팀 모드와 동일한 품질 루프, 최대 3회 재작업)
 
-     a. agents/sdd-implementer.md를 Read 도구로 읽고 해당 규칙을 따름
-     b. wp-N-member.md (있으면)를 컨텍스트로 활용
-     c. 스펙 참조 (02~05 스펙 문서)를 확인하며 구현
-     d. 체크리스트 항목(06-spec-checklist.md)을 하나씩 충족시키며 [x] 표시
+### 솔로 TDD/레거시 모드
 
-  3. 각 WP 완료 후 체크리스트 검증 (팀 모드와 동일):
-     - 06-spec-checklist.md 읽기
-     - 배정된 각 항목에 대해:
-       - [x]로 표시되었는가?
-       - 코드가 실제로 존재하는가?
-     - [ ] 항목이 남아있으면 → 직접 재구현 (최대 3회)
-     - 모두 [x]이면 → 다음 WP로 진행
-
-  4. 모든 WP 완료 후 → 다음 단계로
-
-재작업 사이클 (솔로):
-  미완료 항목을 식별하고 직접 재구현합니다.
-  재작업 시 구체적인 누락 사항을 기록:
-  "항목 API-003: UserController에 422 에러 핸들러 구현 필요"
-  → 직접 해당 코드를 수정하고 체크리스트 갱신
-
-  워크 패키지당 최대 3회 재작업 사이클.
-  3회 후 → 사용자에게 에스컬레이션.
-```
-
-### 솔로 TDD 빌드 루프
-
-TDD 모드에서 솔로 모드는 각 WP에 대해 순차적으로 Phase A→B→C를 실행합니다:
-
-```
-솔로 TDD 루프 (각 WP에 대해):
-  Phase A (Red):
-    - agents/sdd-test-writer.md를 읽고 규칙을 따름
-    - 스펙 기반 실패 테스트 작성
-    - test.command로 모두 실패하는지 확인
-
-  Phase B (Green):
-    - agents/sdd-implementer.md를 읽고 TDD 규칙을 따름
-    - 테스트 통과 코드 작성 (테스트 파일 수정 금지)
-
-  Phase C (Verify):
-    - test.command로 전체 테스트 실행
-    - 통과 → 다음 WP
-    - 실패 → Phase B+C 반복 (최대 3회)
-```
-
-### 솔로 레거시 분석 모드
-
-레거시 모드에서 솔로 모드는 각 WP에 대해 순차적으로 분석을 수행합니다:
-
-```
-솔로 레거시 분석 (각 WP에 대해):
-  - agents/sdd-implementer.md의 레거시 분석 전용 모드 섹션을 읽고 규칙을 따름
-  - 기존 코드와 스펙을 대조
-  - 충족 항목은 [x], 미충족 항목은 갭으로 식별
-  - 코드 수정 없이 분석만 수행
-  → 모든 WP 분석 완료 후 10-analysis-report.md 생성
-```
+- **솔로 TDD**: 각 WP에 대해 Phase A(Red: test-writer) → B(Green: implementer) → C(Verify) 순차 실행. 실패 시 B+C 반복 (최대 3회).
+- **솔로 레거시 분석**: 각 WP에 대해 `sdd-implementer.md`의 레거시 분석 전용 모드 섹션을 읽고 분석만 수행. 코드 수정 없이 충족/미충족 판정 → 완료 후 `10-analysis-report.md` 생성.
 
 ---
 
@@ -202,48 +146,20 @@ TDD 모드에서 솔로 모드는 각 WP에 대해 순차적으로 Phase A→B�
 
 같은 단계의 모든 WP에 대해 `sdd-test-writer` 팀 멤버를 **동시에** 생성합니다:
 
-```
-# 한 번의 메시지에서 여러 Task를 동시에 호출
-Task(team_name="sdd-build", name="wp-1-test", model="sonnet",
-     prompt="당신은 sdd-test-writer입니다. WP-1의 스펙에 기반하여 실패하는 테스트를 작성하세요...")
-Task(team_name="sdd-build", name="wp-2-test", model="sonnet",
-     prompt="당신은 sdd-test-writer입니다. WP-2의 스펙에 기반하여 실패하는 테스트를 작성하세요...")
-```
+같은 단계의 모든 WP에 대해 `Task` 도구를 한 번의 메시지에서 동시에 호출합니다.
 
 모든 테스트 작성자가 완료되면:
-- 테스트 파일이 생성되었는지 확인합니다.
-- `sdd-config.yaml`의 `test.command`로 테스트를 실행하여 모두 실패하는지 확인합니다 (Red 상태).
+- `test.command`로 테스트를 실행하여 모두 실패하는지 확인합니다 (Red 상태).
 - 테스트가 통과하면 이미 구현이 존재하는 것이므로 사용자에게 알립니다.
 - 테스트 작성자 멤버에게 `shutdown_request`를 보냅니다.
 
-```
-TDD Phase A — 병렬 실행:
-  WP-1 테스트 작성: sdd-test-writer 실행 중...  ┐
-  WP-2 테스트 작성: sdd-test-writer 실행 중...  ├─ 동시 진행
-  WP-3 테스트 작성: sdd-test-writer 실행 중...  ┘
-  [전원 완료]
-  WP-1: 3개 파일, 8개 테스트 — 8/8 실패 (Red ✓)
-  WP-2: 2개 파일, 5개 테스트 — 5/5 실패 (Red ✓)
-  WP-3: 4개 파일, 12개 테스트 — 12/12 실패 (Red ✓)
-  Phase B로 진행합니다.
-```
-
 ### TDD Phase B (Green): 테스트 통과 구현 — 병렬
 
-같은 단계의 모든 WP에 대해 `sdd-implementer` 팀 멤버를 **동시에** 생성합니다:
-
-```
-Task(team_name="sdd-build", name="wp-1-impl", model="sonnet",
-     prompt="당신은 sdd-implementer입니다. TDD 모드입니다.
-             테스트 파일을 먼저 읽고, 모든 테스트가 통과하도록 구현하세요.
-             테스트 파일은 절대 수정하지 마세요. ...")
-Task(team_name="sdd-build", name="wp-2-impl", model="sonnet",
-     prompt="당신은 sdd-implementer입니다. TDD 모드입니다. ...")
-```
+같은 단계의 모든 WP에 대해 `sdd-implementer` 팀 멤버를 **동시에** 생성합니다. 프롬프트에 테스트 파일 목록과 "테스트 파일 수정 금지" 규칙을 포함합니다.
 
 모든 구현자가 완료되면:
-- **테스트 파일 무결성 확인**: Phase B 완료 후 테스트 파일이 수정되지 않았는지 확인합니다.
-- 수정된 경우 해당 멤버에게 재작업을 지시합니다: "테스트 파일이 수정되었습니다. 테스트 파일을 원래대로 복원하고 구현 코드만 수정하세요."
+- **테스트 파일 무결성 확인**: 테스트 파일이 수정되지 않았는지 확인합니다.
+- 수정된 경우 해당 멤버에게 재작업을 지시합니다.
 
 ### TDD Phase C (Verify): 테스트 실행 검증
 
@@ -252,33 +168,9 @@ Task(team_name="sdd-build", name="wp-2-impl", model="sonnet",
    - 모든 테스트 통과 → 워크 패키지 완료, 체크리스트 검증으로 진행
    - 실패 테스트 존재 → Phase B 재작업 (실패 목록과 함께)
 
-```
-TDD Phase C — 워크 패키지 WP-1:
-  테스트 실행: npm test
-  결과: 8/8 통과 (Green 상태 ✓)
-  체크리스트 검증으로 진행합니다.
-```
-
 ### TDD 재작업 사이클
 
-Phase C에서 실패 시 Phase B+C를 반복합니다 (최대 3회). 해당 WP 담당 멤버에게 `SendMessage`로 재작업을 지시합니다:
-
-```
-TDD 재작업 사이클 1/3:
-  실패 테스트:
-  - [FAIL] API-001: GET /users 페이지네이션 — Expected 20 items, got 0
-  - [FAIL] DM-001: User 엔티티 email 필드 — Field not found
-
-  → SendMessage(recipient="wp-1-impl", content="다음 테스트가 실패합니다.
-    테스트를 수정하지 말고 구현 코드만 수정하세요:
-    1. API-001: 페이지네이션 로직 구현 필요
-    2. DM-001: User 모델에 email 필드 추가 필요")
-
-  여러 WP에 실패가 있으면 동시에 메시지 전송:
-  → SendMessage(recipient="wp-2-impl", content="...")
-```
-
-3회 재작업 후에도 실패 → 기존 에스컬레이션 프로세스와 동일하게 사용자에게 보고합니다.
+Phase C에서 실패 시 Phase B+C를 반복합니다 (최대 3회). 해당 WP 담당 멤버에게 `SendMessage`로 실패 테스트 목록과 함께 재작업을 지시합니다. 여러 WP에 실패가 있으면 동시에 메시지를 전송합니다. 3회 재작업 후에도 실패 → 사용자에게 에스컬레이션합니다.
 
 ---
 
@@ -290,48 +182,18 @@ TDD 재작업 사이클 1/3:
 
 ### 레거시 분석 Phase (Analysis-Only): 기존 코드 분석 — 병렬
 
-같은 단계의 모든 WP에 대해 `sdd-implementer` 팀 멤버를 **동시에** 생성하되, 분석 전용 모드 프롬프트를 사용합니다:
-
-```
-Task(team_name="sdd-build", name="wp-1", model="sonnet",
-     prompt="당신은 sdd-implementer입니다. 레거시 분석 전용 모드입니다.
-             기존 코드와 스펙을 대조하세요.
-             이미 스펙을 충족하는 항목은 [x]로 표시하고, 미충족 항목은 [ ]로 남기세요.
-             각 항목에 대해 근거(파일 경로:줄 번호)를 보고하세요.
-             미충족 항목은 갭 유형(MISSING/PARTIAL/MISMATCH)과 상세를 보고하세요.
-             새 코드를 작성하지 마세요. 분석만 수행하세요. ...")
-Task(team_name="sdd-build", name="wp-2", model="sonnet",
-     prompt="당신은 sdd-implementer입니다. 레거시 분석 전용 모드입니다. ...")
-```
+같은 단계의 모든 WP에 대해 `sdd-implementer` 팀 멤버를 **동시에** 생성하되, `agents/sdd-implementer.md`의 레거시 분석 전용 모드 섹션(줄 65~117)만 프롬프트에 포함합니다. 코드 수정 금지를 명확히 지시합니다.
 
 모든 분석이 완료되면:
 - 각 멤버의 분석 보고서를 수집합니다.
 - 이미 충족된 항목(`[x]`)과 미충족 항목(`[ ]`)을 집계합니다.
 - `06-spec-checklist.md`를 갱신합니다: 충족 (satisfied) 항목만 `[x]`로 표시.
 
-```
-레거시 분석 결과:
-  WP-1: 8개 항목 중 5개 충족 (satisfied), 3개 미충족 (gap)
-  WP-2: 6개 항목 중 6개 충족 (satisfied) → 갭 없음
-  WP-3: 10개 항목 중 7개 충족 (satisfied), 3개 미충족 (gap)
-
-  전체: 24개 항목 중 18개 충족, 6개 미충족 (갭)
-```
+- WP별 충족/미충족 집계 결과를 출력합니다.
 
 ### 기존 테스트 검증
 
-분석 완료 후 기존 테스트를 실행하여 현재 상태 스냅샷을 확보합니다:
-
-1. `sdd-config.yaml`의 `test.command`로 기존 테스트를 실행합니다.
-2. 테스트 결과를 기록합니다 (통과/실패/건너뜀).
-3. 이 결과는 이후 변경 관리에서 회귀 검증의 베이스라인이 됩니다.
-
-```
-기존 테스트 검증:
-  테스트 명령: npm test
-  전체: 45개, 통과: 45개, 실패: 0개
-  테스트 베이스라인 확립 완료
-```
+분석 완료 후 `test.command`로 기존 테스트를 실행하여 베이스라인을 확립합니다. 이 결과는 이후 변경 관리에서 회귀 검증의 기준이 됩니다.
 
 ### 분석 보고서 생성
 
@@ -378,22 +240,7 @@ Task(team_name="sdd-build", name="wp-2", model="sonnet",
 
 ### 레거시 모드 완료 보고
 
-```
-빌드 단계 완료! (레거시 모드 — 분석 전용)
-
-분석 결과:
-  전체 항목: 24개
-  기존 코드 충족: 18개 (satisfied)
-  미충족 (갭): 6개
-
-기존 테스트: 45/45 통과 (베이스라인 확립 ✓)
-분석 보고서: docs/specs/10-analysis-report.md
-
-추천 CR: 3개 (6개 갭 항목)
-
-다음 단계: /claude-sdd:sdd-change [--from-analysis] — 갭 해소를 위한 변경 관리 시작
-         또는: /claude-sdd:sdd-change --lightweight --from-analysis — 소규모 갭 빠른 처리
-```
+완료 보고에 분석 결과 요약(충족/미충족 수), 테스트 베이스라인, 분석 보고서 경로, 추천 CR을 포함합니다. 다음 단계로 `/claude-sdd:sdd-change [--from-analysis]`를 안내합니다.
 
 ---
 
@@ -419,11 +266,27 @@ Task(team_name="sdd-build", name="wp-2", model="sonnet",
 3. **팀 멤버 동시 생성**: `Task` 도구를 **한 번의 메시지에 여러 개 호출**하여 병렬 생성:
 
    **프롬프트 구성** (각 멤버마다):
-   1. `agents/sdd-implementer.md` 파일을 Read 도구로 **먼저 읽고** 전체 내용을 프롬프트 시작 부분에 포함합니다.
+   1. `agents/sdd-implementer.md` 파일을 Read 도구로 **먼저 읽고**, 현재 모드에 따라 **필요 섹션만** 프롬프트에 포함합니다.
       (TDD Phase A: `agents/sdd-test-writer.md` 사용)
-   2. 워크 패키지 컨텍스트 추가: 태스크 목록, 스펙 참조 경로, 체크리스트 항목.
-   3. 대상 프로젝트에 `docs/specs/wp-N-member.md`(`/claude-sdd:sdd-assign`에서 생성)가 있으면 추가.
-   4. **프로젝트 규칙 주입** (규칙 활성화 시):
+
+      **모드별 포함 섹션** (줄 번호 기준):
+      | 모드 | 포함 섹션 |
+      |------|----------|
+      | 기본 (비TDD, 비레거시) | 줄 1~36 (기본 규칙) + 197~252 (코드 분석/린트/보고서) |
+      | TDD | 기본 + 줄 37~63 (TDD 모드) |
+      | 레거시 분석 | 줄 1~15 (기본) + 65~117 (레거시 분석 전용) |
+      | 레거시 갭 해소 | 줄 1~15 (기본) + 119~167 (레거시 갭 해소) |
+      | 규칙 활성화 시 | 현재 모드 + 줄 169~195 (프로젝트 규칙 준수) |
+      | 멀티 도메인 시 | 현재 모드 + 줄 260~276 (멀티 도메인 모드) |
+
+   2. **체크리스트는 WP 배정 항목만 추출하여 프롬프트에 인라인 포함**:
+      a. `06-spec-checklist.md`를 Read
+      b. `07-task-plan.md`에서 이 WP에 배정된 항목 ID 목록 확인
+      c. 체크리스트에서 해당 ID의 행만 추출하여 프롬프트에 포함
+      d. 전체 파일 경로는 참조만 제공: `"전체 체크리스트 파일: docs/specs/06-spec-checklist.md"`
+   3. 워크 패키지 컨텍스트 추가: 태스크 목록, 스펙 참조 경로.
+   4. 대상 프로젝트에 `docs/specs/wp-N-member.md`(`/claude-sdd:sdd-assign`에서 생성)가 있으면 추가.
+   5. **프로젝트 규칙 주입** (규칙 활성화 시):
       - `docs/specs/sdd-config.yaml`의 `rules.enabled`가 `true`이면:
       - `docs/specs/rules/architecture.md` + `docs/specs/rules/coding-conventions.md`를 항상 포함
       - WP에 해당하는 카테고리 규칙 파일을 선별하여 포함:
@@ -437,20 +300,23 @@ Task(team_name="sdd-build", name="wp-2", model="sonnet",
    Task(
      team_name="sdd-build", name="wp-1",
      subagent_type="general-purpose", model="sonnet",
-     prompt="[agents/sdd-implementer.md 전체 내용을 여기에 삽입]
+     prompt="[agents/sdd-implementer.md 모드별 필요 섹션만 삽입]
 
              --- 워크 패키지 할당 ---
              워크 패키지 WP-1: [태스크 목록]
              스펙 참조: [파일 경로]
-             체크리스트 항목: [항목 목록]
+             전체 체크리스트 파일: docs/specs/06-spec-checklist.md
+
+             --- 배정된 체크리스트 항목 ---
+             [이 WP에 배정된 항목만 추출하여 삽입]
 
              --- 멤버 규칙 ---
              [wp-1-member.md 내용]"
    )
    ```
 
-   **중요**: `[agents/sdd-implementer.md 전체 내용을 여기에 삽입]`은 플레이스홀더가 아닙니다.
-   실제로 해당 파일을 Read 도구로 읽어서 그 텍스트를 프롬프트에 삽입하세요.
+   **중요**: `agents/sdd-implementer.md`를 Read 도구로 읽되, 위 테이블에 따라 현재 모드에 필요한 섹션만 프롬프트에 포함합니다.
+   체크리스트는 전체 파일이 아닌 **이 WP에 배정된 항목만** 추출하여 인라인 포함합니다.
 
 4. **전원 완료 대기**: 모든 팀 멤버가 idle/완료될 때까지 대기합니다
    - 팀 멤버가 완료 보고를 보내면 해당 태스크를 `TaskUpdate`로 completed 처리
@@ -474,26 +340,24 @@ Task(team_name="sdd-build", name="wp-2", model="sonnet",
 
 ### 3단계: 품질 검증 루프
 
-**모든 워크 패키지가 완료된 후** 체크리스트를 일괄 검증합니다:
+**팀 모드**: 팀 멤버가 완료를 보고하면 **즉시 해당 WP의 체크리스트만 검증**합니다. 모든 WP 완료를 기다리지 않고 점진적으로 검증합니다.
+**솔로 모드**: 각 WP 완료 후 즉시 검증합니다.
 
-1. `docs/specs/06-spec-checklist.md` 읽기
-2. 각 워크 패키지별 배정된 체크리스트 항목 확인
-3. 여전히 `[ ]`인 항목에 대해:
+1. **WP별 즉시 검증**: 멤버 완료 보고 수신 즉시 해당 WP의 배정 항목만 Grep으로 확인
+   - `06-spec-checklist.md`에서 해당 WP의 항목 ID로 `[ ]` 패턴을 Grep
+   - 전체 파일을 다시 읽지 않고, 미완료 항목 ID만 추출
+2. 여전히 `[ ]`인 항목에 대해:
    - 누락된 사항 식별
-   - **팀 모드**: 해당 WP 담당 팀 멤버에게 `SendMessage`로 구체적인 재작업 지시 전달. 여러 팀 멤버에게 재작업이 필요하면 **동시에 메시지 전송**
-   - **솔로 모드**: 미완료 항목을 직접 재구현. 구체적인 누락 사항을 확인하고 해당 코드를 수정
+   - **팀 모드**: 해당 WP 담당 팀 멤버에게 `SendMessage`로 **즉시** 구체적인 재작업 지시 전달 (다른 멤버의 완료를 기다리지 않음)
+   - **솔로 모드**: 미완료 항목을 직접 재구현
+3. **최종 교차 검증**: 전체 WP 완료 후 `06-spec-checklist.md` 전체를 한 번만 읽어 최종 확인
 
 ```
-재작업 사이클 1/3:
-  WP-1 미완료 항목:
-  - API-003: UserController에 422 에러 핸들러 누락
-
-  [팀 모드]
-  → SendMessage(recipient="wp-1", content="API-003: 422 에러 핸들러를 추가하세요...")
-  [재작업 완료 대기]
-
-  [솔로 모드]
-  → 직접 해당 코드를 수정하고 체크리스트 갱신
+점진적 검증:
+  WP-1 완료 보고 → 즉시 WP-1 항목 검증 → [ ] 발견 시 즉시 재작업 지시
+  WP-2 완료 보고 → 즉시 WP-2 항목 검증 → 모두 [x] ✓
+  WP-3 완료 보고 → 즉시 WP-3 항목 검증 → 모두 [x] ✓
+  전체 WP 완료 → 최종 교차 검증 (전체 체크리스트 1회 읽기)
 ```
 
 #### 규칙 준수 검증 (규칙 활성화 시)
@@ -514,20 +378,7 @@ Task(team_name="sdd-build", name="wp-2", model="sonnet",
 4. `enforcement: "strict"` → 위반 = FAIL (재작업 필수)
 5. `enforcement: "advisory"` → 위반 = 경고 (보고만, 진행 가능)
 
-4. 3회 실패 후:
-```
-에스컬레이션: 워크 패키지 WP-1이 3회 재작업 사이클 후에도 미완료 항목이 있습니다.
-
-여전히 미완료:
-- API-003: 422 에러 핸들러
-  - 스펙: 03-api-spec.md#create-user
-  - 예상: 잘못된 입력 시 { error: "Validation failed", fields: [...] }를 반환
-
-검토 후 결정해 주세요:
-1. 수동으로 수정
-2. 스펙 조정
-3. 이 항목들 건너뛰기
-```
+4. **3회 실패 후 에스컬레이션**: 미완료 항목, 스펙 참조, 예상 동작을 포함하여 사용자에게 보고합니다. 사용자에게 수동 수정 / 스펙 조정 / 건너뛰기 옵션을 제시합니다.
 
 5. **팀 정리**: 현재 단계 완료 시 `SendMessage(type="shutdown_request")`로 팀 멤버를 종료하고, 다음 단계로 진행합니다
 
@@ -537,17 +388,8 @@ Task(team_name="sdd-build", name="wp-2", model="sonnet",
 **이 단계에서는 `teams.lightweight_model` (기본: haiku)을 사용합니다** — 도구 실행과 결과 수집이 주 작업이므로 경량 모델로 충분합니다.
 
 1. **프로젝트 포매터 실행** (설정된 경우): 수정된 파일 자동 포맷
-   - `/claude-sdd:sdd-lint format --fix` 또는 프로젝트에 설정된 포매터 사용
 2. **프로젝트 린터 실행** (설정된 경우): 린트 에러 확인
-   - `/claude-sdd:sdd-lint diagnostics` 또는 프로젝트에 설정된 진단 도구 사용
 3. 체크리스트 항목을 `[x]`로 표시하기 전에 **모든 문제 수정**
-
-```
-완료 전 검사:
-  1. 포맷팅: prettier --write src/ ✓
-  2. 진단: tsc --noEmit ✓ (0 errors)
-  3. 모든 체크리스트 항목 검증 완료 [x]
-```
 
 이 단계는 권장 사항이지만 필수는 아닙니다. `/claude-sdd:sdd-review` 품질 게이트에서 나머지 문제를 잡아냅니다.
 
