@@ -3,6 +3,12 @@
 ## [Unreleased]
 
 ### Added
+- **워크플로우 일관성 통합** — 갓모드/일반모드, 신규/레거시 어떤 형태로 수행해도 동일한 산출물 구조
+  - 신규/레거시 동일 문서 구조: 레거시도 02~06 동일 파일명 사용, `{{#if LEGACY}}` 조건부 블록으로 추가 섹션 포함
+  - sdd-change: 새 델타 문서 생성 → 기존 스펙 문서에 변경 사이클 섹션(`## 변경 사이클 CR-NNN`) 추가 방식으로 변경
+  - sdd-intake 프로젝트 규칙 수집: 초회 실행 시 규칙 미존재하면 갓모드와 동일한 규칙 수집/생성 수행
+  - 시맨틱 의존성 맵(`docs/dependency-map.md`): 스킬→에이전트→템플릿→산출물 간 구조화된 의존 관계 + 역참조 인덱스
+  - 레거시 전용 템플릿 4개 삭제, `architecture-new.md.tmpl` → `architecture.md.tmpl` 이름변경, `change-cycle-section.md.tmpl` 신규 생성
 - **솔로 모드** — Agent Teams 없이도 빌드 가능
   - Agent Teams 비활성화 시 솔로 모드(순차 빌드)로 자동 전환
   - 현재 세션이 `agents/sdd-implementer.md` 등 에이전트 규칙을 읽고 직접 구현

@@ -71,10 +71,10 @@ claude-sdd/
 [/claude-sdd:sdd-intake] --> 01-requirements.md
     |
     v
-[/claude-sdd:sdd-spec]   --> 02-architecture.md (또는 02-change-impact.md)
-                     --> 03-api-spec.md (또는 03-api-changes.md)
-                     --> 04-data-model.md (또는 04-data-migration.md)
-                     --> 05-component-breakdown.md (또는 05-component-changes.md)
+[/claude-sdd:sdd-spec]   --> 02-architecture.md
+                     --> 03-api-spec.md
+                     --> 04-data-model.md
+                     --> 05-component-breakdown.md
                      --> 06-spec-checklist.md
                      --> diagrams/*.png (자동 생성)
     |
@@ -97,7 +97,7 @@ claude-sdd/
     |                  (변경 요청 발생 시)
     v
 [/claude-sdd:sdd-change]   --> 09-change-request.md
-                       --> 03-api-changes.md, 04-data-migration.md, 05-component-changes.md (델타)
+                       --> 02~05 기존 스펙 문서에 변경 사이클 섹션 추가
                        --> 06-spec-checklist.md 부분 갱신
                        --> TDD 델타 빌드 → 리뷰 → PR
 ```
@@ -217,7 +217,7 @@ TDD 모드에서 `sdd-test-writer`와 `sdd-implementer`는 완전히 분리됩�
 
 ```
 Phase 1: 변경 요청 수집 → 09-change-request.md
-Phase 2: sdd-change-analyst → 영향 분석 → 스펙 델타 (03/04/05-*-changes.md)
+Phase 2: sdd-change-analyst → 영향 분석 → 기존 스펙 문서 업데이트 (02~05 변경 사이클 섹션 추가)
 Phase 3: 체크리스트 부분 갱신 (최소 영향 원칙)
     |-- 영향받는 [x] → [ ] (재설정)
     |-- 영향받지 않는 [x] → 변경 안함
@@ -329,12 +329,11 @@ sdd-config.yaml (publishing 설정)
 
 ## 신규 프로젝트 vs 레거시 프로젝트 워크플로우
 
+신규와 레거시 프로젝트는 **동일한 문서 구조**(02~06)를 사용합니다. 레거시 프로젝트는 각 문서에 `{{#if LEGACY}}` 조건부 블록으로 추가 섹션(변경 영향 분석, 변경 태그, 마이그레이션 대상)이 포함됩니다.
+
 | 관점 | 신규 프로젝트 (Greenfield) | 레거시 프로젝트 (Brownfield) |
 |------|---------------------------|------------------------------|
-| 2단계 문서 | 02-architecture.md | 02-change-impact.md |
-| 3단계 문서 | 03-api-spec.md | 03-api-changes.md |
-| 4단계 문서 | 04-data-model.md | 04-data-migration.md |
-| 5단계 문서 | 05-component-breakdown.md | 05-component-changes.md |
+| 문서 구조 | 02~06 동일 | 02~06 동일 + 레거시 전용 섹션 |
 | 리스크 수준 | 낮음 | 높음 (하위 호환성 필요) |
 | 빌드 루프 | 일반 품질 루프 | 분석 전용 루프 (아래 참조) |
 | 체크리스트 | 동일 형식 | 동일 형식 |

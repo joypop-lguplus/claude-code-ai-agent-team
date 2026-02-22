@@ -139,7 +139,7 @@ Phase C (Verify): 리더가 전체 테스트 실행, 통과 확인
 
 ```
 Phase 1: 변경 요청 수집 → 09-change-request.md
-Phase 2: 영향 분석 (sdd-change-analyst) → 스펙 델타
+Phase 2: 영향 분석 (sdd-change-analyst) → 기존 스펙 문서 업데이트
 Phase 3: 체크리스트 부분 갱신 (최소 영향 원칙)
 Phase 4: 델타 태스크 계획 (CWP-1, CWP-2...)
 Phase 5: TDD 델타 빌드 (CHG- + CHG-REG- 테스트)

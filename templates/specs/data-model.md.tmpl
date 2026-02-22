@@ -44,6 +44,32 @@
 
 {{MIGRATION_NOTES}}
 
+{{#if LEGACY}}
+## 마이그레이션 대상
+
+> 각 엔티티에 다음 태그를 표시합니다: `UNCHANGED` | `MODIFY` | `NEW` | `DEPRECATE`
+
+### {{ENTITY_NAME}} — `{{CHANGE_TAG}}`
+
+**변경 사유**: {{CHANGE_REASON}}
+
+**필드 변경**:
+
+| 필드 | 변경 유형 | 이전 | 이후 | 설명 |
+|------|-----------|------|------|------|
+| {{FIELD}} | {{ADD/MODIFY/DELETE}} | {{BEFORE}} | {{AFTER}} | {{DESCRIPTION}} |
+
+### 마이그레이션 스크립트 윤곽
+
+```sql
+{{MIGRATION_SCRIPT_OUTLINE}}
+```
+
+### 롤백 계획
+
+{{ROLLBACK_PLAN}}
+{{/if}}
+
 ---
 
 *스펙 ID: DM | 생성 원본: 01-requirements.md*

@@ -118,7 +118,7 @@
 | Indirect Impact | 간접 영향 | |
 | Regression Risk | 회귀 위험 | |
 | Regression Test | 회귀 테스트 | |
-| Spec Delta | 스펙 델타 | 변경된 스펙 부분 |
+| Change Cycle Section | 변경 사이클 섹션 | 기존 스펙 문서에 추가되는 변경 내역 섹션 (CR-NNN) |
 | Partial Checklist Update | 체크리스트 부분 갱신 | |
 | Minimal Impact Principle | 최소 영향 원칙 | |
 | Change Work Package (CWP) | 변경 워크 패키지 (CWP) | |

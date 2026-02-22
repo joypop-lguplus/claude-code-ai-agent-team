@@ -68,6 +68,38 @@
 
 {{RATE_LIMIT_DESCRIPTION}}
 
+{{#if LEGACY}}
+## 변경 태그
+
+> 각 엔드포인트에 다음 태그를 표시합니다: `UNCHANGED` | `MODIFY` | `NEW` | `DEPRECATE`
+
+### 변경된 엔드포인트
+
+#### {{METHOD}} {{PATH}} — `MODIFY`
+
+- **변경 사유**: {{CHANGE_REASON}}
+- **원본**: #{{SECTION_REF}}
+
+**변경 전**: {{BEFORE_DESCRIPTION}}
+**변경 후**: {{AFTER_DESCRIPTION}}
+
+### 신규 엔드포인트
+
+#### {{METHOD}} {{PATH}} — `NEW`
+
+- **추가 사유**: {{ADDITION_REASON}}
+
+### 폐기 엔드포인트
+
+| 엔드포인트 | 태그 | 사유 | 대안 |
+|------------|------|------|------|
+| {{METHOD}} {{PATH}} | `DEPRECATE` | {{REASON}} | {{ALTERNATIVE}} |
+
+### 하위 호환성 계획
+
+{{BACKWARD_COMPATIBILITY_PLAN}}
+{{/if}}
+
 ---
 
 *스펙 ID: API | 생성 원본: 01-requirements.md*

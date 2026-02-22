@@ -125,7 +125,7 @@
         },
         {
           "name": "sdd-change-analyst",
-          "description": "Change impact analysis: code analysis, spec delta generation, minimal impact principle"
+          "description": "Change impact analysis: code analysis, existing spec update, minimal impact principle"
         }
       ],
       "mcp_servers": [],

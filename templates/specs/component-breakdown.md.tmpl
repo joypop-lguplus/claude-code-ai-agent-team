@@ -70,6 +70,29 @@ sequenceDiagram
 - **경로**: `{{UTIL_PATH}}`
 - **용도**: {{PURPOSE}}
 
+{{#if LEGACY}}
+## 변경 대상
+
+> 각 컴포넌트에 다음 태그를 표시합니다: `UNCHANGED` | `MODIFY` | `NEW` | `DELETE`
+
+### {{COMPONENT_NAME}} — `{{CHANGE_TAG}}`
+
+- **변경 사유**: {{CHANGE_REASON}}
+- **파일 경로**: `{{FILE_PATH}}`
+
+**인터페이스 변경**:
+
+| 속성/메서드 | 변경 유형 | 이전 | 이후 | 설명 |
+|-------------|-----------|------|------|------|
+| {{MEMBER}} | {{ADD/MODIFY/DELETE}} | {{BEFORE}} | {{AFTER}} | {{DESCRIPTION}} |
+
+### 의존성 영향
+
+| 의존자 | 영향 내용 | 대응 필요 여부 |
+|--------|-----------|----------------|
+| {{DEPENDENT}} | {{IMPACT}} | {{ACTION_REQUIRED}} |
+{{/if}}
+
 ---
 
 *스펙 ID: COMP | 생성 원본: 01-requirements.md*

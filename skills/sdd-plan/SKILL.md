@@ -76,13 +76,13 @@ description: >-
 ```markdown
 ## 워크 패키지 WP-1: [모듈 이름] (팀 멤버 1)
 
-**스펙 섹션**: 03-api-changes.md#user-endpoints, 04-data-migration.md#user
+**스펙 섹션**: 03-api-spec.md#user-endpoints, 04-data-model.md#user
 **체크리스트 항목**: CHG-001, CHG-002, CHG-REG-001
 **기존 코드 참조**: `src/user/controller.ts`, `src/user/model.ts`, `src/user/routes.ts`
 
 ### 태스크
 - [ ] TASK-001: User 모듈 기존 코드 분석 (기존 코드: src/user/)
-- [ ] TASK-002: User API 변경 사항 보완 (스펙: 03-api-changes.md#user-endpoints)
+- [ ] TASK-002: User API 변경 사항 보완 (스펙: 03-api-spec.md#user-endpoints)
 - [ ] TASK-003: 하위 호환성 검증 (기존 API 보존 확인)
 - [ ] TASK-004: 기존 테스트 회귀 검증 + 새 테스트 추가
 

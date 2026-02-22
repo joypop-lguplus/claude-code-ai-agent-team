@@ -139,7 +139,7 @@ After integration, handle change requests through a 7-phase workflow:
 
 ```
 Phase 1: Collect change request → 09-change-request.md
-Phase 2: Impact analysis (sdd-change-analyst) → spec deltas
+Phase 2: Impact analysis (sdd-change-analyst) → update existing spec documents
 Phase 3: Partial checklist update (minimal impact principle)
 Phase 4: Delta task plan (CWP-1, CWP-2...)
 Phase 5: TDD delta build (CHG- + CHG-REG- tests)

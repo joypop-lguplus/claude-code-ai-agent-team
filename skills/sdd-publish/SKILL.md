@@ -55,9 +55,9 @@ SDD 라이프사이클 산출물을 Confluence에 자동 퍼블리싱합니다. 
 | `00-project-context.md` | 프로젝트 컨텍스트 | — |
 | `01-requirements.md` | 요구사항 | — |
 | `02-architecture.md` | 아키텍처 | 의존성 다이어그램 |
-| `03-api-spec.md` / `03-api-changes.md` | API 스펙 | — |
-| `04-data-model.md` / `04-data-migration.md` | 데이터 모델 | ER 다이어그램 |
-| `05-component-breakdown.md` / `05-component-changes.md` | 컴포넌트 분해 | 상호작용 다이어그램 |
+| `03-api-spec.md` | API 스펙 | — |
+| `04-data-model.md` | 데이터 모델 | ER 다이어그램 |
+| `05-component-breakdown.md` | 컴포넌트 분해 | 상호작용 다이어그램 |
 | `06-spec-checklist.md` | 스펙 체크리스트 | — |
 | `07-task-plan.md` | 태스크 계획 | — |
 | `08-review-report.md` | 리뷰 보고서 | — |

@@ -104,11 +104,11 @@ TDD 모드(`--tdd` 또는 `sdd-config.yaml teams.tdd: true`)에서 호출될 때
 - [ ] API-003: 422 에러 핸들러
   - 갭 유형: MISSING
   - 상세: `src/user/controller.ts`에 에러 핸들러가 없음
-  - 스펙 참조: 03-api-changes.md#create-user
+  - 스펙 참조: 03-api-spec.md#create-user
 - [ ] SEC-001: 입력 유효성 검사
   - 갭 유형: PARTIAL
   - 상세: 이메일 유효성 검사는 존재 (`src/user/validator.ts:15`), 전화번호 유효성 검사 누락
-  - 스펙 참조: 05-component-changes.md#validation
+  - 스펙 참조: 05-component-breakdown.md#validation
 
 ### 요약
 - 전체: {{TOTAL}}개 항목

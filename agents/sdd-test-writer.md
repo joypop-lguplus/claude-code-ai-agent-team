@@ -97,7 +97,7 @@ func TestGetUsers_Pagination(t *testing.T) {
 1. **CHG- 항목 테스트**: 변경된 스펙 기반으로 새로운 동작을 검증하는 테스트를 작성합니다.
 2. **CHG-REG- 회귀 테스트**: 변경의 영향을 받을 수 있는 기존 기능의 보존을 검증하는 테스트를 작성합니다.
 3. **기존 테스트 수정 금지**: 이미 통과하고 있는 기존 테스트는 변경하지 않습니다.
-4. **변경 스펙 참조**: `03-api-changes.md`, `04-data-migration.md`, `05-component-changes.md`를 참조합니다.
+4. **변경 스펙 참조**: `03-api-spec.md`, `04-data-model.md`, `05-component-breakdown.md`의 변경 사이클 섹션을 참조합니다.
 
 ### 회귀 테스트 패턴
 

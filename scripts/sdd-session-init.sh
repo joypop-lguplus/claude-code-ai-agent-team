@@ -47,7 +47,7 @@ if [ -d "$DOMAINS_DIR" ]; then
       elif [ -f "$DOMAIN_DIR/07-task-plan.md" ]; then
         echo -e "${BOLD}${BLUE}[SDD]${RESET}   ${DOMAIN_ID}: ${YELLOW}빌드${RESET}"
       elif [ -f "$DOMAIN_DIR/01-requirements.md" ]; then
-        if [ -f "$DOMAIN_DIR/03-api-spec.md" ] || [ -f "$DOMAIN_DIR/03-api-changes.md" ]; then
+        if [ -f "$DOMAIN_DIR/03-api-spec.md" ]; then
           echo -e "${BOLD}${BLUE}[SDD]${RESET}   ${DOMAIN_ID}: ${YELLOW}계획${RESET}"
         else
           echo -e "${BOLD}${BLUE}[SDD]${RESET}   ${DOMAIN_ID}: ${YELLOW}스펙${RESET}"

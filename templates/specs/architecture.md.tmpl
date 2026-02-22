@@ -67,6 +67,34 @@ graph TB
 
 {{DEPLOYMENT_DESCRIPTION}}
 
+{{#if LEGACY}}
+## 변경 영향 분석
+
+### 영향 받는 모듈
+
+| 모듈 | 변경 유형 | 위험 수준 | 설명 |
+|------|-----------|-----------|------|
+| {{MODULE}} | {{CHANGE_TYPE}} | {{RISK_LEVEL}} | {{DESCRIPTION}} |
+
+### 의존성 영향
+
+| 의존 대상 | 영향 | 완화 방안 |
+|-----------|------|-----------|
+| {{DEPENDENT}} | {{IMPACT}} | {{MITIGATION}} |
+
+### 위험 평가
+
+{{RISK_ASSESSMENT}}
+
+### 하위 호환성 계획
+
+{{BACKWARD_COMPATIBILITY_PLAN}}
+
+### 마이그레이션 계획
+
+{{MIGRATION_PLAN}}
+{{/if}}
+
 ---
 
 *스펙 ID: ARCH | 생성 원본: 01-requirements.md*

@@ -77,14 +77,7 @@
 
 **레거시 intake**: `sdd-intake` 실행 시 인터뷰를 수행하지 않고, 기존 코드베이스를 자동 분석하여 요구사항을 생성합니다. 프로젝트 구조, 기술 스택, API/공개 인터페이스, 테스트 현황을 탐색하여 `01-requirements.md`를 생성합니다. godmode 레거시의 경우, 심층 인터뷰에서 수집된 `00-project-context.md` 정보도 반영됩니다. Confluence/Jira/File 소스와 병행 사용이 가능합니다.
 
-이후 흐름은 신규 프로젝트와 동일하지만, **생성되는 스펙이 다릅니다**:
-
-| 신규 프로젝트 | 레거시 프로젝트 |
-|--------------|----------------|
-| 02-architecture.md | 02-change-impact.md |
-| 03-api-spec.md | 03-api-changes.md |
-| 04-data-model.md | 04-data-migration.md |
-| 05-component-breakdown.md | 05-component-changes.md |
+이후 흐름은 신규 프로젝트와 동일합니다. 레거시 프로젝트도 **동일한 문서 구조**(02-architecture.md, 03-api-spec.md, 04-data-model.md, 05-component-breakdown.md, 06-spec-checklist.md)를 사용하되, 각 문서에 레거시 전용 섹션(변경 영향 분석, 변경 태그, 마이그레이션 대상)이 추가됩니다.
 
 레거시 모드는 **하위 호환성**을 항상 고려합니다. 기존 API 변경 시 마이그레이션 전략이 포함되고, 데이터 모델 변경 시 마이그레이션 스크립트 개요가 생성됩니다.
 
@@ -203,7 +196,7 @@
 
 ```
 Phase 1: 변경 요청 인터뷰 → 09-change-request.md
-Phase 2: sdd-change-analyst → 영향 분석 + 스펙 델타
+Phase 2: sdd-change-analyst → 영향 분석 + 기존 스펙 문서 업데이트
 Phase 3: 체크리스트 부분 갱신
            - 영향받는 [x] → [ ] (재설정)
            - 영향받지 않는 [x] → 변경 안함

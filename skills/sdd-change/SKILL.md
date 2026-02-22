@@ -7,7 +7,7 @@ description: >-
 
 # /claude-sdd:sdd-change — 변경 관리
 
-통합이 완료된 프로젝트에서 변경 요청(CR)을 체계적으로 처리합니다. 영향 분석 → 스펙 델타 → 체크리스트 부분 갱신 → TDD 델타 빌드 → 회귀 검증 → PR 생성의 7단계 프로세스를 실행합니다.
+통합이 완료된 프로젝트에서 변경 요청(CR)을 체계적으로 처리합니다. 영향 분석 → 기존 스펙 업데이트 → 체크리스트 부분 갱신 → TDD 델타 빌드 → 회귀 검증 → PR 생성의 7단계 프로세스를 실행합니다.
 
 ## 사용법
 
@@ -222,15 +222,18 @@ Phase 2로 진행합니다 — 영향 분석...
    - [ ] CHG-RULE-002: 변경된 API가 RULE-API-010 (응답 형식) 준수
    ```
 
-### 스펙 델타 문서 생성
+### 기존 스펙 문서 업데이트
 
-영향 분석 결과에 따라 해당되는 델타 스펙 문서를 생성합니다:
+영향 분석 결과에 따라 기존 스펙 문서 끝에 `## 변경 사이클 CR-NNN` 섹션을 추가합니다. 새 문서를 생성하지 않고 기존 문서를 업데이트합니다:
 
-| 영향 대상 | 생성 문서 | 템플릿 |
-|-----------|----------|--------|
-| API 변경 | `03-api-changes.md` | `templates/specs/api-changes.md.tmpl` |
-| 데이터 모델 변경 | `04-data-migration.md` | `templates/specs/data-migration.md.tmpl` |
-| 컴포넌트 변경 | `05-component-changes.md` | `templates/specs/component-changes.md.tmpl` |
+| 영향 대상 | 업데이트 문서 | 추가 섹션 템플릿 |
+|-----------|-------------|-----------------|
+| 아키텍처 변경 | `02-architecture.md` | `templates/specs/change-cycle-section.md.tmpl` |
+| API 변경 | `03-api-spec.md` | `templates/specs/change-cycle-section.md.tmpl` |
+| 데이터 모델 변경 | `04-data-model.md` | `templates/specs/change-cycle-section.md.tmpl` |
+| 컴포넌트 변경 | `05-component-breakdown.md` | `templates/specs/change-cycle-section.md.tmpl` |
+
+업데이트 전 각 문서를 `.pre-CR-NNN.bak` 파일로 백업합니다.
 
 ### 09-change-request.md 업데이트
 
@@ -243,9 +246,9 @@ Phase 2 완료: 영향 분석
 간접 영향: 2개 항목
 회귀 위험: 1개 항목
 
-생성된 델타 스펙:
-  - docs/specs/03-api-changes.md (2개 엔드포인트 변경)
-  - docs/specs/04-data-migration.md (1개 엔티티 변경)
+업데이트된 스펙 문서:
+  - docs/specs/03-api-spec.md (변경 사이클 CR-002 섹션 추가, 2개 엔드포인트)
+  - docs/specs/04-data-model.md (변경 사이클 CR-002 섹션 추가, 1개 엔티티)
 
 Phase 3으로 진행합니다 — 체크리스트 부분 갱신...
 ```
@@ -379,7 +382,7 @@ Phase 5로 진행합니다 — TDD 델타 빌드...
 1. **Phase A (Red)**: `sdd-test-writer`가 변경 스펙 기반으로 테스트를 작성합니다.
    - CHG- 항목: 변경된 동작을 검증하는 테스트
    - CHG-REG- 항목: 기존 기능 보존을 검증하는 회귀 테스트
-   - 참조 스펙: `03-api-changes.md`, `04-data-migration.md`, `05-component-changes.md`
+   - 참조 스펙: `03-api-spec.md (변경 사이클 CR-NNN)`, `04-data-model.md (변경 사이클 CR-NNN)`, `05-component-breakdown.md (변경 사이클 CR-NNN)`
 
 2. **Phase B (Green)**: `sdd-implementer`가 모든 테스트(신규 + 회귀) 통과 코드를 작성합니다.
    - 기존 테스트도 모두 통과해야 합니다.
@@ -503,7 +506,7 @@ Phase 7로 진행합니다 — PR 생성...
 
 ## 체크리스트
 - [x] 영향 분석 완료
-- [x] 스펙 델타 문서 생성
+- [x] 기존 스펙 문서 업데이트
 - [x] 체크리스트 부분 갱신
 - [x] TDD 델타 빌드 완료
 - [x] 리뷰 + 회귀 검증 통과
@@ -513,9 +516,9 @@ Phase 7로 진행합니다 — PR 생성...
 
 | 변경 항목 | 원본 요구사항 | 스펙 참조 |
 |-----------|-------------|-----------|
-| CHG-001 | CR-002-FC-001 | 03-api-changes.md |
-| CHG-002 | CR-002-FC-001 | 04-data-migration.md |
-| CHG-003 | CR-002-FC-002 | 03-api-changes.md |
+| CHG-001 | CR-002-FC-001 | 03-api-spec.md (변경 사이클 CR-002) |
+| CHG-002 | CR-002-FC-001 | 04-data-model.md (변경 사이클 CR-002) |
+| CHG-003 | CR-002-FC-002 | 03-api-spec.md (변경 사이클 CR-002) |
 ```
 
 ### sdd-config.yaml 업데이트
@@ -611,7 +614,7 @@ Phase별 진행:
 | Phase | 생성/수정 파일 |
 |-------|---------------|
 | Phase 1 | `09-change-request.md` (신규) |
-| Phase 2 | `03-api-changes.md`, `04-data-migration.md`, `05-component-changes.md` (해당 시), `09-change-request.md` (업데이트) |
+| Phase 2 | `02~05` 기존 스펙 업데이트 (변경 사이클 섹션 추가, 해당 문서만), `09-change-request.md` (업데이트) |
 | Phase 3 | `06-spec-checklist.md` (부분 갱신), `06-spec-checklist.md.pre-CR-NNN.bak` (백업) |
 | Phase 4 | `07-task-plan.md` (CWP 추가) |
 | Phase 5 | 소스 코드 + 테스트 코드, `06-spec-checklist.md` (업데이트) |

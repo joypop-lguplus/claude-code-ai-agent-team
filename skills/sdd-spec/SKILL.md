@@ -84,32 +84,26 @@ description: >-
 
 ### 레거시 프로젝트의 경우 (`type: legacy`)
 
-`sdd-spec-writer` 에이전트를 사용하여 다음을 생성합니다:
+`sdd-spec-writer` 에이전트를 사용하여 **신규 프로젝트와 동일한 파일명**으로 다음을 생성합니다. 현행 시스템을 기준으로 전체 문서화하되, 각 문서에 변경 태그와 영향 분석 섹션을 추가합니다:
 
-1. **`02-change-impact.md`** — 변경 영향 분석
-   - 영향을 받는 모듈 및 파일
-   - 상위/하위 의존성 영향
-   - 위험 평가
-   - 하위 호환성 계획
-   - 마이그레이션 및 롤백 전략
+1. **`02-architecture.md`** — 현행 아키텍처
+   - 기존 기술 스택, 모듈 구조, 의존성 다이어그램 (신규와 동일)
+   - **[레거시 추가]** 변경 영향 분석 섹션: 영향 모듈, 위험 평가, 하위 호환성, 마이그레이션 계획
 
-2. **`03-api-changes.md`** — API 변경 사항
-   - 신규 엔드포인트
-   - 변경된 엔드포인트 (현재 버전과의 차이 포함)
-   - 폐기/삭제된 엔드포인트
-   - 하위 호환성 전략
+2. **`03-api-spec.md`** — 현행 API 전체 문서화
+   - 모든 엔드포인트의 완전한 스펙 (신규와 동일)
+   - **[레거시 추가]** 변경 태그: 각 엔드포인트에 `UNCHANGED`/`MODIFY`/`NEW`/`DEPRECATE` 태그
+   - **[레거시 추가]** 하위 호환성 전략
 
-3. **`04-data-migration.md`** — 데이터 마이그레이션
-   - 스키마 변경 사항
-   - 필요한 마이그레이션 스크립트
-   - 데이터 변환 규칙
-   - 롤백 계획
+3. **`04-data-model.md`** — 현행 데이터 모델
+   - 모든 엔티티, 관계, 인덱스 (신규와 동일)
+   - **[레거시 추가]** 마이그레이션 대상 태그: 각 엔티티에 `UNCHANGED`/`MODIFY`/`NEW`/`DEPRECATE` 태그
+   - **[레거시 추가]** 마이그레이션 스크립트 윤곽, 롤백 계획
 
-4. **`05-component-changes.md`** — 컴포넌트 변경 사항
-   - 신규 모듈
-   - 변경된 모듈 (변경 설명 포함)
-   - 제거된 모듈
-   - 의존성 그래프 변경 사항
+4. **`05-component-breakdown.md`** — 현행 컴포넌트
+   - 모든 모듈, 인터페이스, 의존성 (신규와 동일)
+   - **[레거시 추가]** 변경 대상 태그: 각 컴포넌트에 `UNCHANGED`/`MODIFY`/`NEW`/`DELETE` 태그
+   - **[레거시 추가]** 의존성 영향 분석
 
 5. **`06-spec-checklist.md`** — 신규 프로젝트와 동일
 
@@ -321,10 +315,10 @@ description: >-
 **단일 도메인**:
 ```
 기술 명세서가 생성되었습니다:
-  - 02-architecture.md (또는 02-change-impact.md)
-  - 03-api-spec.md (또는 03-api-changes.md)
-  - 04-data-model.md (또는 04-data-migration.md)
-  - 05-component-breakdown.md (또는 05-component-changes.md)
+  - 02-architecture.md
+  - 03-api-spec.md
+  - 04-data-model.md
+  - 05-component-breakdown.md
   - 06-spec-checklist.md (M개 카테고리에 N개 항목)
 
 진행하기 전에 스펙을 검토하고 필요한 편집을 수행하세요.
