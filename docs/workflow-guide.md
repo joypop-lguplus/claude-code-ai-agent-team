@@ -424,11 +424,11 @@ SDD 상태 대시보드
 
 ### 사전 설정
 
-인스톨러에서 Atlassian MCP와 다이어그램 도구를 설치합니다:
+인스톨러에서 Atlassian MCP와 Mermaid CLI를 설치합니다:
 
 ```bash
 npx github:joypop-lguplus/claude-sdd install
-# → MCP 서버 설정 (Atlassian) + 다이어그램 도구 설치
+# → MCP 서버 설정 (Atlassian) + mmdc (Mermaid CLI) 설치
 ```
 
 프로젝트 초기화 시 Confluence 퍼블리싱을 활성화합니다:
@@ -458,15 +458,21 @@ npx github:joypop-lguplus/claude-sdd install
 
 ### 다이어그램
 
-`sdd-spec` 단계에서 스펙 생성 후 자동으로 PNG 다이어그램이 `docs/specs/diagrams/`에 생성됩니다. `sdd-publish` 시에는 이 PNG를 재사용하여 Confluence 페이지에 첨부합니다 (소스 md보다 오래된 경우에만 재생성).
+`sdd-spec` 단계에서 `sdd-spec-writer`가 스펙 파일 내에 Mermaid 코드 블록으로 다이어그램을 직접 작성합니다. 스펙 생성 후 `mmdc` (Mermaid CLI)가 Mermaid 코드 블록을 PNG로 렌더링하여 `docs/specs/diagrams/`에 저장합니다. `sdd-publish` 시에는 이 PNG를 재사용하여 Confluence 페이지에 첨부합니다 (소스 md보다 오래된 경우에만 재생성).
 
 다이어그램 유형:
-- **dependency**: 모듈 의존성 (Graphviz DOT) → `02-module-dependency.png`
-- **er**: 엔티티 관계도 (Graphviz DOT) → `04-er-diagram.png`
-- **interaction**: 컴포넌트 상호작용 (Graphviz DOT) → `05-component-interaction.png`
-- **domain**: 도메인 경계 (Python diagrams 라이브러리) → `02-domain-boundary.png`
+- **dependency**: 모듈 의존성 (Mermaid flowchart/graph) → `02-module-dependency.png`
+- **er**: 엔티티 관계도 (Mermaid erDiagram) → `04-er-diagram.png`
+- **interaction**: 컴포넌트 상호작용 (Mermaid sequenceDiagram/flowchart) → `05-component-interaction.png`
+- **domain**: 도메인 경계 (Mermaid flowchart) → `02-domain-boundary.png`
+
+`claude-mermaid` MCP를 통해 브라우저에서 다이어그램 미리보기도 가능합니다 (선택 사항).
 
 마크다운 스펙에서는 `![alt](diagrams/xxx.png)` 이미지 참조를 사용하여, GitHub과 Confluence 모두에서 정상적으로 렌더링됩니다.
+
+### Confluence 변환 파이프라인
+
+`sdd-publish`는 템플릿 기반 변환 파이프라인을 사용하여 마크다운을 Confluence storage format으로 변환합니다. info 패널, status 매크로, expand 매크로, 체크리스트 요약 등 Confluence 전용 매크로를 활용하여 고품질 문서를 생성합니다.
 
 ---
 

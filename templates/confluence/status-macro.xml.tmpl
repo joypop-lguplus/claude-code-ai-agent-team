@@ -1,0 +1,14 @@
+<!-- status-macro.xml.tmpl — 상태 배지 매크로 -->
+
+<!-- 색상 매핑:
+     완료/PASS/통과/GET  → colour="Green"
+     진행중/POST/PUT     → colour="Blue"
+     대기/PATCH          → colour="Yellow"
+     실패/FAIL/DELETE    → colour="Red"
+     건너뜀/SKIP         → colour="Grey"
+-->
+
+<ac:structured-macro ac:name="status">
+  <ac:parameter ac:name="colour">{{COLOUR}}</ac:parameter>
+  <ac:parameter ac:name="title">{{TITLE}}</ac:parameter>
+</ac:structured-macro>

@@ -86,7 +86,7 @@
 - 컴포넌트 변경 사항
 - 스펙 준수 체크리스트
 
-**다이어그램 자동 생성**: 스펙 생성 완료 후, `sdd-generate-diagram.py`가 스펙 내용을 파싱하여 PNG 다이어그램을 `docs/specs/diagrams/`에 자동 생성합니다 (모듈 의존성, ER, 컴포넌트 상호작용). graphviz가 설치되지 않은 경우 경고만 표시하고 계속 진행합니다.
+**다이어그램 자동 생성**: `sdd-spec-writer`가 스펙 파일 내에 Mermaid 코드 블록으로 다이어그램을 직접 작성합니다. 스펙 생성 완료 후, `mmdc` (Mermaid CLI)가 Mermaid 코드 블록을 파싱하여 PNG 다이어그램을 `docs/specs/diagrams/`에 자동 렌더링합니다 (모듈 의존성, ER, 컴포넌트 상호작용). `mmdc`가 설치되지 않은 경우 경고만 표시하고 계속 진행합니다. `claude-mermaid` MCP를 통해 브라우저 미리보기도 가능합니다 (선택 사항).
 
 ### 4. 태스크 계획 (`/claude-sdd:sdd-plan`)
 
@@ -333,7 +333,8 @@ SDD 산출물을 Confluence에 자동 퍼블리싱합니다. 다이어그램 PNG
 ### 동작 방식
 
 - **증분 동기화**: 파일 수정 시간(mtime)과 설정의 타임스탬프를 비교하여 변경된 파일만 퍼블리싱
-- **다이어그램 생성**: 스펙에서 architecture, dependency, ER, interaction 다이어그램을 자동 생성하여 PNG로 첨부
+- **다이어그램 생성**: 스펙 내 Mermaid 코드 블록에서 dependency, ER, interaction 다이어그램을 `mmdc`로 PNG 렌더링하여 첨부
+- **템플릿 기반 변환**: info 패널, status 매크로, expand 매크로, 체크리스트 요약 등 Confluence 전용 매크로를 활용한 고품질 변환
 - **페이지 계층**: 루트 페이지 아래에 산출물별 하위 페이지 자동 생성
 
 ### 조건부 자동 퍼블리싱

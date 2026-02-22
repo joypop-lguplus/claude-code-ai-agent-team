@@ -87,7 +87,7 @@ claude --plugin-dir .
 | `/claude-sdd:sdd-review` | Quality gate verification |
 | `/claude-sdd:sdd-integrate` | Integration, PR creation, documentation |
 | `/claude-sdd:sdd-change` | Change management: impact analysis, checklist update, TDD delta build |
-| `/claude-sdd:sdd-publish` | Publish SDD artifacts to Confluence with diagram PNG attachments |
+| `/claude-sdd:sdd-publish` | Publish SDD artifacts to Confluence with Mermaid diagram PNG attachments |
 | `/claude-sdd:sdd-status` | Status dashboard with progress tracking |
 | `/claude-sdd:sdd-lint` | Code analysis: diagnostics, search, symbols, format |
 
@@ -96,7 +96,7 @@ claude --plugin-dir .
 | Agent | Role |
 |-------|------|
 | `sdd-requirements-analyst` | Extracts requirements from Confluence/Jira/Figma |
-| `sdd-spec-writer` | Generates technical specs and checklists |
+| `sdd-spec-writer` | Generates technical specs and checklists (with Mermaid diagrams) |
 | `sdd-implementer` | Implements work packages (Agent Teams member, TDD mode supported) |
 | `sdd-reviewer` | Verifies implementation against spec checklist (TDD compliance check) |
 | `sdd-code-analyzer` | Automated code analysis with native tools and ast-grep |
@@ -173,6 +173,8 @@ init → intake → spec → plan → assign → build(analysis-only) → change
 | Agent Teams | **Yes** | `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` |
 | `gh` CLI | Recommended | For PR creation |
 | ast-grep (`sg`) | Optional | For `/claude-sdd:sdd-lint search` and `/claude-sdd:sdd-lint symbols` |
+| mmdc (Mermaid CLI) | Optional | Diagram PNG rendering. `npm i -g @mermaid-js/mermaid-cli` |
+| claude-mermaid MCP | Optional | Browser diagram preview (optional) |
 | LSP Plugin | Optional | `boostvolt/claude-code-lsps` — auto-diagnostics and LSP features |
 | Confluence MCP | Optional | For `/claude-sdd:sdd-intake confluence:...` |
 | Jira MCP | Optional | For `/claude-sdd:sdd-intake jira:...` |

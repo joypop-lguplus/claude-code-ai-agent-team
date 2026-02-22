@@ -1,5 +1,27 @@
 # 변경 이력
 
+## [0.5.0] - 2026-02-22
+
+### 추가
+- **Mermaid 다이어그램 엔진**: Graphviz/Python diagrams를 폐기하고 Mermaid (mmdc CLI)로 전면 전환. sdd-spec-writer가 스펙에 Mermaid 코드 블록 직접 작성
+- **claude-mermaid MCP 통합**: 브라우저 다이어그램 프리뷰 지원 (선택 사항)
+- **Confluence 변환 템플릿 시스템**: `templates/confluence/` 디렉토리에 6개 XML 템플릿 추가 (page-wrapper, info-panel, status-macro, expand-macro, checklist-summary, code-block)
+- **Confluence 향상 변환 파이프라인**: blockquote→패널, HTTP 메서드→상태 배지, 긴 코드→접기 매크로, 체크리스트 진행률 요약 패널
+- **Mermaid 테마 설정**: `scripts/mermaid-config.json` — 다이어그램 공통 테마/스타일
+
+### 변경
+- **인스톨러 다이어그램 도구**: Graphviz + Python diagrams → mmdc (Mermaid CLI) + claude-mermaid MCP
+- **checker.mjs**: Graphviz/diagrams 체크 → mmdc + claude-mermaid MCP 체크
+- **sdd-detect-tools.sh**: mmdc 사용 가능 여부 감지 추가
+- **sdd-spec-writer 에이전트**: Mermaid 코드 블록 생성 규칙 추가 (flowchart/erDiagram/sequenceDiagram)
+- **sdd-spec SKILL.md**: Mermaid 블록 추출 + mmdc 렌더링 파이프라인
+- **sdd-publish SKILL.md**: 5단계 변환 파이프라인 (전처리→기본→향상→래핑→다이어그램)
+- **스펙 템플릿**: architecture-new, component-breakdown에 Mermaid 블록 + 의존성 요약 테이블
+
+### 삭제
+- **`scripts/sdd-generate-diagram.py`**: 정규식 기반 스펙 추출 방식 폐기
+- **Graphviz/Python diagrams 의존성**: 인스톨러/체커에서 제거
+
 ## [0.4.0] - 2026-02-21
 
 ### 추가

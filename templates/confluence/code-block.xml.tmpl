@@ -1,0 +1,10 @@
+<!-- code-block.xml.tmpl — 구문 강조가 있는 코드 블록 -->
+
+<!-- 언어 매핑: java, python, javascript, typescript, go, rust, kotlin, sql, bash, json, yaml, xml -->
+
+<ac:structured-macro ac:name="code">
+  <ac:parameter ac:name="language">{{LANGUAGE}}</ac:parameter>
+  <ac:parameter ac:name="linenumbers">true</ac:parameter>
+  <ac:parameter ac:name="collapse">{{COLLAPSE}}</ac:parameter>
+  <ac:plain-text-body><![CDATA[{{CODE}}]]></ac:plain-text-body>
+</ac:structured-macro>

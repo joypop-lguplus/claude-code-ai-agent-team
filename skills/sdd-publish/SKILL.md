@@ -72,38 +72,98 @@ SDD 라이프사이클 산출물을 Confluence에 자동 퍼블리싱합니다. 
 
 ### 3단계: 마크다운 → Confluence 변환 + 퍼블리싱
 
-각 변경된 파일에 대해:
+각 변경된 파일에 대해 **5단계 변환 파이프라인**을 실행합니다.
 
-1. **마크다운 → Confluence storage format 변환**:
-   - 헤더(`#`, `##`, `###`) → `<h1>`, `<h2>`, `<h3>`
-   - 코드 블록 → `<ac:structured-macro ac:name="code">`
-   - 체크리스트(`- [x]`, `- [ ]`) → Confluence 체크리스트 매크로
-   - 테이블 → Confluence 테이블
-   - 인라인 코드 → `<code>`
+`templates/confluence/` 디렉토리의 템플릿을 활용합니다.
 
-2. **다이어그램 준비** (해당 파일에 다이어그램이 필요한 경우):
-   - `docs/specs/diagrams/` (또는 도메인별 `diagrams/`)에 기존 PNG가 있고, 소스 md 파일보다 최신(mtime 비교)이면 **재사용**
-   - 기존 PNG가 없거나 소스보다 오래된 경우에만 `scripts/sdd-generate-diagram.py`를 호출하여 PNG 재생성
-   - 마크다운의 `![alt](diagrams/xxx.png)` → Confluence storage format `<ac:image><ri:attachment ri:filename="xxx.png"/></ac:image>`로 변환
-   - 생성된 PNG를 Confluence storage format의 `<ac:image>` 태그로 삽입
+#### 3-1. 전처리: 메타데이터 추출
 
-3. **Confluence API 호출**:
+파일에서 메타데이터를 추출합니다:
+- **제목**: 첫 번째 `#` 헤더
+- **스펙 ID**: 파일명에서 추출 (예: `02-architecture.md` → `ARCH`)
+- **진행률**: `[x]`/`[ ]` 카운트 (체크리스트 파일)
+- **프로젝트명/유형/날짜**: `sdd-config.yaml`에서 읽기
+
+#### 3-2. 기본 변환
+
+| 마크다운 소스 | Confluence 출력 |
+|-------------|----------------|
+| `#`, `##`, `###` 헤더 | `<h1>`, `<h2>`, `<h3>` |
+| 코드 블록 (` ```lang ... ``` `) | `code-block.xml.tmpl` 사용 (`<ac:structured-macro ac:name="code">`) |
+| 체크리스트 (`- [x]`, `- [ ]`) | Confluence 체크리스트 매크로 |
+| 테이블 | Confluence 테이블 (`<table>`) |
+| 인라인 코드 (`\`code\``) | `<code>` |
+| 볼드/이탤릭 | `<strong>`, `<em>` |
+| 링크 (`[text](url)`) | `<a href="url">text</a>` |
+
+#### 3-3. 향상 변환
+
+| 마크다운 소스 | Confluence 출력 | 템플릿 |
+|-------------|----------------|--------|
+| `> *자동 생성*` (일반 blockquote) | 정보 패널 | `info-panel.xml.tmpl` (type=info) |
+| `> **경고**:` (경고 blockquote) | 경고 패널 | `info-panel.xml.tmpl` (type=warning) |
+| `> **참고**:` (참고 blockquote) | 참고 패널 | `info-panel.xml.tmpl` (type=note) |
+| `> **팁**:` (팁 blockquote) | 팁 패널 | `info-panel.xml.tmpl` (type=tip) |
+| 긴 코드 블록 (20줄 이상) | expand 매크로 안에 code 매크로 중첩 | `expand-macro.xml.tmpl` + `code-block.xml.tmpl` |
+| HTTP 메서드 (`POST`, `GET`, `PUT`, `PATCH`, `DELETE`) | 상태 배지 매크로 | `status-macro.xml.tmpl` |
+| ` ```mermaid ... ``` ` 블록 | 제거 (PNG로 대체됨) | — |
+
+**HTTP 메서드 색상 매핑** (03-api-spec.md 전용):
+
+| 메서드 | 색상 |
+|--------|------|
+| `GET` | Blue |
+| `POST` | Green |
+| `PUT` | Yellow |
+| `PATCH` | Yellow |
+| `DELETE` | Red |
+
+#### 3-4. 래핑
+
+`page-wrapper.xml.tmpl` 템플릿으로 전체 페이지를 래핑합니다:
+- 상단: 프로젝트 정보 패널 (프로젝트명, 유형, 갱신일)
+- TOC 매크로 (maxLevel=3)
+- 구분선
+- 본문
+
+#### 3-5. 다이어그램 변환
+
+- `![alt](diagrams/xxx.png)` → `<ac:image><ri:attachment ri:filename="xxx.png"/></ac:image>`
+- `docs/specs/diagrams/` (또는 도메인별 `diagrams/`)에 기존 PNG가 있고, 소스 md 파일보다 최신(mtime 비교)이면 **재사용**
+- 기존 PNG가 없거나 소스보다 오래된 경우, 스펙 파일에서 Mermaid 블록을 추출하여 mmdc로 PNG 재생성:
+  ```bash
+  npx mmdc -i /tmp/diagram.mmd -o <출력경로>/XX-name.png \
+    -b white -s 2 -c {플러그인}/scripts/mermaid-config.json
+  ```
+
+### 파일별 특수 변환 규칙
+
+| 파일 | 특수 변환 |
+|------|-----------|
+| `06-spec-checklist.md` | 상단에 진행률 요약 패널 (`checklist-summary.xml.tmpl`), 카테고리별 status 매크로 |
+| `02-architecture.md` | 기술 스택 테이블 헤더에 배경색 적용 |
+| `03-api-spec.md` | HTTP 메서드에 status 매크로 (GET=Blue, POST=Green, DELETE=Red) |
+| `08-review-report.md` | 통과/실패에 status 매크로 (PASS=Green, FAIL=Red) |
+
+### 4단계: Confluence API 호출
+
+1. **페이지 생성/업데이트**:
    - `page_ids`에 ID가 있으면 → `confluence_update_page` MCP 도구로 업데이트
    - `page_ids`에 ID가 없으면 → `confluence_create_page` MCP 도구로 신규 생성
      - 부모 페이지: `root_page_id`
      - 생성 후 반환된 page_id를 `page_ids`에 저장
 
-4. **PNG 첨부** (다이어그램이 있는 경우):
+2. **PNG 첨부** (다이어그램이 있는 경우):
    - `scripts/sdd-confluence-upload.py`를 실행하여 PNG를 Confluence 페이지에 첨부
    - 이 스크립트는 `~/.claude.json`에서 MCP 서버의 인증 정보를 추출하여 `atlassian-python-api`로 첨부
 
-5. **타임스탬프 업데이트**: `publishing.confluence.sync.timestamps`에 현재 시각 기록
+3. **타임스탬프 업데이트**: `publishing.confluence.sync.timestamps`에 현재 시각 기록
 
-### 4단계: sdd-config.yaml 저장
+### 5단계: sdd-config.yaml 저장
 
 변경된 `timestamps`와 `page_ids`를 `sdd-config.yaml`에 저장합니다.
 
-### 5단계: 결과 대시보드
+### 6단계: 결과 대시보드
 
 ```
 ╔═══════════════════════════════════════╗
@@ -122,7 +182,7 @@ SDD 라이프사이클 산출물을 Confluence에 자동 퍼블리싱합니다. 
   07-태스크 계획        — 변경없음
 
   퍼블리싱: 4개 업데이트, 3개 건너뜀
-  다이어그램: 3개 생성
+  다이어그램: 3개 생성 (Mermaid → mmdc)
 ```
 
 ---
@@ -173,35 +233,30 @@ Confluence에 생성되는 페이지 계층:
 
 ---
 
-## 다이어그램 생성
+## 다이어그램 생성 (Mermaid 기반)
 
-`scripts/sdd-generate-diagram.py`를 사용하여 다이어그램을 PNG로 생성합니다.
+스펙 파일에 포함된 Mermaid 코드 블록을 추출하여 mmdc (Mermaid CLI)로 PNG를 생성합니다.
+
+### 렌더링 파이프라인
+
+1. 스펙 파일에서 ` ```mermaid ``` ` 코드 블록을 찾습니다.
+2. 블록 직후의 `![](diagrams/XX-name.png)` 참조에서 출력 파일명을 결정합니다.
+3. Mermaid 코드를 임시 `.mmd` 파일에 저장합니다.
+4. mmdc로 렌더링합니다:
+   ```bash
+   npx mmdc -i /tmp/diagram.mmd -o <출력경로>/XX-name.png \
+     -b white -s 2 -c {플러그인}/scripts/mermaid-config.json
+   ```
+5. 렌더링 실패 시 경고(⚠)를 표시하고 계속 진행합니다.
 
 ### 지원 유형
 
-| 유형 | 도구 | 대상 산출물 |
-|------|------|------------|
-| `architecture` | diagrams 라이브러리 | 02-architecture.md |
-| `dependency` | graphviz DOT | 02-architecture.md (모듈 의존성) |
-| `er` | graphviz DOT | 04-data-model.md |
-| `interaction` | graphviz DOT | 05-component-breakdown.md |
-| `domain` | diagrams Cluster | 02-architecture.md (멀티 도메인) |
-
-### 다이어그램 소스 추출
-
-각 산출물의 마크다운 내용에서 다이어그램에 필요한 정보를 자동 추출합니다:
-
-- **architecture**: 모듈 목록, 계층 구조, 외부 서비스
-- **dependency**: 모듈 간 의존관계 (`→` 또는 화살표 표기)
-- **er**: 엔티티, 필드, 관계 (FK, 1:N, N:M)
-- **interaction**: 컴포넌트 간 호출 관계
-
-### diagrams vs graphviz 선택
-
-`publishing.confluence.diagrams.tool` 설정에 따라:
-- `auto`: 가용한 도구 자동 선택 (diagrams 우선, 없으면 graphviz)
-- `graphviz`: graphviz DOT만 사용
-- `diagrams`: Python diagrams 라이브러리만 사용
+| Mermaid 유형 | 대상 산출물 | PNG 파일명 |
+|-------------|------------|-----------|
+| `graph TB` (flowchart) | 02-architecture.md | 02-module-dependency.png |
+| `erDiagram` | 04-data-model.md | 04-er-diagram.png |
+| `sequenceDiagram` | 05-component-breakdown.md | 05-component-interaction.png |
+| `graph TB` (flowchart) | 02-architecture.md (멀티) | 02-domain-boundary.png |
 
 ---
 
@@ -245,5 +300,5 @@ MCP 도구의 `confluence_update_page`는 첨부 파일 업로드를 지원하�
 - `docs/specs/sdd-config.yaml` (`/claude-sdd:sdd-init`에서 생성)
 - `publishing.confluence.enabled: true` 설정
 - Atlassian MCP 서버 연결
-- 다이어그램 생성: `graphviz` 또는 `diagrams` Python 패키지 (선택)
+- 다이어그램 생성: `mmdc` (Mermaid CLI — `npm i -g @mermaid-js/mermaid-cli`)
 - PNG 첨부: `atlassian-python-api` Python 패키지

@@ -144,9 +144,9 @@
 | Incremental Sync | 증분 동기화 | 타임스탬프 비교로 변경된 파일만 퍼블리싱 |
 | Conditional Publishing | 조건부 퍼블리싱 | `publishing.confluence.enabled: true`일 때 단계 완료 후 자동 퍼블리싱 |
 | Diagram | 다이어그램 | 스펙에서 자동 생성되는 시각 자료 (PNG) |
-| Architecture Diagram | 아키텍처 다이어그램 | Python diagrams 라이브러리로 생성 |
-| Dependency Diagram | 의존성 다이어그램 | Graphviz DOT으로 생성 |
-| ER Diagram | ER 다이어그램 | 엔티티 관계도, Graphviz DOT으로 생성 |
+| Architecture Diagram | 아키텍처 다이어그램 | Mermaid flowchart (`graph TB`)로 생성 |
+| Dependency Diagram | 의존성 다이어그램 | Mermaid flowchart로 생성 |
+| ER Diagram | ER 다이어그램 | 엔티티 관계도, Mermaid `erDiagram`으로 생성 |
 | Interaction Diagram | 상호작용 다이어그램 | 컴포넌트 간 흐름, Graphviz DOT으로 생성 |
 | Attachment Upload | 첨부 업로드 | `atlassian-python-api`로 PNG를 Confluence에 첨부 |
 | Root Page | 루트 페이지 | Confluence 퍼블리싱의 상위 페이지 |

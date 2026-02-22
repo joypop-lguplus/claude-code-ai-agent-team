@@ -18,6 +18,7 @@ LINTER=""
 AST_GREP=false
 LSP_SERVER=""
 LSP_AVAILABLE=false
+MMDC_AVAILABLE=false
 
 # 명령어 존재 여부 확인
 cmd_exists() { command -v "$1" &>/dev/null; }
@@ -25,6 +26,11 @@ cmd_exists() { command -v "$1" &>/dev/null; }
 # ast-grep 사용 가능 여부 확인
 if cmd_exists sg; then
   AST_GREP=true
+fi
+
+# mmdc (Mermaid CLI) 사용 가능 여부 확인
+if cmd_exists mmdc || npx mmdc --version &>/dev/null 2>&1; then
+  MMDC_AVAILABLE=true
 fi
 
 # --- 감지 로직 ---
@@ -246,6 +252,7 @@ cat <<EOF
   "linter": "$LINTER",
   "ast_grep": $AST_GREP,
   "lsp_server": "$LSP_SERVER",
-  "lsp_available": $LSP_AVAILABLE
+  "lsp_available": $LSP_AVAILABLE,
+  "mmdc_available": $MMDC_AVAILABLE
 }
 EOF

@@ -87,7 +87,7 @@ claude --plugin-dir .
 | `/claude-sdd:sdd-review` | 품질 게이트 검증 |
 | `/claude-sdd:sdd-integrate` | 통합, PR 생성, 문서화 |
 | `/claude-sdd:sdd-change` | 변경 관리: 영향 분석, 체크리스트 갱신, TDD 델타 빌드 |
-| `/claude-sdd:sdd-publish` | SDD 산출물을 Confluence에 퍼블리싱 + 다이어그램 PNG 첨부 |
+| `/claude-sdd:sdd-publish` | SDD 산출물을 Confluence에 퍼블리싱 + Mermaid 다이어그램 PNG 첨부 |
 | `/claude-sdd:sdd-status` | 진행 상황 대시보드 |
 | `/claude-sdd:sdd-lint` | 코드 분석: 진단, 검색, 심볼, 포맷 |
 
@@ -96,7 +96,7 @@ claude --plugin-dir .
 | 에이전트 | 역할 |
 |----------|------|
 | `sdd-requirements-analyst` | Confluence/Jira/Figma에서 요구사항 추출 |
-| `sdd-spec-writer` | 기술 스펙 및 체크리스트 생성 |
+| `sdd-spec-writer` | 기술 스펙 및 체크리스트 생성 (Mermaid 다이어그램 포함) |
 | `sdd-implementer` | 워크 패키지 구현 (Agent Teams 멤버, TDD 모드 지원) |
 | `sdd-reviewer` | 스펙 체크리스트 대비 구현 검증 (TDD 준수 확인 포함) |
 | `sdd-code-analyzer` | 네이티브 도구, ast-grep을 활용한 자동 코드 분석 |
@@ -173,6 +173,8 @@ init → intake → spec → plan → assign → build(분석 전용) → change
 | Agent Teams | **필수** | `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` |
 | `gh` CLI | 권장 | PR 생성용 |
 | ast-grep (`sg`) | 선택 | `/claude-sdd:sdd-lint search` 및 `/claude-sdd:sdd-lint symbols`용 |
+| mmdc (Mermaid CLI) | 선택 | 다이어그램 PNG 렌더링용. `npm i -g @mermaid-js/mermaid-cli` |
+| claude-mermaid MCP | 선택 | 브라우저 다이어그램 프리뷰 (선택 사항) |
 | LSP 플러그인 | 선택 | `boostvolt/claude-code-lsps` — 자동 진단 및 LSP 기능 활성화 |
 | Confluence MCP | 선택 | `/claude-sdd:sdd-intake confluence:...`용 |
 | Jira MCP | 선택 | `/claude-sdd:sdd-intake jira:...`용 |

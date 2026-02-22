@@ -41,12 +41,13 @@ claude-sdd/
 │   ├── test-writer           # TDD 테스트 작성 (스펙→실패 테스트)
 │   └── change-analyst        # 변경 영향 분석 (최소 영향 원칙)
 │
-├── Templates (24)     # 문서 템플릿
+├── Templates (30)     # 문서 템플릿
 │   ├── claude-md/     # 리더/멤버용 CLAUDE.md 템플릿 (2)
 │   ├── specs/         # 스펙 문서 템플릿 (13)
 │   ├── checklists/    # 품질 체크리스트 템플릿 (4)
 │   ├── cross-domain/  # 도메인 의존성/통합 템플릿 (3)
-│   └── project-init/  # 프로젝트 설정 템플릿 (2)
+│   ├── project-init/  # 프로젝트 설정 템플릿 (2)
+│   └── confluence/  # Confluence 변환 템플릿 (6)
 │
 ├── Hooks (2)          # 이벤트 훅 (SessionStart)
 │   ├── sdd-session-init.sh   # SDD 프로젝트 감지 + 진행 상황 표시
@@ -154,6 +155,8 @@ sdd-config.yaml (lint 섹션)      프로젝트별 도구 설정
 | `LSP goToDefinition` | 심볼의 원본 정의 위치 확인 | sdd-implementer, sdd-change-analyst |
 | `LSP hover` | 타입 정보 확인 | sdd-implementer, sdd-test-writer |
 
+**템플릿 연동**: `sdd-leader.md.tmpl`과 `sdd-member.md.tmpl`에 LSP 우선 활용 지침이 포함되어, 모든 빌드 모드에서 에이전트가 LSP를 적극 사용합니다.
+
 통합 지점:
 - `/claude-sdd:sdd-build`: 워크 패키지 완료 전 린트/포맷 실행
 - `/claude-sdd:sdd-review`: 품질 게이트 (2.5단계)에 네이티브 진단 포함
@@ -196,34 +199,34 @@ Phase 7: PR 생성 (변경 추적성 포함)
 - `--from-analysis`: 분석 보고서(`10-analysis-report.md`)의 갭 항목에서 CR 자동 생성
 - `--lightweight --from-analysis`: 소규모 갭(5개 이하) 빠른 처리 — Phase 1-4 자동 설정, Phase 5(빌드)+6(검증)+7(PR)만 실행
 
-## 다이어그램 파이프라인
+## 다이어그램 파이프라인 (Mermaid 기반)
 
-PNG 다이어그램은 두 단계로 나뉘어 생성/활용됩니다:
+Mermaid 코드 블록 기반 다이어그램 파이프라인:
 
 ```
 [1] sdd-spec 단계 (스펙 생성 직후)
     |
-    |-- 02-architecture.md, 04-data-model.md, 05-component-breakdown.md 파싱
-    |   |
-    |   v
-    |   scripts/sdd-generate-diagram.py
-    |       extract_modules()   ← "모듈 책임"/"컴포넌트" 섹션의 ### 헤더만 추출
-    |       extract_relations() ← **의존성**: targets 패턴 + "관계" 테이블 + 화살표 fallback
-    |       extract_entities()  ← "엔티티" 섹션 범위 한정 + 필드/관계 테이블
-    |       → PNG 파일 생성
+    |-- sdd-spec-writer 에이전트가 스펙에 Mermaid 코드 블록 직접 작성
+    |   (graph TB, erDiagram, sequenceDiagram)
+    |
+    |-- Mermaid 블록 추출 → 임시 .mmd 파일 저장
+    |-- mmdc (Mermaid CLI)로 PNG 렌더링:
+    |   npx mmdc -i /tmp/diagram.mmd -o <출력> -b white -s 2 -c mermaid-config.json
     |
     |-- 영구 저장:
     |   docs/specs/diagrams/                    ← 단일 도메인 / 프로젝트 수준
     |   docs/specs/domains/<id>/diagrams/       ← 도메인별
     |   docs/specs/cross-domain/diagrams/       ← 크로스 도메인
     |
-    |-- 마크다운에 이미지 참조: ![alt](diagrams/xxx.png)
+    |-- 마크다운에 Mermaid 블록 + 이미지 참조 쌍:
+    |   ```mermaid ... ``` + ![alt](diagrams/xxx.png)
 
 [2] sdd-publish 단계 (Confluence 퍼블리싱)
     |
     |-- docs/specs/diagrams/ PNG 존재 + 소스 md보다 최신? → 재사용
-    |-- PNG 없거나 오래됨? → sdd-generate-diagram.py로 재생성
+    |-- PNG 없거나 오래됨? → Mermaid 블록 추출 → mmdc로 재생성
     |
+    |-- ```mermaid``` 블록 → 제거 (PNG로 대체)
     |-- ![](diagrams/xxx.png) → <ac:image><ri:attachment ri:filename="xxx.png"/></ac:image>
     |-- scripts/sdd-confluence-upload.py → 첨부 업로드
 ```
@@ -256,7 +259,7 @@ sdd-config.yaml (publishing 설정)
     |   |-- 마크다운 → Confluence storage format 변환
     |   |-- ![](diagrams/xxx.png) → <ac:image> 변환
     |   |
-    |   |-- docs/specs/diagrams/ PNG 재사용 (최신이면) 또는 재생성
+    |   |-- docs/specs/diagrams/ PNG 재사용 (최신이면) 또는 Mermaid→mmdc 재생성
     |   |
     |   |-- MCP confluence_create_page / confluence_update_page
     |   |-- scripts/sdd-confluence-upload.py
@@ -268,6 +271,14 @@ sdd-config.yaml (publishing 설정)
     v
 결과 대시보드
 ```
+
+**Confluence 변환 템플릿** (`templates/confluence/`):
+- `page-wrapper.xml.tmpl` — 페이지 래핑 (헤더 패널 + TOC + 본문)
+- `info-panel.xml.tmpl` — 정보/경고/참고 패널
+- `status-macro.xml.tmpl` — 상태 배지 매크로
+- `expand-macro.xml.tmpl` — 접기 영역 매크로
+- `checklist-summary.xml.tmpl` — 진행률 요약 패널
+- `code-block.xml.tmpl` — 구문 강조 코드 블록
 
 **조건부 퍼블리싱**: `sdd-intake`, `sdd-spec`, `sdd-plan`, `sdd-review` 스킬은 단계 완료 시 `publishing.confluence.enabled: true`이면 해당 산출물을 즉시 퍼블리싱합니다.
 

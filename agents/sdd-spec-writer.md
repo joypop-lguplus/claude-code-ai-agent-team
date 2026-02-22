@@ -113,27 +113,59 @@
 
 ## 다이어그램 규칙
 
-스펙 문서에서 다이어그램은 **PNG 이미지 참조**로 표현합니다. ASCII art나 코드 블록으로 다이어그램을 직접 작성하지 마세요.
+스펙 작성 시 다음 위치에 **Mermaid 코드 블록**을 직접 포함합니다. Mermaid 코드 블록 직후에 반드시 PNG 참조를 배치합니다 (mmdc가 자동 렌더링).
 
 ### 금지 사항
 - ASCII box art 다이어그램 작성 금지 (예: `+---+`, `|   |`, `───>`)
-- 코드 블록(`````)으로 다이어그램을 작성하지 않음
+- Mermaid 이외의 코드 블록으로 다이어그램을 작성하지 않음
 
-### 이미지 참조 유지
-템플릿에 이미 포함된 `![](diagrams/xxx.png)` 이미지 참조를 그대로 유지합니다. 스펙 작성 후 `sdd-generate-diagram.py`가 스펙 내용을 파싱하여 PNG를 자동 생성합니다.
+### 다이어그램 유형별 작성 규칙
+
+1. **02-architecture.md** — 모듈 의존성:
+   - `graph TB` (top-bottom) + `subgraph`로 계층 그룹핑
+   - 관계 유형을 엣지 라벨에 표기 (`-->|"DI"|`, `-->|"HTTP"|`)
+   - 노드 ID는 영문 (한글은 라벨에만 사용): `controller["컨트롤러"]`
+
+2. **04-data-model.md** — ER 다이어그램:
+   - `erDiagram` 사용
+   - 열거형(enum), DTO, 엔티티 모두 포함
+   - 관계: `||--||`, `||--o{`, `}o--||` 등 카디널리티 정확히 표기
+   - 속성: `type name` 형식 (예: `string username`)
+
+3. **05-component-breakdown.md** — 컴포넌트 상호작용:
+   - `sequenceDiagram` 사용 (주요 유스케이스 흐름)
+   - participant alias로 가독성 확보: `participant C as Controller`
+   - 에러 흐름은 `alt`/`else` 블록으로 표현
+
+### 작성 형식
+
+각 다이어그램은 아래 형식으로 작성합니다:
+
+````markdown
+```mermaid
+graph TB
+    subgraph Layer["계층명"]
+        module["모듈명"]
+    end
+```
+
+![설명](diagrams/XX-name.png)
+
+> *이 다이어그램은 mmdc가 Mermaid 코드에서 자동 렌더링합니다.*
+````
 
 ### PNG 파일명 규칙
 
-| 스펙 파일 | PNG 파일명 | 위치 |
-|----------|-----------|------|
-| `02-architecture.md` (단일) | `02-module-dependency.png` | `docs/specs/diagrams/` |
-| `04-data-model.md` | `04-er-diagram.png` | `docs/specs/diagrams/` |
-| `05-component-breakdown.md` | `05-component-interaction.png` | `docs/specs/diagrams/` |
-| `02-architecture.md` (멀티) | `02-domain-boundary.png` | `docs/specs/diagrams/` |
-| 도메인 `02-architecture.md` | `02-domain-dependency.png` | `docs/specs/domains/<id>/diagrams/` |
-| 도메인 `04-data-model.md` | `04-er-diagram.png` | `docs/specs/domains/<id>/diagrams/` |
-| 도메인 `05-component-breakdown.md` | `05-component-interaction.png` | `docs/specs/domains/<id>/diagrams/` |
-| `cross-domain/dependency-map.md` | `cross-domain-dependency.png` | `docs/specs/cross-domain/diagrams/` |
+| 스펙 파일 | Mermaid 유형 | PNG 파일명 | 위치 |
+|----------|-------------|-----------|------|
+| `02-architecture.md` (단일) | `graph TB` | `02-module-dependency.png` | `docs/specs/diagrams/` |
+| `04-data-model.md` | `erDiagram` | `04-er-diagram.png` | `docs/specs/diagrams/` |
+| `05-component-breakdown.md` | `sequenceDiagram` | `05-component-interaction.png` | `docs/specs/diagrams/` |
+| `02-architecture.md` (멀티) | `graph TB` | `02-domain-boundary.png` | `docs/specs/diagrams/` |
+| 도메인 `02-architecture.md` | `graph TB` | `02-domain-dependency.png` | `docs/specs/domains/<id>/diagrams/` |
+| 도메인 `04-data-model.md` | `erDiagram` | `04-er-diagram.png` | `docs/specs/domains/<id>/diagrams/` |
+| 도메인 `05-component-breakdown.md` | `sequenceDiagram` | `05-component-interaction.png` | `docs/specs/domains/<id>/diagrams/` |
+| `cross-domain/dependency-map.md` | `graph LR` | `cross-domain-dependency.png` | `docs/specs/cross-domain/diagrams/` |
 
 ## 멀티 도메인 모드
 

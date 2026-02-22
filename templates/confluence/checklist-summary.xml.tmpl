@@ -1,0 +1,24 @@
+<!-- checklist-summary.xml.tmpl — 체크리스트 진행률 요약 패널 -->
+
+<ac:structured-macro ac:name="panel">
+  <ac:parameter ac:name="borderColor">#36B37E</ac:parameter>
+  <ac:parameter ac:name="bgColor">#E3FCEF</ac:parameter>
+  <ac:rich-text-body>
+    <h3>진행률 요약</h3>
+    <table>
+      <tbody>
+        <tr>
+          <td><strong>전체</strong></td>
+          <td>{{TOTAL}} 항목</td>
+          <td>
+            <ac:structured-macro ac:name="status">
+              <ac:parameter ac:name="colour">{{OVERALL_COLOUR}}</ac:parameter>
+              <ac:parameter ac:name="title">{{COMPLETED}}/{{TOTAL}} ({{PERCENT}}%)</ac:parameter>
+            </ac:structured-macro>
+          </td>
+        </tr>
+        {{CATEGORY_ROWS}}
+      </tbody>
+    </table>
+  </ac:rich-text-body>
+</ac:structured-macro>

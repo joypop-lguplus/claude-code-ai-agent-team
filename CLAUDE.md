@@ -34,14 +34,14 @@ node bin/cli.mjs version     # 버전 표시
 /claude-sdd:sdd-next      → 단계 자동 감지 후 계속 진행
 /claude-sdd:sdd-init      → 프로젝트 설정 + SDD 디렉토리 초기화 (--domains로 멀티 도메인)
 /claude-sdd:sdd-intake    → 요구사항 수집 (Confluence/Jira/Figma/파일/인터뷰). 레거시: 인터뷰 없이 기존 코드 자동 분석으로 요구사항 생성
-/claude-sdd:sdd-spec      → 기술 스펙 + 스펙 준수 체크리스트 생성 + 다이어그램 PNG 자동 생성
+/claude-sdd:sdd-spec      → 기술 스펙 + 스펙 준수 체크리스트 생성 + Mermaid 다이어그램 PNG 자동 생성
 /claude-sdd:sdd-plan      → 태스크 분해 → 워크 패키지
 /claude-sdd:sdd-assign    → 워크 패키지에 팀 멤버 배정 + 멤버별 CLAUDE.md 생성
 /claude-sdd:sdd-build     → Agent Teams로 구현 + 품질 루프 (최대 3회 재작업 사이클)
 /claude-sdd:sdd-review    → 품질 게이트 검증 + 자동 진단
 /claude-sdd:sdd-integrate → PR 생성 + 문서화
 /claude-sdd:sdd-change    → 변경 관리 (영향 분석 → 체크리스트 갱신 → TDD 델타 빌드)
-/claude-sdd:sdd-publish   → Confluence 퍼블리싱 (마크다운 변환, 다이어그램 PNG 첨부)
+/claude-sdd:sdd-publish   → Confluence 퍼블리싱 (템플릿 기반 변환, Mermaid 다이어그램 PNG 첨부)
 /claude-sdd:sdd-status    → 상태 대시보드
 /claude-sdd:sdd-lint      → 코드 분석 (진단, 검색, 심볼, 포맷)
 ```
@@ -55,7 +55,7 @@ node bin/cli.mjs version     # 버전 표시
 ### 에이전트 (`agents/` 내 7개)
 Sonnet 모델에서 실행되는 마크다운 기반 에이전트:
 - **sdd-requirements-analyst** -- 외부 소스 파싱 (Confluence/Jira/Figma)
-- **sdd-spec-writer** -- 기술 스펙 문서 생성
+- **sdd-spec-writer** -- 기술 스펙 문서 생성 (Mermaid 다이어그램 포함)
 - **sdd-implementer** -- 워크 패키지를 구현하는 팀 멤버 (TDD 모드 지원)
 - **sdd-reviewer** -- 체크리스트 대비 스펙 준수 검증 (TDD 준수 확인 포함)
 - **sdd-code-analyzer** -- 자동 진단, ast-grep, LSP, 포매팅 실행
@@ -90,9 +90,10 @@ Sonnet 모델에서 실행되는 마크다운 기반 에이전트:
 ### 템플릿 (`templates/`)
 - `claude-md/` -- `/claude-sdd:sdd-build` 시 대상 프로젝트에 주입되는 CLAUDE.md 템플릿 (리더 vs 멤버 규칙)
 - `project-init/` -- 프로젝트 초기화용 `sdd-config.yaml.tmpl`
-- `specs/` -- 아키텍처, API, 데이터 모델 스펙 템플릿
+- `specs/` -- 아키텍처, API, 데이터 모델 스펙 템플릿 (Mermaid 블록 포함)
 - `checklists/` -- 스펙 준수 및 품질 게이트 체크리스트 템플릿
 - `cross-domain/` -- 도메인 의존성 맵, 통합 포인트, 통합 체크리스트 템플릿
+- `confluence/` -- Confluence 변환 XML 템플릿 (page-wrapper, info-panel, status-macro, expand-macro, checklist-summary, code-block)
 
 ### 도구 감지 (`scripts/sdd-detect-tools.sh`)
 프로젝트 언어 및 사용 가능한 린터/포매터를 자동 감지합니다. JSON 출력. TypeScript, Python, Go, Rust, Java, Kotlin, C++ 지원.
@@ -112,17 +113,21 @@ Sonnet 모델에서 실행되는 마크다운 기반 에이전트:
 | `LSP goToDefinition` | 심볼의 원본 정의 위치 확인 | sdd-implementer, sdd-change-analyst |
 | `LSP hover` | 타입 정보 확인 | sdd-implementer, sdd-test-writer |
 
+**CLAUDE.md 템플릿 적용**: `sdd-leader.md.tmpl`과 `sdd-member.md.tmpl`에 LSP 우선 활용 지침이 포함되어, 빌드 시 대상 프로젝트의 에이전트가 코드 분석에 LSP를 적극 사용합니다.
+
 ### 세션 훅 (`hooks/hooks.json` + `scripts/sdd-session-init.sh` + `scripts/sdd-lsp-patch.sh`)
 세션 시작 시 두 개의 훅이 실행됩니다:
 - `sdd-session-init.sh` -- 현재 프로젝트가 SDD를 사용하는지 자동 감지하고 단계/진행 상황을 표시
 - `sdd-lsp-patch.sh` -- gopls PATH 자동 패치 및 kotlin-lsp JVM 프리웜
 
 ### Confluence 퍼블리싱 (`/claude-sdd:sdd-publish`)
-SDD 산출물을 Confluence에 자동 퍼블리싱합니다. `sdd-config.yaml`의 `publishing.confluence` 섹션이 활성화되면 동작합니다. 마크다운 → Confluence storage format 변환, 다이어그램 PNG 생성/첨부, 증분 동기화(타임스탬프 비교)를 지원합니다.
+SDD 산출물을 Confluence에 자동 퍼블리싱합니다. `sdd-config.yaml`의 `publishing.confluence` 섹션이 활성화되면 동작합니다. 마크다운 → Confluence storage format 변환 (템플릿 기반), 다이어그램 PNG 생성/첨부, 증분 동기화(타임스탬프 비교)를 지원합니다.
 
-**다이어그램 생성**: `scripts/sdd-generate-diagram.py`가 스펙에서 architecture, dependency, ER, interaction 다이어그램을 PNG로 생성합니다 (Graphviz DOT + Python diagrams 라이브러리). PNG는 `docs/specs/diagrams/`에 영구 저장됩니다 (도메인별: `docs/specs/domains/<id>/diagrams/`, 크로스 도메인: `docs/specs/cross-domain/diagrams/`). `sdd-spec` 단계에서 스펙 생성 후 자동으로 PNG를 생성하며, `sdd-publish` 단계에서는 기존 PNG가 소스보다 최신이면 재사용합니다.
+**다이어그램 생성 (Mermaid 기반)**: `sdd-spec-writer` 에이전트가 스펙에 Mermaid 코드 블록(graph TB, erDiagram, sequenceDiagram)을 직접 작성합니다. `sdd-spec` 단계에서 Mermaid 블록을 추출하여 mmdc (Mermaid CLI)로 PNG를 렌더링합니다. PNG는 `docs/specs/diagrams/`에 영구 저장됩니다 (도메인별: `docs/specs/domains/<id>/diagrams/`, 크로스 도메인: `docs/specs/cross-domain/diagrams/`). `sdd-publish` 단계에서는 기존 PNG가 소스보다 최신이면 재사용합니다. `claude-mermaid` MCP로 브라우저 프리뷰 가능 (선택).
 
 **PNG 파일명 규칙**: `02-module-dependency.png`, `04-er-diagram.png`, `05-component-interaction.png`, `02-domain-boundary.png`, `02-domain-dependency.png`, `cross-domain-dependency.png`
+
+**Confluence 변환 파이프라인**: 5단계 파이프라인 — 전처리(메타데이터 추출) → 기본 변환(헤더/코드/테이블/체크리스트) → 향상 변환(blockquote→패널, HTTP 메서드→상태 배지, 긴 코드→접기 매크로, 체크리스트 진행률 요약) → 래핑(page-wrapper 템플릿) → 다이어그램(Mermaid→PNG→ac:image). `templates/confluence/` 디렉토리의 6개 XML 템플릿을 사용합니다.
 
 **첨부 업로드**: `scripts/sdd-confluence-upload.py`가 `atlassian-python-api`를 사용하여 PNG를 Confluence 페이지에 첨부합니다. MCP 도구는 첨부를 지원하지 않으므로 별도 스크립트가 필요합니다.
 

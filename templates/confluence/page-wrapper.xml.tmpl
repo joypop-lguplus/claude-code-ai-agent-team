@@ -1,0 +1,21 @@
+<!-- page-wrapper.xml.tmpl — Confluence 페이지 전체 래핑 (헤더 패널 + TOC + 본문) -->
+
+<!-- 프로젝트 정보 패널 (상단) -->
+<ac:structured-macro ac:name="panel">
+  <ac:parameter ac:name="borderColor">#4A90D9</ac:parameter>
+  <ac:parameter ac:name="bgColor">#F0F7FF</ac:parameter>
+  <ac:rich-text-body>
+    <p><strong>프로젝트</strong>: {{PROJECT_NAME}} | <strong>유형</strong>: {{PROJECT_TYPE}} | <strong>갱신</strong>: {{DATE}}</p>
+  </ac:rich-text-body>
+</ac:structured-macro>
+
+<!-- 목차 -->
+<ac:structured-macro ac:name="toc">
+  <ac:parameter ac:name="maxLevel">3</ac:parameter>
+  <ac:parameter ac:name="style">disc</ac:parameter>
+</ac:structured-macro>
+
+<hr/>
+
+<!-- 본문 -->
+{{BODY}}

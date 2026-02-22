@@ -1,0 +1,16 @@
+<!-- info-panel.xml.tmpl — 정보/경고/참고 패널 -->
+
+<!-- 유형: info | warning | note | tip -->
+<!-- 마크다운 blockquote 변환 규칙:
+     > *자동 생성*           → type="info"
+     > **경고**:             → type="warning"
+     > **참고**:             → type="note"
+     > **팁**:               → type="tip"
+     기타 blockquote         → type="info"
+-->
+
+<ac:structured-macro ac:name="{{PANEL_TYPE}}">
+  <ac:rich-text-body>
+    <p>{{CONTENT}}</p>
+  </ac:rich-text-body>
+</ac:structured-macro>
