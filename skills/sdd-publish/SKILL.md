@@ -10,7 +10,8 @@ SDD 라이프사이클 산출물을 Confluence에 자동 퍼블리싱합니다. 
 ## 사용법
 
 ```
-/claude-sdd:sdd-publish                                    # 전체 산출물 퍼블리싱
+/claude-sdd:sdd-publish                                    # 대화형 문서 선택 후 퍼블리싱
+/claude-sdd:sdd-publish --all                              # 변경된 전체 산출물 퍼블리싱
 /claude-sdd:sdd-publish --stage=spec                       # 특정 단계만
 /claude-sdd:sdd-publish --stage=intake                     # intake 단계만
 /claude-sdd:sdd-publish --domain=device-mgmt               # 특정 도메인만
@@ -20,6 +21,7 @@ SDD 라이프사이클 산출물을 Confluence에 자동 퍼블리싱합니다. 
 
 ## 인자
 
+- `--all` — 변경된 전체 산출물 퍼블리싱 (선택 없이 일괄 처리)
 - `--stage=<name>` — 특정 단계 산출물만 퍼블리싱 (intake, spec, plan, review, change, analysis)
 - `--domain=<id>` — 특정 도메인 산출물만 (멀티 도메인)
 - `confluence:SPACE_KEY/PAGE_ID` — config 무시, 직접 대상 지정
@@ -69,6 +71,39 @@ SDD 라이프사이클 산출물을 Confluence에 자동 퍼블리싱합니다. 
 - `timestamps`에 기록이 없으면 → 신규 퍼블리싱 대상
 
 `--stage` 옵션이 있으면 해당 단계 파일만 필터링합니다.
+
+### 2.5단계: 문서 선택 (대화형)
+
+`--all`, `--stage`, `confluence:`, URL 인자가 **없는** 경우 (인자 없이 `/claude-sdd:sdd-publish`만 실행), 퍼블리싱할 문서를 사용자가 선택합니다.
+
+1. 2단계에서 감지된 **변경된 파일 목록**과 **변경 없는 파일 목록**을 표시합니다:
+   ```
+   퍼블리싱할 문서를 선택하세요:
+
+   변경됨 (신규/업데이트):
+     [1] 01-요구사항          (신규)
+     [2] 02-아키텍처          (업데이트, 다이어그램 1개)
+     [3] 03-API 스펙          (신규)
+     [4] 04-데이터 모델        (신규, ER 다이어그램)
+     [5] 05-컴포넌트 분해      (신규)
+     [6] 06-스펙 체크리스트    (업데이트)
+
+   변경 없음:
+     [7] 00-프로젝트 컨텍스트  (변경 없음)
+     [8] 07-태스크 계획        (변경 없음)
+
+   선택 (번호, 쉼표 구분 / all / 1-6 범위 / Enter=변경분만):
+   ```
+
+2. 사용자 입력 해석:
+   - `1,3,6` → 지정된 문서만 퍼블리싱
+   - `1-6` → 범위 내 문서 퍼블리싱
+   - `all` → 모든 문서 퍼블리싱 (변경 없는 문서 포함, 강제 업데이트)
+   - Enter (빈 입력) → 변경된 문서만 퍼블리싱 (기본값)
+
+3. 선택된 문서만 3단계로 전달합니다.
+
+**참고**: `--all`, `--stage`, `confluence:`, URL 인자가 있으면 이 단계를 건너뛰고 바로 3단계로 진행합니다.
 
 ### 3단계: 마크다운 → Confluence 변환 + 퍼블리싱
 

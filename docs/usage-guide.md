@@ -323,7 +323,8 @@ SDD 산출물을 Confluence에 자동 퍼블리싱합니다. 다이어그램 PNG
 ### 사용법
 
 ```bash
-/claude-sdd:sdd-publish                                    # 전체 산출물 퍼블리싱
+/claude-sdd:sdd-publish                                    # 대화형 문서 선택 후 퍼블리싱
+/claude-sdd:sdd-publish --all                              # 변경된 전체 산출물 퍼블리싱
 /claude-sdd:sdd-publish --stage=spec                       # 특정 단계만
 /claude-sdd:sdd-publish --domain=device-mgmt               # 특정 도메인만
 /claude-sdd:sdd-publish confluence:SPACE_KEY/PAGE_ID       # 직접 지정
@@ -336,10 +337,6 @@ SDD 산출물을 Confluence에 자동 퍼블리싱합니다. 다이어그램 PNG
 - **다이어그램 생성**: 스펙 내 Mermaid 코드 블록에서 dependency, ER, interaction 다이어그램을 `mmdc`로 PNG 렌더링하여 첨부
 - **템플릿 기반 변환**: info 패널, status 매크로, expand 매크로, 체크리스트 요약 등 Confluence 전용 매크로를 활용한 고품질 변환
 - **페이지 계층**: 루트 페이지 아래에 산출물별 하위 페이지 자동 생성
-
-### 조건부 자동 퍼블리싱
-
-`publishing.confluence.enabled: true`인 경우, `sdd-intake`, `sdd-spec`, `sdd-plan`, `sdd-review` 스킬 완료 시 해당 산출물이 자동으로 퍼블리싱됩니다.
 
 ## 팁
 

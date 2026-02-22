@@ -439,11 +439,16 @@ npx github:joypop-lguplus/claude-sdd install
 # → MCP 서버, 스페이스 키, 루트 페이지 설정
 ```
 
-### 수동 퍼블리싱
+### 퍼블리싱
+
+모든 워크플로우 완료 후 사용자가 직접 실행합니다:
 
 ```bash
-# 전체 산출물 퍼블리싱
+# 대화형 문서 선택 후 퍼블리싱
 /claude-sdd:sdd-publish
+
+# 변경된 전체 산출물 퍼블리싱
+/claude-sdd:sdd-publish --all
 
 # 특정 단계만
 /claude-sdd:sdd-publish --stage=spec
@@ -452,9 +457,7 @@ npx github:joypop-lguplus/claude-sdd install
 /claude-sdd:sdd-publish --domain=device-mgmt
 ```
 
-### 자동 퍼블리싱
-
-`publishing.confluence.enabled: true`이면, `sdd-intake`, `sdd-spec`, `sdd-plan`, `sdd-review` 완료 시 해당 산출물이 자동으로 퍼블리싱됩니다.
+인자 없이 실행 시 변경된 문서 목록을 보여주고, 퍼블리싱할 문서를 선택할 수 있습니다.
 
 ### 다이어그램
 

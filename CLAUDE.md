@@ -131,7 +131,7 @@ SDD 산출물을 Confluence에 자동 퍼블리싱합니다. `sdd-config.yaml`�
 
 **첨부 업로드**: `scripts/sdd-confluence-upload.py`가 `atlassian-python-api`를 사용하여 PNG를 Confluence 페이지에 첨부합니다. MCP 도구는 첨부를 지원하지 않으므로 별도 스크립트가 필요합니다.
 
-**조건부 퍼블리싱**: `sdd-intake`, `sdd-spec`, `sdd-plan`, `sdd-review` 스킬은 단계 완료 후 `publishing.confluence.enabled: true`이면 해당 산출물을 즉시 퍼블리싱합니다.
+**수동 퍼블리싱**: 퍼블리싱은 모든 워크플로우 완료 후 사용자가 `/claude-sdd:sdd-publish`를 직접 실행합니다. 인자 없이 실행 시 퍼블리싱할 문서를 대화형으로 선택할 수 있으며, `--all`로 전체 일괄 퍼블리싱도 가능합니다.
 
 ### 브랜치 관리
 `sdd-init`, `sdd-godmode`, `sdd-change` 스킬은 실행 시작 전에 현재 브랜치가 `feature/**` 패턴인지 확인합니다. 아닌 경우 Jira 소스에서 자동 생성하거나 사용자 입력을 받아 `feature/<name>` 브랜치를 생성합니다.
